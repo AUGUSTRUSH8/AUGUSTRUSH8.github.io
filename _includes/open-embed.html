@@ -15,7 +15,7 @@
     }    
     </style>
     
-<script>
+    <script>
     function get_youtube_id(url) {
         var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
         return (url.match(p)) ? RegExp.$1 : false;
@@ -42,7 +42,7 @@
     function video_embed() {
         var p = document.getElementsByTagName('p');
         for(var i = 0; i < p.length; i++) {
-            //check if this is an external url (that starts with https:// or http://
+            //check if this is an external url
             if (p[i].innerHTML.indexOf("http://") == 0 ||
                 p[i].innerHTML.indexOf("https://") == 0) {
                 var youtube_id = get_youtube_id(p[i].innerHTML);
