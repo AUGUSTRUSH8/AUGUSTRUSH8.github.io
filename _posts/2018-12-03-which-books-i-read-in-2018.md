@@ -3,10 +3,10 @@ layout: post
 title: '2018 年我读了哪些书'
 tags: [read]
 ---
-<p>http://pkngrra8q.bkt.clouddn.com/%EF%BC%88%E5%A5%B3%E5%A3%B0%EF%BC%89Something%20Just%20Like%20This%20-%20Alex%20Goot%20%20Madilyn%20Bailey%20.mp3</p>
 
 年末又至。按照惯例，我将继续盘点一下 2018 年中，我读过的那些书。
 
+<p>http://pkngrra8q.bkt.clouddn.com/%EF%BC%88%E5%A5%B3%E5%A3%B0%EF%BC%89Something%20Just%20Like%20This%20-%20Alex%20Goot%20%20Madilyn%20Bailey%20.mp3</p>
 
 ### 你一定爱读的极简欧洲史（约翰·赫斯特著，席玉苹译）
 
