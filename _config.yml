@@ -3,7 +3,7 @@ permalink:        /post/:title.html
 
 # Setup
 url:              https://augustrush8.github.io
-img_url:          https://infp.github.io/images
+img_url:          http://pkngrra8q.bkt.clouddn.com
 
 # Set to '' in case of hosting on `https://<your-github-name>.github.io`
 baseurl:          ''
