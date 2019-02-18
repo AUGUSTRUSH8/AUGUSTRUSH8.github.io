@@ -4,16 +4,16 @@ title: 'pix2pix图像超分辨率'
 tags: [code]
 ---
 
-###目标
+### 目标
 训练一个pix2pix模型，把模糊的图片换成清晰的图片
-###准备
+### 准备
 租了一个极客云上面的GPU服务器，GTX1070，速度还行
-###数据集准备
+### 数据集准备
 数据集是“图片对”的形式，一个图片包含两张图片，一张是清晰的图片，一张是模糊的图片。
-####我的原数据集
+#### 我的原数据集
 我用的kaggle上面的花花数据：https://www.kaggle.com/alxmamaev/flowers-recognition
-####去除错误数据
-```
+#### 去除错误数据
+```python
 import tensorflow as tf
 from glob import glob
 import os
@@ -58,13 +58,14 @@ if __name__ == '__main__':
             logging.info('Processing %d / %d.' % (i + 1, len(all_pic_list)))
 ```
 运行指令类似如下：
-```
+```txt
 python delete_broken_img.py -p 文件目录
 ```
-####图像裁剪到统一大小
+#### 图像裁剪到统一大小
 主要两个文件：
 process.py:
-```
+
+```python
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -387,7 +388,7 @@ main()
 
 ```
 tfimage.py：
-```
+```python
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -535,10 +536,10 @@ def save(image, path, replace=False):
 
 ```
 运行指令类似下面：
-```
+```txt
 python process.py --input_dir 上步处理完的文件目录 --operation resize --output_dir 自己定义一个输出文件夹
 ```
-####制作对应要求的图片对
+#### 制作对应要求的图片对
 代码在：https://github.com/hzy46/Deep-Learning-21-Examples/blob/master/chapter_10/
 第十章的代码，对应的处理代码在chapter10/pix2pix-tensorflow/tools下，需要的两个处理脚本与上面的两个脚本同名。下载下来放到对应文件夹就好。
 - 模糊处理命令
@@ -553,22 +554,22 @@ python process.py --input_dir resize后的文件夹 --b_dir 上面模糊操作�
 ```
 python split.py --dir 上面的合并后输出文件夹
 ```
-####最后的生成结果类似下面
+#### 最后的生成结果类似下面
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-ae1bfb6541e4392e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-047a775d6d633091.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
-###训练模型（pix2pix.py还是在上面GitHub地址）
+### 训练模型（pix2pix.py还是在上面GitHub地址）
 ```
 python pix2pix.py --mode train --output_dir 自定义模型输出模型路径 --max_epochs 20 --input_dir 上面输出的训练文件夹 --which_direction BtoA
 ```
-###模型迭代
+### 模型迭代
 由于我把终端给关了，就不截图了，最后云端打包下来是这样的形式：
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-3b2dabef3af9175d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
-###测试模型
+### 测试模型
 ```
 python pix2pix.py --mode test --output_dir 自定义输出文件夹 --input_dir 之前生成的验证数据集目录 --checkpoint 之前自定义的模型输出文件夹
 ```
-###结果展示
+### 结果展示
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-5cdce9bb3cce775d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 左边是模糊的，中间是模型生成的，右边是原图，效果不是特别好，之前看了看我的模型，后面收敛的不是很好，但差不多就这意思了，另外我的数据集也不太好，仅作借鉴

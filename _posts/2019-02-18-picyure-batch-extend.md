@@ -5,7 +5,7 @@ tags: [code]
 ---
 
 废话不多说，代码如下，有其他增强需求直接扩展就行：
-```
+```python
 #-*- coding: UTF-8 -*-   
 import os
 from PIL import Image
