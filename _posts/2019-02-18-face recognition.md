@@ -105,7 +105,7 @@ if __name__ == '__main__':
 ![Inked捕获_LI.jpg](https://upload-images.jianshu.io/upload_images/10780978-a94b6291b1c36de2.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 #####2.创建CNN网络：
-```
+```python
 #!/usr/bin/python
 #coding=utf-8
 ''' face detect convolution'''
@@ -246,7 +246,7 @@ if __name__ == '__main__':
   所以最后输入的图像是8 * 8 * 64，卷积层和全连接层都设置了dropout参数
 >将输入的8 * 8 * 64的多维度，进行flatten，映射到512个数据上，然后进行softmax，输出到onehot类别上，类别的输入根据采集的人员的个数来确定。
 #####3.识别人脸分类
-```
+```python
 def getfileandlabel(filedir):
     ''' get path and host paire and class index to name'''
     dictdir = dict([[name, os.path.join(filedir, name)] \
@@ -268,7 +268,7 @@ myconv.train(train_x, train_y, savepath)
 >- 需要多次训练的话，把checkpoint下面的上次训练结果删除，代码有个判断，有上一次的训练结果，就不会再训练了
 
 #####4.识别图像
-```
+```python
 def testfromcamera(chkpoint):
     camera = cv2.VideoCapture(0)
     haar = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')

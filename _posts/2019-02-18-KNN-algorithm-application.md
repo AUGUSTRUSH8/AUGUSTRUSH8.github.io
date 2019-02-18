@@ -13,7 +13,7 @@ KNN算法的一般处理流程：
   （注：这好像适用于绝大多数的数据处理挖掘过程）
   实验采用数据地址[到这里](http://cuijiahua.com/wp-content/themes/begin/inc/go.php?url=https://github.com/Jack-Cherish/Machine-Learning/blob/master/kNN/2.%E6%B5%B7%E4%BC%A6%E7%BA%A6%E4%BC%9A/datingTestSet.txt)
   实验代码如下：
-```
+```python
 from matplotlib.font_manager import FontProperties
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
@@ -158,7 +158,7 @@ if __name__ == '__main__':
 
 这个程序就能推测出海伦大致喜欢这个人的程度。
 完整程序如下：
-```
+```python
 from matplotlib.font_manager import FontProperties
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt

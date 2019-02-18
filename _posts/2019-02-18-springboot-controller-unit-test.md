@@ -5,7 +5,7 @@ tags: [code]
 ---
 
 - controller
-```
+```java
 @RestController
 public class UserController {
   @RequestMapping("/getString")
@@ -15,7 +15,7 @@ public class UserController {
 }
 ```
 - 测试类
-```
+```java
 //SpringBoot1.4版本之前用的是SpringJUnit4ClassRunner.class
 @RunWith(SpringRunner.class)
 //SpringBoot1.4版本之前用的是@SpringApplicationConfiguration(classes = Application.class)
@@ -47,7 +47,7 @@ public class UserControllerTest {
 }
 ```
 - 打印输出
-```
+```java
 MockHttpServletRequest:
       HTTP Method = GET
       Request URI = /getString
