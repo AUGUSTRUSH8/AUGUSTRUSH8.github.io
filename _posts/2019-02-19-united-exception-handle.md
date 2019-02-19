@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'SpringBoot笔记'
+title: 'Java全局异常处理'
 tags: [code]
 ---
 
