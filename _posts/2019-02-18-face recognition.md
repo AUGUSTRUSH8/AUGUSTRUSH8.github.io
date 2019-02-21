@@ -4,19 +4,20 @@ title: 'opencv+tensorflow+cnn实现人脸识别'
 tags: [code]
 ---
 
-训练**“她”**，**让“她”认识我**！
+> 训练**“她”**，**让“她”认识我**！
 
+#### 1.获取我的人脸数据
 
-#####1.获取我的人脸数据：
 注意以下有一个引用库**import cv2**
 为顺利找到依赖库函数，需要先安装库：
 
->pip install opencv-python
+> pip install opencv-python
 
 - 使用opencv打开摄像头，获取人脸
 - 对图像做一些**预处理**，如处理成64*64大小的图片
 - 获取期间，做一些明暗处理，以增加图像的噪声干扰，使得训练出来的模型具备一定的泛化能力
 - 共获取200张照片
+
 ```python
 #!/usr/bin/python
 #coding=utf-8
@@ -98,13 +99,14 @@ def getfacefromcamera(outdir):
 if __name__ == '__main__':
     name = input('please input yourename: ')
     getfacefromcamera(os.path.join('./image/trainfaces', name))
-
-
 ```
-执行完以后效果是这样的（原谅我作了处理（-——-））
-![Inked捕获_LI.jpg](https://upload-images.jianshu.io/upload_images/10780978-a94b6291b1c36de2.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
-#####2.创建CNN网络：
+执行完以后效果是这样的（原谅我作了处理（^-^））
+
+![img](https://upload-images.jianshu.io/upload_images/10780978-a94b6291b1c36de2.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp){:.center}
+
+#### 2.创建CNN网络
+
 ```python
 #!/usr/bin/python
 #coding=utf-8
@@ -239,13 +241,18 @@ if __name__ == '__main__':
     pass
 
 ```
->使用tf创建3层cnn，3 * 3的filter，输入为rgb所以：
-- 第一层的channel是3，图像宽高为64，输出32个filter，maxpooling是缩放一倍
-- 第二层的输入为32个channel，宽高是32，输出为64个filter，maxpooling是缩放一倍
-- 第三层的输入为64个channel，宽高是16，输出为64个filter，maxpooling是缩放一倍
-  所以最后输入的图像是8 * 8 * 64，卷积层和全连接层都设置了dropout参数
->将输入的8 * 8 * 64的多维度，进行flatten，映射到512个数据上，然后进行softmax，输出到onehot类别上，类别的输入根据采集的人员的个数来确定。
-#####3.识别人脸分类
+
+> 使用tf创建3层cnn，3 * 3的filter，输入为rgb所以:
+>
+> - 第一层的channel是3，图像宽高为64，输出32个filter，maxpooling是缩放一倍
+> - 第二层的输入为32个channel，宽高是32，输出为64个filter，maxpooling是缩放一倍
+> - 第三层的输入为64个channel，宽高是16，输出为64个filter，maxpooling是缩放一倍
+>   所以最后输入的图像是8 * 8 * 64，卷积层和全连接层都设置了dropout参数
+>
+> 将输入的8 * 8 * 64的多维度，进行flatten，映射到512个数据上，然后进行softmax，输出到onehot类别上，类别的输入根据采集的人员的个数来确定。
+
+#### 3.识别人脸分类
+
 ```python
 def getfileandlabel(filedir):
     ''' get path and host paire and class index to name'''
@@ -263,11 +270,13 @@ train_x, train_y = readimage(pathlabelpair)
 train_x = train_x.astype(np.float32) / 255.0
 myconv.train(train_x, train_y, savepath)
 ```
->- 将人脸从子目录内读出来，根据不同的人名，分配不同的onehot值，这里是按照遍历的顺序分配序号，然后训练，完成之后会保存checkpoint
->- 图像识别之前将像素值转换为0到1的范围
->- 需要多次训练的话，把checkpoint下面的上次训练结果删除，代码有个判断，有上一次的训练结果，就不会再训练了
 
-#####4.识别图像
+- 将人脸从子目录内读出来，根据不同的人名，分配不同的onehot值，这里是按照遍历的顺序分配序号，然后训练，完成之后会保存checkpoint
+- 图像识别之前将像素值转换为0到1的范围
+- 需要多次训练的话，把checkpoint下面的上次训练结果删除，代码有个判断，有上一次的训练结果，就不会再训练了
+
+#### 4.识别图像
+
 ```python
 def testfromcamera(chkpoint):
     camera = cv2.VideoCapture(0)
@@ -315,8 +324,10 @@ def testfromcamera(chkpoint):
     camera.release()
     cv2.destroyAllWindows()
 ```
->- 从训练的结果中恢复训练识别的参数，然后用于新的识别判断
->- 打开摄像头，采集到图片之后，进行人脸检测，检测出来之后，进行人脸识别，根据结果对应到人员名字，显示在图片中人脸的上面
-#####5.测试效果如下
-![测试结果.PNG](https://upload-images.jianshu.io/upload_images/10780978-83c81386023f7f9b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
+- 从训练的结果中恢复训练识别的参数，然后用于新的识别判断
+- 打开摄像头，采集到图片之后，进行人脸检测，检测出来之后，进行人脸识别，根据结果对应到人员名字，显示在图片中人脸的上面
+
+##### 5.测试效果如下
+
+![img](https://upload-images.jianshu.io/upload_images/10780978-83c81386023f7f9b.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/639/format/webp){:.center}

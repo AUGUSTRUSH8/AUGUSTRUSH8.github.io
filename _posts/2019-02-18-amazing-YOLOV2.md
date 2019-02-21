@@ -25,18 +25,18 @@ tags: [code]
 ![demo1.png](https://upload-images.jianshu.io/upload_images/10780978-588f44e75e42b98d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 嗯！非常有极客范的一个网站，蠢蠢欲动！
-***
-#####看看它有多厉害！
+
+##### 看看它有多厉害！
 下面是Siraj Raval的一个演示视频，我觉着可以充分说明这个YOLO有多厉害：
 >https://youtu.be/4eIBisqx9_g
 
 emmm~需要科学上网。
-#####实践之路
+##### 实践之路
 我的电脑是Win10 64的，所以我是在Windows上面实现的，以下以我的环境为例进行阐述。而且也是以训练好的模型进行阐述。训练自己的数据集将在之后作进一步的探索。网上也有很多Linux实现的，想尝试的同学也可以搜索实践一下。
 - 第一步
   按照文章**[地址](https://ganjiacheng.cn/blog/?p=300)**的描述了解一个大概的流程就好，建议不要按照博主的配置走，因为原作者已经在GitHub上面进行了更新和配置说明，跟着GitHub作者的描述走更加顺利。**[GitHub地址](https://github.com/AlexeyAB/darknet#how-to-use)**
   我的配置流程主要是按照下面的描述走的：
-***
+
 ### How to compile on Windows:
 
 1. If you have **MSVS 2015, CUDA 9.1, cuDNN 7.0 and OpenCV 3.x** (with paths: `C:\opencv_3.0\opencv\build\include` & `C:\opencv_3.0\opencv\build\x64\vc14\lib`), then start MSVS, open `build\darknet\darknet.sln`, set **x64** and **Release**, and do the: Build -> Build darknet. **NOTE:** If installing OpenCV, use OpenCV 3.4.0 or earlier. This is a bug in OpenCV 3.4.1 in the C API (see [#500](https://github.com/AlexeyAB/darknet/issues/500)).
@@ -64,7 +64,7 @@ emmm~需要科学上网。
     4.2 (right click on project) -> properties -> Linker -> General -> Additional Library Directories: `C:\opencv_2.4.13\opencv\build\x64\vc14\lib`
 ***
 其中需要注意的就是以上**1.1**的描述。基本环境编译没问题以后，就可以接着**[这篇文章](https://ganjiacheng.cn/blog/?p=300)**继续进行了。后面的流程基本没什么问题
-#####效果展示
+##### 效果展示
 下面展示一些我的测试案例吧
 程序初始化：
 ![process.PNG](https://upload-images.jianshu.io/upload_images/10780978-64af58ddc6fa020e.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}

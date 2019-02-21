@@ -4,9 +4,9 @@ title: 'python+opencv检测图片中二维码'
 tags: [code]
 ---
 
-#缘起
+### 缘起
 需要检测发票中二维码的位置，以确定图像该怎么旋转，同时也可以为提取二维码信息创造先觉条件！（万恶的需求！）
-##失败的尝试--opencv训练大法
+### 失败的尝试--opencv训练大法
 不感兴趣的可跳过不看！
 - 参考原文：https://blog.csdn.net/qq_27063119/article/details/79247266
 - 解释：原文作者是训练检测舌头。。（蜜汁尴尬），先通过opencv自带的人脸检测cascade分类器进行人脸检测然后叠加训练的舌头分类器完成舌头的检测任务。不多说。
@@ -20,14 +20,14 @@ tags: [code]
 - 测试效果
   ![image.png](https://upload-images.jianshu.io/upload_images/10780978-61084671efa81476.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 - 解释：我解释为训练样本太少，正样本少，负样本也少，原作者说负样本的数量要多于正样本很大一部分，然而我的负样本确实比较少，但我按照模式识别的思想去思考一波，感觉这非常勉强。。。
-##成功的尝试！
-###第一步：灵感的来源
+### 成功的尝试！
+#### 第一步：灵感的来源
 - 原文链接：https://www.jianshu.com/p/604774f7edb5
 - 关键
   ![image.png](https://upload-images.jianshu.io/upload_images/10780978-0aeccefafe1ec544.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
   原作者给出了这么个样式，想一想很明显可以迁移学习的。点开之！
   链接：http://blog.jobbole.com/80448/
-###第二步：消化以上实现效果的方法
+#### 第二步：消化以上实现效果的方法
 经过一番浏览以后，作者自己就给出了总体的实现思路，如下：
 - 计算x方向和y方向上的Scharr梯度幅值表示
 - 将x-gradient减去y-gradient来显示条形码区域
@@ -40,14 +40,15 @@ tags: [code]
   ![image.png](https://upload-images.jianshu.io/upload_images/10780978-14d7943d8cd578da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 可以看出，思路异常清晰！效果也不错，适合自己的需求。
-###第三步：观察自己的图片
+#### 第三步：观察自己的图片
 简单处理后是这样的
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-6d75abf592faf66b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 - 分析：要识别二维码，这个图片当中颜色区分很明显，所以首先需要把蓝色以外的其他色调给去掉！
-###第四步：写个小脚本仅显示蓝色调
+#### 第四步：写个小脚本仅显示蓝色调
 直接上代码：OnlyBlue.py
-```
+
+```python
 import numpy as np
 import cv2
 import argparse
@@ -74,20 +75,29 @@ cv2.imwrite('blue.jpg',res)
 
 cv2.waitKey(0)
 ```
+
 以上代码参考自：[传送门](http://ex2tron.top/2017/12/07/Python-OpenCV%E6%95%99%E7%A8%8B5%EF%BC%9A%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/)
 也是很好的一篇博客，感兴趣的可以看看
+
 - 解释：由于我这里是比较浅的蓝色调，因此更改了原来代码当中的上下阈值定义部分，如下：
-```
+
+```python
 # 蓝色的范围，不同光照条件下不一样，可灵活调整
 lower_blue = np.array([90, 90, 90])
 upper_blue = np.array([130, 255, 255])
 ```
+
 - 效果
-  ![image.png](https://upload-images.jianshu.io/upload_images/10780978-292916417a06242e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
-  这效果我感觉后面已经可以处理了，遂没有再去调阈值参数。
-###第五步：写检测二维码的程序脚本
+
+![img](https://upload-images.jianshu.io/upload_images/10780978-292916417a06242e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/378/format/webp)
+
+这效果我感觉后面已经可以处理了，遂没有再去调阈值参数。
+
+#### 第五步：写检测二维码的程序脚本
+
 直接上代码：
-```
+
+```python
 import numpy as np
 import argparse
 import cv2
@@ -132,16 +142,28 @@ cv2.imshow("Image", image)
 
 cv2.waitKey(0)
 ```
-####关键错误bug解决
+
+#### 关键错误bug解决
+
 原作者文中的代码运行起来有些问题，主要以下两个
+
 - 关于 Python opencv 使用中的 ValueError: too many values to unpack
-  - 解决链接：https://blog.csdn.net/jjddss/article/details/72674704 
+
+  - 解决链接：<https://blog.csdn.net/jjddss/article/details/72674704>
   - 关键部分
-    ![image.png](https://upload-images.jianshu.io/upload_images/10780978-a09876db5b609172.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
+
+  ![img](https://upload-images.jianshu.io/upload_images/10780978-a09876db5b609172.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/885/format/webp)
+
 - Why can't use `cv2.cv.BoxPoints` in OpenCV (Python)?
-  - 解决链接：[传送门](https://stackoverflow.com/questions/48056956/why-cant-use-cv2-cv-boxpoints-in-opencv-python)
-  - 关键部分
-    ![image.png](https://upload-images.jianshu.io/upload_images/10780978-b7a4c7821042800c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
-###第六步：测试效果
-![image.png](https://upload-images.jianshu.io/upload_images/10780978-7fcd721f55e444a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
+
+- 解决链接：[传送门](https://stackoverflow.com/questions/48056956/why-cant-use-cv2-cv-boxpoints-in-opencv-python)
+
+- 关键部分
+
+![img](https://upload-images.jianshu.io/upload_images/10780978-b7a4c7821042800c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/736/format/webp)
+
+### 第六步：测试效果
+
+![img](https://upload-images.jianshu.io/upload_images/10780978-7fcd721f55e444a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/380/format/webp)
+
 效果很成功！
