@@ -44,13 +44,10 @@ org.w3c.dom.Document
  对象。
 
 - `validation` 属性，是否校验 XML 。一般情况下，值为 `true` 。
-- `entityResolver` 属性，`org.xml.sax.EntityResolver` 对象，XML 实体解析器。默认情况下，对 XML 进行校验时，会基于 XML 文档开始位置指定的 DTD 文件或 XSD 文件。例如说，解析 `mybatis-config.xml` 配置文件时，会加载 `http://mybatis.org/dtd/mybatis-3-config.dtd` 这个 DTD 文件。但是，如果每个应用启动都从网络加载该 DTD 文件，势必在弱网络下体验非常下，甚至说应用部署在无网络的环境下，还会导致下载不下来，那么就会出现 XML 校验失败的情况。所以，在实际场景下，MyBatis 自定义了 EntityResolver 的实现，达到使用**本地** DTD 文件，从而避免下载**网络** DTD 文件的效果。详细解析，见 [「3. XMLMapperEntityResolver」](http://svip.iocoder.cn/MyBatis/parsing-package/#) 。
+- `entityResolver` 属性，`org.xml.sax.EntityResolver` 对象，XML 实体解析器。默认情况下，对 XML 进行校验时，会基于 XML 文档开始位置指定的 DTD 文件或 XSD 文件。例如说，解析 `mybatis-config.xml` 配置文件时，会加载 `http://mybatis.org/dtd/mybatis-3-config.dtd` 这个 DTD 文件。但是，如果每个应用启动都从网络加载该 DTD 文件，势必在弱网络下体验非常下，甚至说应用部署在无网络的环境下，还会导致下载不下来，那么就会出现 XML 校验失败的情况。所以，在实际场景下，MyBatis 自定义了 EntityResolver 的实现，达到使用**本地** DTD 文件，从而避免下载**网络** DTD 文件的效果。
 - `xpath` 属性，`javax.xml.xpath.XPath` 对象，用于查询 XML 中的节点和元素。
 - `variables` 属性，变量 Properties 对象，用来替换需要动态配置的属性值。例如：
 
-```
-
-```
 
 ```xml
 <dataSource type="POOLED">
