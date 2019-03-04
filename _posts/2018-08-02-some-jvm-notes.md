@@ -4,7 +4,7 @@ title: 'JVM闲散笔记'
 tags: [read]
 ---
 
-这篇文章记录我学习JVM当中做的一些笔记，比较杂乱，但比较有价值:wink:
+这篇文章记录我学习JVM当中做的一些笔记，比较杂乱，但比较有价值(哈哈，不要脸如我)
 
 write once，run everywhere
 

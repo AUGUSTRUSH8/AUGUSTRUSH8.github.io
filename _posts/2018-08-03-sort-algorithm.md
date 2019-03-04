@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Java实现八大排序算法'
+title: 'Java实现常用排序算法'
 tags: [read]
 ---
 
