@@ -6,8 +6,8 @@ tags: [read]
 
 **目录索引**：
 
-[TOC]
-
+* TOC
+{:toc}
 ### Java线程的创建方式
 
 - **继承 Thread 类** 

@@ -6,8 +6,8 @@ tags: [read]
 
 **目录索引**：
 
-[TOC]
-
+* TOC
+{:toc}
 ### Java锁
 
 #### 乐观锁 
