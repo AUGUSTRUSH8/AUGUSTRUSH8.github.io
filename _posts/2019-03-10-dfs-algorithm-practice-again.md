@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '走迷宫'
+title: '算法-走迷宫'
 tags: [code]
 ---
 
