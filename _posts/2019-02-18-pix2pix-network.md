@@ -58,7 +58,7 @@ if __name__ == '__main__':
             logging.info('Processing %d / %d.' % (i + 1, len(all_pic_list)))
 ```
 运行指令类似如下：
-```txt
+```bash
 python delete_broken_img.py -p 文件目录
 ```
 #### 图像裁剪到统一大小
@@ -536,22 +536,22 @@ def save(image, path, replace=False):
 
 ```
 运行指令类似下面：
-```txt
+```bash
 python process.py --input_dir 上步处理完的文件目录 --operation resize --output_dir 自己定义一个输出文件夹
 ```
 #### 制作对应要求的图片对
 代码在：https://github.com/hzy46/Deep-Learning-21-Examples/blob/master/chapter_10/
 第十章的代码，对应的处理代码在chapter10/pix2pix-tensorflow/tools下，需要的两个处理脚本与上面的两个脚本同名。下载下来放到对应文件夹就好。
 - 模糊处理命令
-```
+```bash
 python process.py --operation blur --input_dir resize后的文件目录 --output_dir 自定义一个输出文件夹
 ```
 - 原始图片和模糊图片合并在一起命令
-```
+```bash
 python process.py --input_dir resize后的文件夹 --b_dir 上面模糊操作后的输出文件夹 --operation combine --output_dir 自定义输出文件夹
 ```
 - 分为训练集和测试集（split.py同样在之前的GitHub地址）
-```
+```bash
 python split.py --dir 上面的合并后输出文件夹
 ```
 #### 最后的生成结果类似下面
@@ -559,7 +559,7 @@ python split.py --dir 上面的合并后输出文件夹
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-047a775d6d633091.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 ### 训练模型（pix2pix.py还是在上面GitHub地址）
-```
+```bash
 python pix2pix.py --mode train --output_dir 自定义模型输出模型路径 --max_epochs 20 --input_dir 上面输出的训练文件夹 --which_direction BtoA
 ```
 ### 模型迭代
@@ -567,7 +567,7 @@ python pix2pix.py --mode train --output_dir 自定义模型输出模型路径 --
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-3b2dabef3af9175d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 
 ### 测试模型
-```
+```bash
 python pix2pix.py --mode test --output_dir 自定义输出文件夹 --input_dir 之前生成的验证数据集目录 --checkpoint 之前自定义的模型输出文件夹
 ```
 ### 结果展示

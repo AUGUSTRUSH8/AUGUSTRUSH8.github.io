@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/atrandys/wireguard/master/wireguard_insta
 
 选择1 安装wireguard
 
-![](../images/wireguard1.png)
+![](../images/wireguard1.png){:.center}
 
 等待安装完成，手机可直接扫描，电脑请下载/etc/wireguard/client.conf文件到电脑。
 
@@ -46,7 +46,7 @@ wget https://raw.githubusercontent.com/atrandys/wireguard/master/wireguard_insta
 
 打开TunSafe，点击file，选择import file，选择第5步下载的client.conf文件，导入到软件中。
 
-![](../images/wireguard2.png)
+![](../images/wireguard2.png){:.center}
 
 导入后会自动连接，连接成功后，所有流量都会被代理，也就是全局代理。
 
@@ -60,10 +60,10 @@ wget https://raw.githubusercontent.com/atrandys/wireguard/master/wireguard_insta
 
 > 注意：这里可能会提示错误，原因是没有文件操作权限，去权限管理里给软件勾上存储权限即可。
 
-![](../images/wireguard3.png)
+![](../images/wireguard3.png){:.center}
 
 选择文件后如下图所示
 
-![](../images/wireguard4.png)
+![](../images/wireguard4.png){:.center}
 
 开启代理即可。
