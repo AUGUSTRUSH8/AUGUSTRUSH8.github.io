@@ -495,8 +495,8 @@ public class HuaRongDao {
     private static final int UP = 2;
     private static final int DOWN = 3;
 
-    // 定义辅助数组
-    private static final int[][] dxdy = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    // 定义辅助数组（此处有Jekyll渲染问题，运行时请解除注释）
+    //private static final int[][] dxdy = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
     // 3x3的九宫格
     private int[][] arr;
