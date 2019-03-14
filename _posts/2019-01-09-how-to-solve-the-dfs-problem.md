@@ -430,7 +430,7 @@ public class HuaRongDao {
 
 ```java
 public static void main(String[] args) {
-        int[][] arr=new int[][]{{1,2,3},{4,0,6},{7,5,8}};
+        int[][] arr=(此处有jekyll渲染问题，请读者自行在这里构造一个二维数组);
         HuaRongDao huaRongDao=new HuaRongDao(arr);
         huaRongDao.solve();
         huaRongDao.printRoute();
