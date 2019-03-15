@@ -40,7 +40,7 @@ another error：
 再去找解决方案。找到了下面这个：
 issue地址：https://github.com/eragonruan/text-detection-ctpn/issues/59
 解决方案如下（我只是部分修改，原作者是仅使用CPU执行）
-```txt
+```xml
 thanks to the author and [#43](https://github.com/eragonruan/text-detection-ctpn/issues/43) zhao181
 
 my environment is:
@@ -84,7 +84,7 @@ execute:python ./ctpn/demo.py
 
 ```
 关键改动部分
-```txt
+```xml
 step 1:make some change
 change "np.int_t " to "np.intp_t" in line 25 of the file lib\utils\cython_nms.pyx
 otherwise appear " ValueError: Buffer dtype mismatch, expected 'int_t' but got 'long long' " in step 6.
@@ -94,7 +94,7 @@ otherwise appear " ValueError: Buffer dtype mismatch, expected 'int_t' but got '
 ![image.png](https://upload-images.jianshu.io/upload_images/10780978-6f6623873805bb95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240){:.center}
 错误信息如下：
 
-```txt
+```xml
 Loading network VGGnet_test...  Restoring from checkpoints/VGGnet_fast_rcnn_iter_50000.ckpt... done
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Demo for E:\business\recognition\text_detection\text-detection-ctpn\data\demo\010.png
@@ -109,7 +109,7 @@ OSError: [Errno 22] Invalid argument: 'data/results/res_E:\\business\\recognitio
 ```
 定位这个问题花了我一点时间，各种猜想，最后再回头详细读一下这个错误信息，发现了问题所在，最后一句！参数错误！
 回去改源码：
-```txt
+```xml
  base_name = image_name.split('\\')[-1]
     with open('data\\results\\' + 'res_{}.txt'.format(base_name.split('.')[0]), 'w') as f:
 ```

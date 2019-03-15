@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '电商当中的一些“黑话”'
+title: '开发当中的一些“黑话”'
 tags: [read]
 ---
 
