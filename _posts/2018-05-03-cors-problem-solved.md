@@ -112,7 +112,7 @@ CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持�
 
 当浏览器发现发起的ajax请求是简单请求时，会在请求头中携带一个字段：`Origin`.
 
-![](../images/1530460311064.png)
+![](../images/1530460311064.png){:.center}
 
 Origin中会指出当前请求属于哪个域（协议+域名+端口）。服务会根据这个值决定是否允许其跨域。
 
@@ -209,17 +209,17 @@ Content-Type: text/plain
 
 - 项目结构
 
-![](../images/project.png)
+![](../images/project.png){:.center}
 
 - 请求流程
 
-![](../images/structure.png)
+![](../images/structure.png){:.center}
 
 前台发起访问`http://api.leyou.com/api/item/category/list?pid=0`
 
 经过nginx，判断资源定向
 
-![](../images/corsNginxConfig.png)
+![](../images/corsNginxConfig.png){:.center}
 
 于是发送给`ly-api-gateway`去处理，这个时候就需要在`ly-api-gateway`当中配置`CorsFilter`了，由于是`http://manage.leyou.com`发送到`api.leyou.com`,这就涉及到服务端对特定域下的资源请求是否通过了，我们在下面代码当中添加了允许的域：`configuration.addAllowedOrigin("http://manage.leyou.com");`
 
@@ -256,7 +256,7 @@ public class GlobalCorsConfig {
 
 紧接着网关识别出当前资源请求域是`http://manage.leyou.com`,于是给予处理，发现匹配模式`/api`,与自己配置文件吻合,于是路由到`item-service`这个微服务去处理。
 
-![](../images/corsZuulConfig.png)
+![](../images/corsZuulConfig.png){:.center}
 
 最后即是在`item-service`当中做处理并返回结果
 
@@ -295,4 +295,4 @@ public class CategoryController {
 
 这里自己犯二了，之前明显配置的是允许`http://manage.leyou.com`域的请求，而自己在启动Vue后台项目之后，使用它的默认配置请求地址` http://localhost:9001`，请求发现还是跨域的问题，检查两遍后改了请求域名就好了。
 
-![](../images/corstest.png)
+![](../images/corstest.png){:.center}
