@@ -8,15 +8,15 @@ tags: [read]
 
 首先，配置remote：
 
-![1](../images/idea/1.png){:.center}
+![1](../images/ideaimg/1.png){:.center}
 
 如上图所示，点击Edit Configurations，进入如下界面：
 
-![2](../images/idea/2.png){:.center}
+![2](../images/ideaimg/2.png){:.center}
 
 如上图所示，我们进入了Run/Debug Configurations界面，然后点击左上角的+，选择Remote：
 
-![remote](../images/idea/3.png){:.center}
+![remote](../images/ideaimg/3.png){:.center}
 
 - 标注 1：运行远程 JVM 的命令行参数；
 - 标注 2：传输方式，默认为Socket；
@@ -47,7 +47,7 @@ tags: [read]
 
 接下来，修改 Tomcat 的 bin 目录下的catalina.sh文件（如果是 Windows 系统则修改catalina.bat文件），将上述的导入语句添加到此文件中即可：
 
-![cata](../images/idea/4.png){:.center}
+![cata](../images/ideaimg/4.png){:.center}
 
 至此，IntelliJ IDEA 远程调试 Tomcat 的配置已经完成了，调试的后续步骤按正常的调试技巧进行就可以啦！
 
@@ -55,7 +55,7 @@ tags: [read]
 
 　　在这里，我们假设服务器的 IP 地址为10.11.12.39，端口号为16203，设置完成后，进入Debug模式，如果连接成功，则会出现如下提示：
 
-![5](../images/idea/5.png){:.center}
+![5](../images/ideaimg/5.png){:.center}
 
 此外，如果我们是跨多个系统进行调试，则只需要在想要调试的系统中配置Remote，打上断点，启动Debug模式，然后在服务开始的地方执行程序即可进入到我们设置的断点。而且，如果我们在本地配置Remote并关联到某个 Tomcat，在Debug模式下，所有涉及到断点所在代码的功能，都会进入我们设置的断点。
 
