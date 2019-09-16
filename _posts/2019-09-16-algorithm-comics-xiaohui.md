@@ -94,5 +94,173 @@ List<Integer> generatePacketsByLineCutting(int people, int money) {
 }
 ```
 
+### 二叉树的深度遍历和广度遍历
 
+深度遍历很明显就是一种类似于栈操作的过程，其主要有非递归和递归两种解法，递归的解法非常直观易懂，如下简单的前序遍历递归表示：
+
+```java
+/**
+ * 二叉树前序遍历
+ * @param node 二叉树节点
+ */
+   public static void preOrderTraveral(TreeNode node){
+       if(node == null){
+           return;
+       }
+       System.out.println(node.data);
+       preOrderTraveral(node.leftChild);
+       preOrderTraveral(node.rightChild);
+   }
+```
+
+那么怎么用非递归解答这样的问题呢，如下，这个需要多理解练习，看一遍不够。
+
+```java
+public static void preOrderTraveralWithStack(Node root){
+        if (root==null){
+            return;
+        }
+        Stack<Node> nodeStack = new Stack<>();
+        while (root!=null || !nodeStack.isEmpty()){
+            while (root!=null){
+                System.out.println(root.getVal());
+                nodeStack.push(root);
+                root = root.getLeft();
+            }
+            if (!nodeStack.isEmpty()){
+                Node curr = nodeStack.pop();
+                root = curr.getRight();
+            }
+        }
+    }
+```
+
+二叉树的层次遍历就没那么烧脑了，非常纯粹的队列操作，demo代码如下：
+
+```java
+public static void levelOrderTraversal(Node root){
+        Queue<Node> queue =new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            Node curr = queue.poll();
+            System.out.println(curr.getVal());
+            if (curr.getLeft()!=null){
+                queue.offer(curr.getLeft());
+            }
+            if (curr.getRight()!=null){
+                queue.offer(curr.getRight());
+            }
+        }
+    }
+```
+
+### 看看二叉堆的存储数据结构和衍生品
+
+二叉堆，本质上是一颗完全二叉树，分为两个类型：
+
+- 最大堆（任何一个父节点的值， 都大于或等于它左、 右孩子节点的值 ）
+- 最小堆（任何一个父节点的值， 都小于或等于它左、 右孩子节点的值 ）
+
+二叉堆的自我调整：
+
+- 插入节点
+- 删除节点
+- 构建二叉堆
+
+主要包括两个动作：**上浮+下沉**
+
+二叉堆虽然是一个完全二叉树， 但它的存储方式并不是链式存储， 而是顺序存储。 换句话说， **二叉堆的所有节点都存储在数组中** 
+
+衍生品？  **优先队列**
+
+其主要代码示意如下：
+
+```java
+public class PriorityQueue {
+    private int[] array;
+    private int size;
+    public PriorityQueue(){
+        array=new int[32];
+    }
+    public void enqueue(int key){
+        if (size>=array.length){
+            resize();
+        }
+        array[size++]=key;
+        upAdjust();
+    }
+    //上浮操作
+    public void upAdjust(){
+        int childIndex = size-1;
+        int parentIndex= (childIndex-1)/2;
+        while (childIndex>0){
+            int currVal=array[childIndex];
+            int parentVal= array[parentIndex];
+            if (currVal<parentVal){
+                break;
+            }
+            int temp = array[childIndex];
+            array[childIndex]= array[parentIndex];
+            array[parentIndex]=temp;
+            childIndex=parentIndex;
+            parentIndex=childIndex/2;
+
+        }
+
+    }
+    //下沉操作
+    public void downAdjust(){
+        int parentIndex = 0;
+        int childIndex =1;
+        int temp = array[parentIndex];
+        while (childIndex<size){
+            if (childIndex+1<size && array[childIndex]<array[childIndex+1]){
+                childIndex++;
+            }
+            if (temp>array[childIndex]){
+                break;
+            }
+            array[parentIndex]=array[childIndex];
+            parentIndex= childIndex;
+            childIndex=2*childIndex+1;
+        }
+        array[parentIndex]=temp;
+    }
+    public void resize(){
+        int newSize= size*2;
+        array= Arrays.copyOf(array,newSize);
+    }
+}
+```
+
+### 几个典型的排序算法
+
+事实上，冒泡排序是有很多的优化步骤的，下面是一段不错的优化后冒泡排序算法：
+
+```java
+public static void bubbleSort(int[] arr){
+    	//记录上次发生交换的位置
+        int lastExchangeIndex= 0;
+    	//记录基本有序位置，也就是后面在进行比较的时候可以停止比较的位置
+        int sortBoarder=arr.length-1;
+        for (int i = 0; i < arr.length - 1; i++) {、
+            //每次大循环的时候，先把已经有序标志置为true，这样，只有没有发生交换，将直接跳出循环
+            boolean sorted=true;
+            for (int j = 0; j < sortBoarder; j++) {
+                int temp=0;	
+                if (arr[j]>arr[j+1]){
+                    temp=arr[j];
+                    arr[j]=arr[j+1];
+                    arr[j+1]=temp;
+                    sorted=false;
+                    lastExchangeIndex=j;
+                }
+            }
+            sortBoarder = lastExchangeIndex;
+            if (sorted){
+                break;
+            }
+        }
+    }
+```
 
