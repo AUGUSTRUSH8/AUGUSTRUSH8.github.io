@@ -264,3 +264,98 @@ public static void bubbleSort(int[] arr){
     }
 ```
 
+### 求最大公约数
+
+这个是我们小学得时候就接触到的一个简单算法，那么拿到这么一个问题心中第一个直观得想法是什么呢？用暴力枚举法去试！看看代码
+
+- base?
+
+```java
+public static int getGreatestCommonDivisor(int a, int b){
+    int big = a>b ? a:b;
+    int small = a<b ? a:b;
+    if(big%small == 0){
+        return small;
+    }
+    for(int i= small/2; i>1; i--){
+        if(small%i==0 && big%i==0){
+            return i;
+        }
+    }
+    return 1;
+}
+```
+
+- better?
+
+以前我们学习过的**辗转相除法**
+
+这条算法基于一个定理： **两个正整数a和b（ a>b） ， 它们的最大公约数等于a除以b的余数c和b之间的最大公约数。** 
+
+看看代码：
+
+```java
+public static int getGreatestCommonDivisorV2(int a, int b){
+    int big = a>b ? a:b;
+    int small = a<b ? a:b;
+    if(big%small == 0){
+        return small;
+    }
+    return getGreatestCommonDivisorV2(big%small, small);
+}
+```
+
+- better better?
+
+以上代码存在什么问题？取余运算有些损耗性能，怎么改进？**更相减损术**
+
+它的原理更加简单： **两个正整数a和b（ a>b） ， 它们的最大公约数等于a-b的差值c和较小数b的最大公约数。** 例如10和25， 25减10的差是15， 那么10和25的最大公约数， 等同于10和15的最大公约数。 
+
+看看代码：
+
+```java
+public static int getGreatestCommonDivisorV3(int a, int b){
+    if(a == b){
+        return a;
+    }
+    int big = a>b ? a:b;
+    int small = a<b ? a:b;
+    return getGreatestCommonDivisorV3(big-small, small);
+}
+```
+
+- better better better?
+
+以上代码存在什么问题？如果要求（1000，1）的最大公约数，要减多少次啊？怎么改进，**辗转相除法和更相减损术相结合，同时使用位运算**
+
+规则：
+
+>当a和b均为偶数时， gcd(a,b) = 2× gcd(a/2, b/2) = 2× gcd(a>>1,b>>1)。
+>当a为偶数， b为奇数时， gcd(a,b) = gcd(a/2,b) = gcd(a>>1,b)。
+>当a为奇数， b为偶数时， gcd(a,b) = gcd(a,b/2) = gcd(a,b>>1)。
+>当a和b均为奇数时， 先利用更相减损术运算一次， gcd(a,b) = gcd(b,a-b)， 此
+>时a-b必然是偶数， 然后又可以继续进行移位运算。 
+
+代码：
+
+```java
+public static int gcd(int a, int b){
+    if(a == b){
+        return a;
+    }
+    if((a&1)==0 && (b&1)==0){
+        return gcd(a>>1, b>>1)<<1;
+    } else if((a&1)==0 && (b&1)!=0){
+        return gcd(a>>1, b);
+    } else if((a&1)!=0 && (b&1)==0){
+       return gcd(a, b>>1);
+   } else {
+       int big = a>b ? a:b;
+       int small = a<b ? a:b;
+       return gcd(big-small, small);
+   }
+}
+```
+
+在上述代码中， 判断整数奇偶性的方式是让整数和1进行与运算， 如果(a&1)==0， 则说明整数a是偶数； 如果(a&1)!=0， 则说明整数a是奇数。 
+
