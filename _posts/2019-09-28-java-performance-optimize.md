@@ -90,3 +90,174 @@ tags: [read]
 
   反应单位时间内，不同响应时间的占比率，例如50% 的响应时间是1ms以内，80%的响应时间是2ms以内，99%的响应时间是5ms以内。说明有19%是在2ms~5ms以内。
 
+### 测试性能方法策略
+
+- 微基性能测试——可以精准定位到某个模块或者某个方法的性能问题。
+- 宏基准性能测试——是一个综合测试，需要考虑到测试环境、测试场景和测试目标。
+
+### 测试需要注意的问题
+
+- 热身问题
+
+  在 Java 编程语言和环境中，.java 文件编译成为 .class 文件后，机器还是无法直接运行 .class 文件中的字节码，需要通过解释器将字节码转换成本地机器码才能运行。为了节约内存和执行效率，代码最初被执行时，解释器会率先解释执行这段代码。
+
+  随着代码被执行的次数增多，当虚拟机发现某个方法或代码块运行得特别频繁时，就会把这些代码认定为热点代码（Hot Spot Code）。为了提高热点代码的执行效率，在运行时，虚拟机将会通过即时编译器（JIT compiler，just-in-time compiler）把这些代码编译成与本地平台相关的机器码，并进行各层次的优化，然后存储在内存中，之后每次运行代码时，直接从内存中获取即可。
+
+- 性能测试结果不稳定——可以求平均
+
+- 多JVM情况下的影响——避免线上环境中一台机器部署多个 JVM 的情况。
+
+### 优化策略
+
+- 优化代码
+  - 比如某段代码占用内存不断攀升，导致内存溢出，JVM频繁发生垃圾回收，导致CPU100%以上居高不下，随后又消耗了系统的CPU资源。
+  - 对于LinkedList的遍历最好使用 Iterator （迭代器）迭代循环，而不要使用 for 循环获取元素，因为在每次循环获取元素时，都会去遍历一次 List，这样会降低读的效率。
+- 优化设计
+  - 单例模式在频繁调用创建对象的场景中，可以共享一个创建对象，这样可以减少频繁地创建和销毁对象所带来的性能消耗。
+- 优化算法
+- 时间换空间——对查询速度要求不高，而对存储空间要求比较严苛的时候
+- 空间换时间——比如MySQL的分库分表就是
+
+- 参数调优——比如JVM参数，线程池核心线程数等
+
+### 兜底策略
+
+无论优化的有多好，还是会存在承受极限，为了保证系统的稳定性，我们还需要采用一些兜底策略。
+
+- 限流
+
+- 智能化横向扩容
+
+- 提前扩容——使用于可预知的高并发访问的场景
+
+  目前很多公司使用 Docker 容器来部署应用服务。这是因为 Docker 容器是使用 Kubernetes 作为容器管理系统，而 Kubernetes 可以实现智能化横向扩容和提前扩容 Docker 服务。
+
+### 字符串优化
+
+![](../images/字符串进化.JPG)
+
+char数组的方式存在什么问题？可能会出现内存泄漏
+
+为什么char——>byte?  char 字符占 16 位，2 个字节。这个情况下，存储单字节编码内的字符（占一个字节的字符）就显得非常浪费。
+
+coder 属性默认有 0 和 1 两个值，0 代表 Latin-1（单字节编码），1 代表 UTF-16。如果 String 判断字符串只包含了 Latin-1，则 coder 属性值为 0，反之则为 1。
+
+为什么char[] 被 final+private 修饰？三点：
+
+- 保证 String 对象的安全性。假设 String 对象是可变的，那么 String 对象将可能被恶意修改。
+- 保证 hash 属性值不会频繁变更，确保了唯一性，使得类似 HashMap 容器才能实现相应的 key-value 缓存功能。
+- 可以实现字符串常量池。在 Java 中，通常有两种创建字符串对象的方式，一种是通过字符串常量的方式创建，如 String str=“abc”；另一种是字符串变量通过 new 形式的创建，如 String str = new String(“abc”)。
+  - 使用第一种方式创建字符串对象时，JVM 首先会检查该对象是否在字符串常量池中，如果在，就返回该对象引用，否则新的字符串将在常量池中被创建。这种方式可以减少同一个值的字符串对象的重复创建，节约内存。
+  - String str = new String(“abc”) 这种方式，首先在编译类文件时，"abc"常量字符串将会放入到常量结构中，在类加载时，“abc"将会在常量池中创建；其次，在调用 new 时，JVM 命令将会调用 String 的构造函数，同时引用常量池中的"abc” 字符串，在堆内存中创建一个 String 对象；最后，str 将引用 String 对象。
+
+**question：**对一个 String 对象 str 赋值“hello”，然后又让 str 值为“world”，这个时候 str 的值变成了“world”。为什么还说 String 对象不可变呢？
+
+**answer：**第一次赋值的时候，创建了一个“hello”对象，str 引用指向“hello”地址；第二次赋值的时候，又重新创建了一个对象“world”，str 引用指向了“world”，但“hello”对象依然存在于内存中。
+
+也就是说 **str 并不是对象，而只是一个对象引用**。真正的对象依然还在内存中，没有被改变。
+
+**编译器优化**
+
+源代码：
+
+```java
+String str = "abcdef";
+ 
+for(int i=0; i<1000; i++) {
+      str = str + i;
+}
+```
+
+优化后代码：
+
+```java
+String str = "abcdef";
+ 
+for(int i=0; i<1000; i++) {
+        	  str = (new StringBuilder(String.valueOf(str))).append(i).toString();
+}
+```
+
+能得出什么？即使使用 + 号作为字符串的拼接，也一样可以被编译器优化成 StringBuilder 的方式。平时做字符串拼接的时候，还是要显示地使用 String Builder 来提升系统性能。
+
+**如何使用 String.intern 节省内存？**
+
+来看个实例，twitter的用户发推的地理位置信息
+
+```java
+public class Location {
+    private String city;
+    private String region;
+    private String countryCode;
+    private double longitude;
+    private double latitude;
+} 
+```
+
+这样存的话需要约32G的内存，抽取一部分公共信息出来
+
+```java
+public class SharedLocation {
+ 
+	private String city;
+	private String region;
+	private String countryCode;
+}
+ 
+public class Location {
+ 
+	private SharedLocation sharedLocation;
+	double longitude;
+	double latitude;
+}
+```
+
+这样存储量可以减少至20G左右。如何进一步优化？
+
+```java
+SharedLocation sharedLocation = new SharedLocation();
+ 
+sharedLocation.setCity(messageInfo.getCity().intern());		sharedLocation.setCountryCode(messageInfo.getRegion().intern());
+sharedLocation.setRegion(messageInfo.getCountryCode().intern());
+ 
+Location location = new Location();
+location.set(sharedLocation);
+location.set(messageInfo.getLongitude());
+location.set(messageInfo.getLatitude());
+```
+
+
+
+在字符串常量中，默认会将对象放入常量池；在字符串变量中，对象是会创建在堆内存中，同时也会在常量池中创建一个字符串对象，复制到堆内存对象中，并返回堆内存对象引用。
+
+如果调用 intern 方法，会去查看字符串常量池中是否有等于该对象的字符串，如果没有，就在常量池中新增该对象，并返回该对象引用；如果有，就返回常量池中的字符串引用。堆内存中原有的对象由于没有引用指向它，将会通过垃圾回收器回收。
+
+**字符串的分割**
+
+**Split**() 方法使用了正则表达式实现了其强大的分割功能，而正则表达式的性能是非常不稳定的，使用不恰当会引起**回溯问题**，很可能导致 CPU 居高不下。
+
+所以我们应该慎重使用 Split() 方法，我们可以用 String.indexOf() 方法代替 Split() 方法完成字符串的分割。如果实在无法满足需求，你就在使用 Split() 方法时，对回溯问题加以重视就可以了。
+
+#### QA
+
+**Q：**String.substring 方法也不再共享 char[]，从而解决了使用该方法可能导致的内存泄漏问题。这句话怎么理解
+
+**A：** 在Java6中substring方法会调用new string构造函数，此时会复用原来的char数组，而如果我们仅仅是用substring获取一小段字符，而原本string字符串非常大的情况下，substring的对象如果一直被引用，由于substring的里面的char数组仍然指向原字符串，此时string字符串也无法回收，从而导致内存泄露。
+
+试想下，如果有大量这种通过substring获取超大字符串中一小段字符串的操作，会因为内存泄露而导致内存溢出。  
+
+**Q：**使用intern的方式怎么把握这个度？
+
+**A：**  如果对空间要求高于时间要求，且存在大量重复字符串时，可以考虑使用常量池存储。
+
+如果对查询速度要求很高，且存储字符串数量很大，重复率很低的情况下，不建议存储在常量池中。  
+
+**Q：**A.String str= "abcdef";
+B.String str= new String("abcdef");
+C.String str= new String("abcdef"). intern();
+D.String str1=str.intern();  这个方式到底什么时候用？
+
+**A：**实际编码中，我们要结合实际场景来选择创建字符串的方式，例如，在创建局部变量以及常量时，我们一般使用A的这种方式；如果我们要区别一个字符串创建两个不同的对象来使用时，会选择B；intern一般使用的比较少，例如我们平时会创建很多一样的字符串的对象时，且对象会保存在内存中，我们可以考虑使用intern方法来减少过多重复对象占用内存空间。
+
+
+
