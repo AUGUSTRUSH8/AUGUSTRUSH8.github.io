@@ -6,7 +6,7 @@ tags: [read]
 
 JVM 类加载机制分为五个部分：加载，验证，准备，解析，初始化 。下面我们就分别来看一下这五个过程。
 
-![](../images/classload1.png){:.center}
+![](http://image.augustrush8.com/images/classload1.png){:.center}
 
 ### 加载
 
@@ -93,7 +93,7 @@ public static final int v = 8080;
 
 JVM 通过双亲委派模型进行类的加载， 当然我们也可以通过继承 java.lang.ClassLoader实现自定义的类加载器。 
 
-![](../images/classload2.png){:.center}
+![](http://image.augustrush8.com/images/classload2.png){:.center}
 
 ### 双亲委派 
 
@@ -101,4 +101,4 @@ JVM 通过双亲委派模型进行类的加载， 当然我们也可以通过继
 
 采用双亲委派的一个好处是比如加载位于 rt.jar 包中的类 java.lang.Object，不管是哪个加载器加载这个类，最终都是委托给顶层的启动类加载器进行加载，这样就保证了**使用不同的类加载器最终得到的都是同样一个 Object 对象** 。
 
-![](../images/classload3.png){:.center}
+![](http://image.augustrush8.com/images/classload3.png){:.center}

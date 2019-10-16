@@ -10,7 +10,7 @@ tags: [read]
 
 这是一个微服务项目，事先已经有了依赖管理的父工程，在此不多作阐述。
 
-![](../images/uploadPro.png){:.center}
+![](http://image.augustrush8.com/images/uploadPro.png){:.center}
 
 ### 添加依赖
 
@@ -179,11 +179,11 @@ public class UploadService {
 
 这里由于未保存postman提交记录，暂且用其他图片作阐述
 
-![](../images/1526196967376.png){:.center}
+![](http://image.augustrush8.com/images/1526196967376.png){:.center}
 
 结果：
 
-![](../images/1526197027688.png){:.center}
+![](http://image.augustrush8.com/images/1526197027688.png){:.center}
 
 ### 绕过网关
 
@@ -232,7 +232,7 @@ zuul:
 
 查看页面的请求路径：
 
-![](../images/1526196446765.png){:.center}
+![](http://image.augustrush8.com/images/1526196446765.png){:.center}
 
 可以看到这个地址不对，依然是去找Zuul网关，因为我们的系统全局配置了URL地址。怎么办？
 
@@ -315,7 +315,7 @@ server {
 
 重启nginx，再次上传，发现报错了：
 
-![](../images/1526200471676.png){:.center}
+![](http://image.augustrush8.com/images/1526200471676.png){:.center}
 
 在upload-service中添加一个CorsFilter即可：
 
@@ -347,4 +347,4 @@ public class GlobalCorsConfig {
 
 再次测试
 
-![](../images/uploadTest.png){:.center}
+![](http://image.augustrush8.com/images/uploadTest.png){:.center}

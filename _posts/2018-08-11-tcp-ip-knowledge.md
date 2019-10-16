@@ -8,7 +8,7 @@ tags: [read]
 
 TCP/IP 协议不是 TCP 和 IP 这两个协议的合称，而是指因特网整个 TCP/IP 协议族。从协议分层模型方面来讲， **TCP/IP 由四个层次组成：网络接口层、网络层、传输层、应用层**。 
 
-![](../images/tcpip1.png){:.center}
+![](http://image.augustrush8.com/images/tcpip1.png){:.center}
 
 #### 网络访问层
 

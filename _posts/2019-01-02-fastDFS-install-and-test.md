@@ -305,4 +305,4 @@ tcp LISTEN 0 128 :8888 :* users:((“nginx”,7308,6),(“nginx”,7309,6))
 
 > http://120.78.237.137:8888/group1/M01/00/00/rBKowFx2JGWADBRMAACARrBGE7w855.jpg
 
-![](../images/fastdfsTest.png)
+![](http://image.augustrush8.com/images/fastdfsTest.png)

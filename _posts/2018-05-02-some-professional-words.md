@@ -47,7 +47,7 @@ SKU：Stock Keeping Unit（库存量单位），SPU商品集因具体特性不�
 
 以图为例来看：
 
-![](../images/1526085541996.png)
+![](http://image.augustrush8.com/images/1526085541996.png)
 
 - 本页的 华为Mate10 就是一个商品集（SPU）
 - 因为颜色、内存等不同，而细分出不同的Mate10，如亮黑色128G版。（SKU）

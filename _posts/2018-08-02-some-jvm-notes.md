@@ -403,11 +403,11 @@ G1垃圾回收器:。。。
 
     - **YoungGC日志解释如下**：
 
-    ![youngGC日志](../images/youngGCLog.png)
+    ![youngGC日志](http://image.augustrush8.com/images/youngGCLog.png)
 
     - **FullGC日志解释如下**：
 
-      ![fullGcLog](../images/fullGCLog.png)
+      ![fullGcLog](http://image.augustrush8.com/images/fullGCLog.png)
 
 
 

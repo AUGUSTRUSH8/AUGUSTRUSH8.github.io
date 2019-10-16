@@ -10,7 +10,7 @@ tags: [read]
 
 比如我按下一个‘b’键，会出现很多待选URL给我，第一个便是百度。那么其实是在浏览器接收到这个消息之后，会触发浏览器的自动完成机制，会在你之前访问过的搜索最匹配的相关URL，会根据特定的算法显示出来供用户选择。
 
-![](../images/url1.png){:.center}
+![](http://image.augustrush8.com/images/url1.png){:.center}
 
 ### 按下回车键之后
 
@@ -42,7 +42,7 @@ host.sld.tld.root
 3. 从"顶级域名服务器"查到"次级域名服务器"的NS记录和A记录（IP地址）
 4. 从"次级域名服务器"查出"主机名"的IP地址
 
-![](../images/url2.png){:.center}
+![](http://image.augustrush8.com/images/url2.png){:.center}
 
 以www.google.com为例，下面是一整个DNS查询过程:
 
@@ -61,7 +61,7 @@ host.sld.tld.root
 
 为什么握手一定要是三次？
 
-![](../images/url3.png){:.center}
+![](http://image.augustrush8.com/images/url3.png){:.center}
 
 - 第一次与第二次握手完成意味着：A能发送请求到B，并且B能解析A的请求
 - 第二次与第三次握手完成意味着：A能解析B的请求，并且B能发送请求到A
@@ -70,7 +70,7 @@ host.sld.tld.root
 
 短连接与长连接？
 
-![](../images/url4.png){:.center}
+![](http://image.augustrush8.com/images/url4.png){:.center}
 
 上图是一个短连接的过程演示，对于长连接，A与B完成一次读写之后，它们之间的连接并不会主动关闭，后续的读写操作会继续使用这个连接。另外，由于长连接的实现比较困难，需要要求长连接在没有数据通信时，定时发送数据包(心跳)，以维持连接状态，并且长连接对于服务器的压力也会很大，所以推送服务对于一般的开发者是非常难以实现的，这样的话就出现了很多不同的大型厂商提供的消息推送服务。
 
@@ -93,7 +93,7 @@ host.sld.tld.root
 
 其中需要提到的一点是**反向代理**，先回顾一下反向代理的原理:正向代理是将自己要访问的资源告诉Proxy，让Proxy帮你拿到数据返回给你，Proxy服务于Client，常用于翻墙和跨权限操作;反向代理也是将自己要访问的资源告诉Proxy，让Proxy帮你拿到数据返回给你，但是Proxy服务于Server，它会将请求接受完毕之后发送给某一合适的Server，这个时候Client是不知道是根据什么规则并且也不知道最后是哪一个Server服务于它的，所以叫反向代理，常用于负载均衡、安全控制.
 
-![](../images/url5.png){:.center}
+![](http://image.augustrush8.com/images/url5.png){:.center}
 
 ### 服务器的处理
 
@@ -112,7 +112,7 @@ host.sld.tld.root
 
 浏览器解释和展示 HTML 文件的方法，在 HTML 和 CSS 的标准中有详细介绍。这些标准由 Web 标准组织 W3C(World Wide Web Consortium) 维护。
 
-![](../images/url6.png){:.center}
+![](http://image.augustrush8.com/images/url6.png){:.center}
 
 ### HTML解析
 

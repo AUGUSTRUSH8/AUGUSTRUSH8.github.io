@@ -24,7 +24,7 @@ Java里面的异常在真正工作中使用还是十分普遍的。什么时候�
 
 看张图：
 
-![](../images/javaexception.png){:.center}
+![](http://image.augustrush8.com/images/javaexception.png){:.center}
 
 ### 异常封装实例
 
@@ -112,7 +112,7 @@ public class ExceptionTest {
 }
 ```
 
-![](../images/javaexception1.png){:.center}
+![](http://image.augustrush8.com/images/javaexception1.png){:.center}
 
 ### 总结
 

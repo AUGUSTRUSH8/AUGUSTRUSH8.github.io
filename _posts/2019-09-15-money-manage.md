@@ -132,7 +132,7 @@ tags: [read]
 - 拿铁因子：生活当中如买杯咖啡般可有可无的习惯性支出，例如每天中午饭后的一杯拿铁咖啡，看到商场促销就买的衣服，付了钱却不去使用的健身卡
 - 蓄水池模型：
 
-![](../images/蓄水池模型.PNG)
+![](http://image.augustrush8.com/images/蓄水池模型.PNG)
 
 - 三个池子的管理法则
 
@@ -166,22 +166,22 @@ tags: [read]
 
 - 信用卡的常见费用
 
-![](../images/信用卡的常见费用.JPG)
+![](http://image.augustrush8.com/images/信用卡的常见费用.JPG)
 
 - 社保到底保什么
 - 养老保险
 
-![](../images/养老保.JPG)
+![](http://image.augustrush8.com/images/养老保.JPG)
 
 - 医疗保险
 
-![](../images/医疗保.JPG)
+![](http://image.augustrush8.com/images/医疗保.JPG)
 
 - 失业保险
 
-![](../images/失业保险.JPG)
+![](http://image.augustrush8.com/images/失业保险.JPG)
 
 - 工资收入和税缴纳的关系
 
-![](../images/工资收入和税缴纳的关系.JPG)
+![](http://image.augustrush8.com/images/工资收入和税缴纳的关系.JPG)
 

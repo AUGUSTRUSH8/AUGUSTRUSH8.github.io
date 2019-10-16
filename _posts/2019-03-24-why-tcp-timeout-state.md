@@ -6,7 +6,7 @@ tags: [read]
 
 ### 四次挥手
 
-![](../images/timeout1.png){:.center}
+![](http://image.augustrush8.com/images/timeout1.png){:.center}
 
 - 第一次：主机1（**可以是客户端，也可以是服务器端**），设置**Sequence Number**，向主机2发送一个**FIN**报文段；此时，主机1进入**FIN_WAIT_1**状态；这表示主机1没有数据要发送给主机2了； 
 

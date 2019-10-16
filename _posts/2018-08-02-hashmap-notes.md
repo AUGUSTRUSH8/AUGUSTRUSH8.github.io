@@ -21,7 +21,7 @@ HashMap 是基于 hash的原理，我们使用 put(key, value) 存储对象到 H
 
 这里关键点在于指出，HashMap 是在 bucket 中储存键对象和值对象，作为Map.Node 。
 
-![](../images/hashmap1.png){:.center}
+![](http://image.augustrush8.com/images/hashmap1.png){:.center}
 
 以下是 HashMap 初始化简化的模拟数据结构：
 
@@ -50,7 +50,7 @@ JDK1.8下的**put过程**：
 
 当我们调用 get() 方法，HashMap 会使用键对象的 hashcode 找到 bucket 位置，找到 bucket 位置之后，会调用 keys.equals() 方法去找到链表中正确的节点，最终找到要找的值对象。
 
-![](../images/hashmap2.png){:.center}
+![](http://image.augustrush8.com/images/hashmap2.png){:.center}
 
 ### 有什么方法可以减少碰撞？
 
@@ -87,7 +87,7 @@ JDK1.8下的**put过程**：
 }
 ```
 
-![](../images/hashmap3.png){:.center}
+![](http://image.augustrush8.com/images/hashmap3.png){:.center}
 
 简单来说就是：
 
@@ -100,7 +100,7 @@ JDK1.8下的**put过程**：
 
 ### 对红黑树的见解？
 
-![](../images/hashmap4.png){:.center}
+![](http://image.augustrush8.com/images/hashmap4.png){:.center}
 
 - 每个节点非红即黑
 - 根节点总是黑色的
@@ -179,7 +179,7 @@ HashMap 的容量是有限的。当经过多次元素插入，使得 HashMap 达
 - 尝试自旋获取锁
 - 如果重试的次数达到了 MAX_SCAN_RETRIES 则改为阻塞锁获取，保证能获取成功。最后解除当前 Segment 的锁
 
-![](../images/hashmap5.png){:.center}
+![](http://image.augustrush8.com/images/hashmap5.png){:.center}
 
 ### CocurrentHashMap（1.8）
 

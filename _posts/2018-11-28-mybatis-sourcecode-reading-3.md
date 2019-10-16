@@ -6,7 +6,7 @@ tags: [read]
 
 今天分析的模块是反射模块，即`org.apache.ibatis.reflection`包
 
-![](../images/mybatis/reflection.jpg)
+![](http://image.augustrush8.com/images/mybatis/reflection.JPG)
 
 之前简介：
 

@@ -11,7 +11,7 @@ tags: [read]
 - **实体（entity）**实际的对象，带有自己的属性，可以理解成一组相关属性的容器
 - **关系（relationship）**实体之间的联系，通常可以分成"一对一"、"一对多"和"多对多"等类型。
 
-![](../images/sqljoin1.png){:.center}
+![](http://image.augustrush8.com/images/sqljoin1.png){:.center}
 
 在关系型数据库里面，每个实体有自己的一张表（table），所有属性都是这张表的字段（field），表与表之间根据关联字段"连接"（join）在一起。所以，表的连接是关系型数据库的核心问题。
 
@@ -27,19 +27,19 @@ tags: [read]
 
 内连接：
 
-![](../images/sqljoin2.png)
+![](http://image.augustrush8.com/images/sqljoin2.png)
 
 左连接：
 
-![](../images/sqljoin3.png)
+![](http://image.augustrush8.com/images/sqljoin3.png)
 
 右连接：
 
-![](../images/sqljoin4.png)
+![](http://image.augustrush8.com/images/sqljoin4.png)
 
 全连接：
 
-![](../images/sqljoin5.png)
+![](http://image.augustrush8.com/images/sqljoin5.png)
 
 **所谓"连接"，就是两张表根据关联字段，组合成一个数据集。**
 
@@ -54,7 +54,7 @@ tags: [read]
 
 四种连接的图示：
 
-![](../images/sqljoin6.png)
+![](http://image.augustrush8.com/images/sqljoin6.png)
 
 解释：上图中，表 A 的记录是 123，表 B 的记录是 ABC，颜色表示匹配关系。返回结果中，如果另一张表没有匹配的记录，则用 null 填充。
 
@@ -101,5 +101,5 @@ WHERE A.id IS null OR B.id IS null;
 
 此外，还存在一种特殊的连接，叫做"交叉连接"（cross join），指的是表 A 和表 B 不存在关联字段，这时表 A（共有 n 条记录）与表 B （共有 m 条记录）连接后，会产生一张包含 n x m 条记录的新表（见下图）
 
-![](../images/sqljoin7.png)
+![](http://image.augustrush8.com/images/sqljoin7.png)
 

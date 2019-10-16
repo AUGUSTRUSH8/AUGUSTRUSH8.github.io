@@ -45,7 +45,7 @@ tags: [read]
 
 ### 图形解释说明
 
-![img](../images/orange.png)
+![img](http://image.augustrush8.com/images/orange.png)
 
 ### 思路
 

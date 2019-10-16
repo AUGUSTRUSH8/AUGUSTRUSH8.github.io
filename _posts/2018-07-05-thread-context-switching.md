@@ -6,7 +6,7 @@ tags: [read]
 
 巧妙地利用了时间片轮转的方式, CPU 给每个任务都服务一定的时间，然后把当前任务的状态保存下来，在加载下一任务的状态后，继续服务下一任务， **任务的状态保存及再加载, 这段过程就叫做上下文切换**。时间片轮转的方式使多个任务在同一颗 CPU 上执行变成了可能。 
 
-![](../images/threadcontext.png){:.center}
+![](http://image.augustrush8.com/images/threadcontext.png){:.center}
 
 ### 进程
 

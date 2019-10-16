@@ -122,4 +122,4 @@ public class ExceptionCatch {
 
 - 统一异常处理图示
 
-![统一异常处理](../images/统一异常处理.jpg){:.center}
+![统一异常处理](http://image.augustrush8.com/images/统一异常处理.jpg){:.center}

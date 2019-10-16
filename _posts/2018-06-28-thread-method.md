@@ -8,7 +8,7 @@ tags: [read]
 
 线程的基本方法围绕着线程的状态来描述比较好理解，因此先来看一张线程状态切换图：
 
-![](../images/threadState.png){:.center}
+![](http://image.augustrush8.com/images/threadState.png){:.center}
 
 ### 线程等待（wait） 
 

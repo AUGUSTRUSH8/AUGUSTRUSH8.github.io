@@ -157,7 +157,7 @@ class ProxyFactory {
 
 测试和结果：
 
-![](../images/springAOP1.png)
+![](http://image.augustrush8.com/images/springAOP1.png)
 
 注意下面这段代码：
 
@@ -199,7 +199,7 @@ public class $Cglib_Proxy_class  extends UserDao{}
 1. 创建容器对象的时候，根据切入点表达式拦截的类，生成代理对象。
 2. 如果目标对象有实现接口，使用 JDK 代理。如果目标对象没有实现接口，则使用 CGLIB 代理。然后从容器获取代理后的对象，在运行期植入“切面”类的方法。其实从spring源码也可以得到印证
 
-![img](../images/springAOP2.png)
+![img](http://image.augustrush8.com/images/springAOP2.png)
 
 **结论**：Spring AOP 综合两种代理方式的使用前提有会如下结论：如果目标类没有实现接口，且 class 为 final 修饰的，则不能进行 Spring AOP 编程！
 
@@ -316,7 +316,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 测试代码：
 
-![img](../images/springAOP3.png)
+![img](http://image.augustrush8.com/images/springAOP3.png)
 
 到这里，我们已经全部介绍完Spring AOP。回到开篇的问题，我们拿它做什么？
 
