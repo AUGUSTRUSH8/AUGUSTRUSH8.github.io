@@ -10,14 +10,8 @@ sequence: 5
 {:.lead}
 
 
-* [阿仲的博客](https://banyaner.github.io/)
-
-* [Mac 小兔](https://perixiaowan.github.io/)
-
-* [Ray の博客](https://ray916.github.io/)
-
-* [zkli blog](https://lizekui.github.io/)
-
-* [嗨森の猫窝](http://hexenq.com/blog/)
-
-* [Li RUONAN](http://liruonan.tech/)
+<figure class="third">
+    <img src="https://hbimg.huabanimg.com/ea74ca590fd984c6596caaef2601e96a97b596083d666-68QBCi_fw658">
+    <img src="https://hbimg.huabanimg.com/1626941aa142ff2a32a466cd468adbed3be65f9e2c185-2OeoFr_fw658">
+    <img src="https://hbimg.huabanimg.com/d799c05f39aadbaee828c36f4b5fa87a2e325db024b73-wqIaHv_fw658">
+</figure>
