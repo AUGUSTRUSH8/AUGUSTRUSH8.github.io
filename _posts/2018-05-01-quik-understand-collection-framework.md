@@ -35,9 +35,9 @@ JDK1.2 引入了 Java 集合框架，包含一组数据结构。与数组不同�
 
 java.util 中的数据结构继承体系分为两大类，一类实现了 Collection 接口，一类实现了 Map 接口。
 
-![Collection](../images/collection.png)
+![Collection](http://image.augustrush8.com/images/collection.png)
 
-![](../images/collection1png.png)
+![](http://image.augustrush8.com/images/collection1png.png)
 
 集合框架核心接口及实现类：
 
@@ -52,7 +52,7 @@ SortedSet 与 SortedMap 默认的排序是自然序，可通过 Comparator 或 C
 
 在接口与具体的实现类之间还有一些抽象类，如下图：
 
-![](../images/collection3.png)
+![](http://image.augustrush8.com/images/collection3.png)
 
 这些抽象类为集合增加了很多功能：
 

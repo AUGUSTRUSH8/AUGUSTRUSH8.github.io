@@ -38,7 +38,7 @@ vscode 重新定义了编辑器，它开源、免费、Runs everywhere，是一�
 
 ## 布局
 
-![img](../images/v2-5a495945b24ec0eaa44e46bdef5589aa_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-5a495945b24ec0eaa44e46bdef5589aa_hd.jpg)
 
 
 
@@ -80,7 +80,7 @@ vscode 的用户配置分3个级别，分别是默认配置、全局配置和工
 
 怎么安装呢？
 
-![img](../images/v2-6e964e31dc14be6e6d5bd797491faff2_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-6e964e31dc14be6e6d5bd797491faff2_hd.jpg)
 
 
 
@@ -144,7 +144,7 @@ public class Mmp {
 
 **代码定位**
 
-![img](../images/v2-7a349375abbdb569dd259b7b912fd9cb_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-7a349375abbdb569dd259b7b912fd9cb_hd.jpg)
 
 按住 **ctrl** 键鼠标悬停在类上面会有类描述，点击即可进入类定义处，方法也是同样。
 
@@ -152,7 +152,7 @@ public class Mmp {
 
 **代码重构**
 
-![img](../images/v2-5669b12e0e07878b7b64195910954ee2_hd.jpg)代码重构
+![img](http://image.augustrush8.com/images/v2-5669b12e0e07878b7b64195910954ee2_hd.jpg)代码重构
 
 很强大的一个地方就是我们有时候会修改字段、方法的名称。
 
@@ -175,9 +175,9 @@ code spring-boot-helloworld
 
 > 什么？`git` 还不会
 
-![img](../images/v2-ffecf58f1a664a9e9bc3e119e5b67ad0_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-ffecf58f1a664a9e9bc3e119e5b67ad0_hd.jpg)
 
-![img](../images/v2-7ec18936dcbc7a546f73efc1d63226ec_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-7ec18936dcbc7a546f73efc1d63226ec_hd.jpg)
 
 启动调试，选择 `Java` 语言，会提示我们 `launch.json` 文件是下面这样的
 
@@ -212,7 +212,7 @@ code spring-boot-helloworld
 
 主要看 `mainClass`，只有第一次生成这个文件，确认后点击 **调试** 即可看到控制台日志
 
-![img](../images/v2-0a736a5baec8a4482578239b97d736bf_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-0a736a5baec8a4482578239b97d736bf_hd.jpg)
 
 
 
@@ -237,7 +237,7 @@ code spring-boot-helloworld
 
 试一下吧
 
-![img](../images/v2-ba08cf239441498f001ea89bddd005af_hd.jpg)
+![img](http://image.augustrush8.com/images/v2-ba08cf239441498f001ea89bddd005af_hd.jpg)
 
 
 

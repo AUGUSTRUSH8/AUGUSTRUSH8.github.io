@@ -25,14 +25,14 @@ tags: [read]
 
 不符合第一范式的实例：
 
-![](../images/databaserule1.png){:.center}
+![](http://image.augustrush8.com/images/databaserule1.png){:.center}
 
 存在问题:
 
 最后一条记录和第一条重复（不唯一，没有主键）
 联系方式字段可以再分，不是原子性的
 
-![](../images/databaserule2.png){:.center}
+![](http://image.augustrush8.com/images/databaserule2.png){:.center}
 
 关于第一范式，每一行必须唯一，也就是**每个表必须有主键**，这是数据库设计的最基本要求，**主要采用数值型或定长字符串表示**，关于列不可再分，应该根据具体的情况来决定。如联系方式，为了开发上的便利可能就采用一个字段。
 
@@ -42,17 +42,17 @@ tags: [read]
 
 实例：
 
-![](../images/databaserule3.png){:.center}
+![](http://image.augustrush8.com/images/databaserule3.png){:.center}
 
 确定主键：
 
-![](../images/databaserule4.png){:.center}
+![](http://image.augustrush8.com/images/databaserule4.png){:.center}
 
 以上虽然确定了主键，但此表会出现大量的冗余，主要涉及到的冗余字段为“学生姓名”和“教师姓名”，出现冗余的原因在于，学生姓名部分依赖了主键的一个字段学生编号，而没有依赖教师编号，而教师姓名部分依赖了主键的一个字段教师编号，这就是第二范式部分依赖。
 
 解决：
 
-![](../images/databaserule5.png){:.center}
+![](http://image.augustrush8.com/images/databaserule5.png){:.center}
 
 如果一个表是单一主键，那么它就是符合第二范式，部分依赖和主键有关系
 
@@ -62,11 +62,11 @@ tags: [read]
 
 建立在第二范式基础上的，非主键字段不能传递依赖于主键字段（不要产生传递依赖）
 
-![](../images/databaserule6.png){:.center}
+![](http://image.augustrush8.com/images/databaserule6.png){:.center}
 
 上表中，班级名称字段存在冗余，因为班级名称字段没有直接依赖于主键，班级名称字段依赖于班级编号，班级编号依赖于学生编号，这就是传递依赖，解决的办法就是将冗余字段单独拿出来建立表：
 
-![](../images/databaserule7.png){:.center}
+![](http://image.augustrush8.com/images/databaserule7.png){:.center}
 
 以上设计是典型的一对多的设计，一存储在一张表中，多存储在一张表中，在多的那张表中添加外键指向一的一方
 

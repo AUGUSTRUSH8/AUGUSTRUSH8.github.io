@@ -30,7 +30,7 @@ tags: [read]
 
 
 
- ![高并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](../images/concurrentHashmap1.png){:.center}
+ ![高并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](http://image.augustrush8.com/images/concurrentHashmap1.png){:.center}
 
 
 
@@ -69,7 +69,7 @@ HashTable和HashMap的实现原理几乎一样，差别无非是
 
 我们都知道Map一般都是**数组+链表结构**（JDK1.8该为数组+红黑树）。
 
-![高并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](../images/concurrentHashmap2.png){:.center}
+![高并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](http://image.augustrush8.com/images/concurrentHashmap2.png){:.center}
 
 **ConcurrentHashMap避免了对全局加锁改成了局部加锁操作**，这样就极大地提高了并发环境下的操作速度，由于ConcurrentHashMap在JDK1.7和1.8中的实现非常不同，接下来我们谈谈JDK在1.7和1.8中的区别。
 
@@ -85,7 +85,7 @@ ConcurrentHashMap中的**分段锁称为Segment**，它即类似于HashMap的结
 
 ConcurrentHashMap使用分段锁技术，将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问，能够实现真正的并发访问。如下图是ConcurrentHashMap的内部结构图：
 
-![并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](../images/concurrentHashmap3.png){:.center}
+![并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](http://image.augustrush8.com/images/concurrentHashmap3.png){:.center}
 
 从上面的结构我们可以了解到，ConcurrentHashMap定位一个元素的过程需要进行两次Hash操作。
 
@@ -133,7 +133,7 @@ class Node<K,V> implements Map.Entry<K,V> {
 
 在JDK8中ConcurrentHashMap的结构，由于引入了红黑树，使得ConcurrentHashMap的实现非常复杂，我们都知道，红黑树是一种性能非常好的二叉查找树，其查找性能为O（logN），但是其实现过程也非常复杂，而且可读性也非常差，DougLea的思维能力确实不是一般人能比的，早期完全采用链表结构时Map的查找时间复杂度为O（N），JDK8中ConcurrentHashMap在链表的长度大于某个阈值的时候会将链表转换成红黑树进一步提高其查找性能。
 
-![并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](../images/concurrentHashmap4.png){:.center}
+![并发编程系列：ConcurrentHashMap的实现原理(JDK1.7和JDK1.8)](http://image.augustrush8.com/images/concurrentHashmap4.png){:.center}
 
 ## 总结 
 

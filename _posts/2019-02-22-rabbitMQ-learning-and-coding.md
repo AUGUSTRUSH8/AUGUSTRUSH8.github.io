@@ -45,7 +45,7 @@ jdbc，只要遵循jms标准的应用程序之间都可以进行消息通信。�
 
 #### RabbitMQ工作原理图示
 
-![](../images/./rabbitMQ/rabbitmq.png)
+![](http://image.augustrush8.com/images/./rabbitMQ/rabbitmq.png)
 
 **组件说明**
 
@@ -377,24 +377,24 @@ public class Consumer02_subscribe_sms {
 
 - 1、Work queues
 
-![](../images/rabbitMQ/workqueue.jpg)
+![](http://image.augustrush8.com/images/rabbitMQ/workqueue.JPG)
 
 - 2、Publish/Subscribe
 
-![](../images/rabbitMQ/publishandsubscribe.jpg)
+![](http://image.augustrush8.com/images/rabbitMQ/publishandsubscribe.JPG)
 
 - 3、Routing
 
-![](../images/rabbitMQ/routing.jpg)
+![](http://image.augustrush8.com/images/rabbitMQ/routing.JPG)
 
 - 4、Topics
 
-![](../images/rabbitMQ/topics.jpg)
+![](http://image.augustrush8.com/images/rabbitMQ/topics.JPG)
 
 - 5、Header
 - 6、RPC （这个就比较适合后台有个什么耗时任务的编码需求）
 
-![](../images/rabbitMQ/rpc.jpg)
+![](http://image.augustrush8.com/images/rabbitMQ/rpc.JPG)
 
 #### springboot 的编码方式
 

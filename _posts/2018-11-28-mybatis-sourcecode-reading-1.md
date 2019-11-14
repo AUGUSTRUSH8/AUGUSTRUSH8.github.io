@@ -4,7 +4,7 @@ title: 'Mybatis源码阅读第一话'
 tags: [read]
 ---
 
-![](../images/mybatis/introduction.jpg){:.center}
+![](http://image.augustrush8.com/images/mybatis/introduction.jpg){:.center}
 
 > MyBatis SQL映射器框架使关系数据库与面向对象的应用程序的使用变得更加容易。MyBatis使用XML描述符或注释将对象与存储过程或SQL语句结合在一起。简单性是MyBatis数据映射器相对于对象关系映射工具的最大优势。
 
@@ -22,7 +22,7 @@ tags: [read]
 
 为更好的理解`AutoConstructorTest`这个类，我们先来看看`autoconstructor`这个包
 
-![](../images/mybatis/package.jpg){:.center}
+![](http://image.augustrush8.com/images/mybatis/package.JPG){:.center}
 
 ##### mybatis-config.xml
 
@@ -347,7 +347,7 @@ MyBatis 的整体架构分为三层：
 
 图示：
 
-![](../images/mybatis/mybatis整体结构.png){:.center}
+![](http://image.augustrush8.com/images/mybatis/mybatis整体结构.png){:.center}
 
 ##### 基础支持层
 
@@ -472,7 +472,7 @@ SQL 语句的执行涉及多个组件 ，其中比较重要的是 Executor、Sta
 
 示意图：
 
-![](../images/mybatis/sql执行.png){:.center}
+![](http://image.augustrush8.com/images/mybatis/sql执行.png){:.center}
 
 - 插件层
 

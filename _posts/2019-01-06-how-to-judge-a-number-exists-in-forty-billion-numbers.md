@@ -20,11 +20,11 @@ tags: [read]
 
 分8次加载？那样的话会很慢的，从磁盘加载数据是磁盘io操作，是非常慢的，每次都要加载这么大的数据，还要8次，估计找一个数的时间可以达到分钟甚至小时级了。
 
-![](../images/findnum1.png){:.center}
+![](http://image.augustrush8.com/images/findnum1.png){:.center}
 
 - 稍好一点的解决方案，分批放在8台机器上，按分布式的思路解决这个问题
 
-![](../images/findnum2.png){:.center}
+![](http://image.augustrush8.com/images/findnum2.png){:.center}
 
 8台机器分别计算，最终汇总结果，一次性读入数据，查找很快。
 
@@ -36,7 +36,7 @@ tags: [read]
 
 1代表第一个位，2代表第二个位，2的32次方代表最后一个位。40亿个数中，存在的数就在相应的位置1，其他位就是0。
 
-![](../images/findnum3.png){:.center}
+![](http://image.augustrush8.com/images/findnum3.png){:.center}
 
 比如来了一个新的数1234，就找一下第1234位，如果是1就存在，是0就不存在。
 
@@ -54,5 +54,5 @@ tags: [read]
 
 这样一来，最差情况就是2亿多的断点，也就是2亿多的结构体，每个结构体8个字节，大概16亿字节，1.6GB，在内存中可以放下。
 
-![](../images/findnum4.png){:.center}
+![](http://image.augustrush8.com/images/findnum4.png){:.center}
 

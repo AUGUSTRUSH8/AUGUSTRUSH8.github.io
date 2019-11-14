@@ -36,5 +36,5 @@ tags: [read]
 
 主要是一些终端的应用，比如说FTP（各种文件下载）， WEB（IE浏览）， QQ之类的（把它理解成我们在电脑屏幕上可以看到的东西．就是终端应用）。 
 
-![](../images/OSIModel.png){:.center}
+![](http://image.augustrush8.com/images/OSIModel.png){:.center}
 

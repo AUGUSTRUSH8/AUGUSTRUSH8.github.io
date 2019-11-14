@@ -16,15 +16,15 @@ tags: [code]
 
 - 第二种，可以用分治法，这有点类似快排中partition的操作。随机选一个数t，然后对整个数组进行partition，会得到两部分，前一部分的数都大于t，后一部分的数都小于t。
 
-![](../images/quicksort1.png){:.center}
+![](http://image.augustrush8.com/images/quicksort1.png){:.center}
 
 如果说前一部分总数大于1000个，那就继续在前一部分进行partition寻找。如果前一部分的数小于1000个，那就在后一部分再进行partition，寻找剩下的数。
 
-![](../images/quicksort2.png){:.center}
+![](http://image.augustrush8.com/images/quicksort2.png){:.center}
 
 时间复杂度分析：partition的过程，时间是o(n)。我们在进行第一次partition的时候需要花费n，第二次partition的时候，数据量减半了，所以只要花费n/2，同理第三次的时候只要花费n/4，以此类推。而n+n/2+n/4+...显然是小于2n的，所以这个方法的渐进时间只有o(n)
 
-![](../images/quicksort3.png){:.center}
+![](http://image.augustrush8.com/images/quicksort3.png){:.center}
 
 继续优化？如果计算机内存只有2个G，怎么办？
 
@@ -32,7 +32,7 @@ tags: [code]
 
 - 第三种，将数据读取后分别写入两个文件
 
-![](../images/quicksort4.png){:.center}
+![](http://image.augustrush8.com/images/quicksort4.png){:.center}
 
 由于内存放不下，只好把数据放到文件，然后再从其中一个文件读出来进行partition。
 
@@ -40,7 +40,7 @@ tags: [code]
 
 - 第四种，使用分布式的思想，将数据切分，然后在多台机器上分别计算前1000大的数，最后再把这些数汇总
 
-![](../images/quicksort5.png){:.center}
+![](http://image.augustrush8.com/images/quicksort5.png){:.center}
 
 将数据分散在多台机器上并行计算，再汇总结果。
 
@@ -48,19 +48,19 @@ tags: [code]
 
 - 第五种，使用堆排序，维护一个1000数的最小堆
 
-![](../images/quicksort6.png){:.center}
+![](http://image.augustrush8.com/images/quicksort6.png){:.center}
 
 先取前n个数，构成小顶堆，然后从文件中读取数据，并且和堆顶大小相比，如果比堆顶小，就直接丢弃，如果比堆顶大，就替换堆顶，然后调整此小顶堆。
 
-![](../images/heapsort1.png){:.center}
+![](http://image.augustrush8.com/images/heapsort1.png){:.center}
 
 下一个读取的数字比18大，把18替换下来。
 
-![](../images/heapsort2.png){:.center}
+![](http://image.augustrush8.com/images/heapsort2.png){:.center}
 
 然后对小顶堆进行调整，保持小顶堆的性质，
 
-![](../images/heapsort3.png){:.center}
+![](http://image.augustrush8.com/images/heapsort3.png){:.center}
 
 同理，44和75也进行相同的处理........所有数据处理完以后，就小顶堆内就是topN
 

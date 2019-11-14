@@ -6,7 +6,7 @@ tags: [read]
 
 说真的，我喜欢Google的一切！
 
-![](../images/google1.png){:.center}
+![](http://image.augustrush8.com/images/google1.png){:.center}
 
 > 黑客可能利用Google去搜索精准敏感的信息并占为己有；创业者可能利用Google去搜索更有用的商业信息；产品经理可以利用Google去抓住用户的痛点；销售可能利用Google去搜索客服的基本信息；
 
@@ -43,31 +43,31 @@ OR：搜索一个或者另外一个关键字。
 
 intitle主要用于查询**网页顶部显示的文本**；allintitle显示的结果更为准确。如：intitle:当乐网
 
-![](../images/google2.png){:.center}
+![](http://image.augustrush8.com/images/google2.png){:.center}
 
 **allintext**
 
 在网页内容里查询搜索项。如：allintext:"当乐熊"
 
-![](../images/google3.png){:.center}
+![](http://image.augustrush8.com/images/google3.png){:.center}
 
 **inurl与allinurl**
 
 在url中查找关键字。如：inurl:.php?id=
 
-![](../images/google4.png){:.center}
+![](http://image.augustrush8.com/images/google4.png){:.center}
 
 **site**
 
 搜索特定的站点。如：site:www.d.cn
 
-![](../images/google5.png){:.center}
+![](http://image.augustrush8.com/images/google5.png){:.center}
 
 **filetype**
 
 指定搜索的文件类型。如：filetype:pdf Java编程思想
 
-![](../images/google6.png){:.center}
+![](http://image.augustrush8.com/images/google6.png){:.center}
 
 **link**
 

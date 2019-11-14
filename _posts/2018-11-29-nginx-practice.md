@@ -6,7 +6,7 @@ tags: [read]
 
 #### 什么是Nginx
 
-![](../images/1526187409033.png){:.center}
+![](http://image.augustrush8.com/images/1526187409033.png){:.center}
 
 nginx可以作为web服务器，但更多的时候，我们把它作为网关，因为它具备网关必备的功能：
 
@@ -51,7 +51,7 @@ nginx可以当做反向代理服务器来使用：
 
 利用反向代理，就可以解决我们前面所说的端口问题，如图
 
-![1526016663674](../images/1526016663674.png){:.center}
+![1526016663674](http://image.augustrush8.com/images/1526016663674.png){:.center}
 
 ### 安装和使用
 
@@ -59,11 +59,11 @@ nginx可以当做反向代理服务器来使用：
 
 安装非常简单，把课前资料提供的nginx直接解压即可，绿色免安装，舒服！
 
-![img](../images/0C36B84E.gif){:.center} 
+![img](http://image.augustrush8.com/images/0C36B84E.gif){:.center} 
 
 解压后，目录结构：
 
-![1530384792790](../images/nginx.jpg){:.center}
+![1530384792790](http://image.augustrush8.com/images/nginx.jpg){:.center}
 
 1. conf：配置目录
 2. contrib：第三方依赖
@@ -77,7 +77,7 @@ nginx可以当做反向代理服务器来使用：
 
 示例：
 
- ![1526188831504](../images/1526188831504.png){:.center}
+ ![1526188831504](http://image.augustrush8.com/images/1526188831504.png){:.center}
 
 nginx中的每个server就是一个反向代理配置，可以有多个server
 
@@ -144,7 +144,7 @@ nginx可以通过命令行来启动，操作命令：
 
 启动过程会闪烁一下，启动成功后，任务管理器中会有两个nginx进程：
 
-![1530385404783](../images/sshot-1.png){:.center}
+![1530385404783](http://image.augustrush8.com/images/sshot-1.png){:.center}
 
 
 
@@ -152,11 +152,11 @@ nginx可以通过命令行来启动，操作命令：
 
 启动nginx，然后用域名访问后台管理系统：
 
-![1530385593052](../images/screenshot.png){:.center}
+![1530385593052](http://image.augustrush8.com/images/screenshot.png){:.center}
 
 现在实现了域名访问网站了，中间的流程是怎样的呢？
 
-![1526189945180](../images/1526189945180.png){:.center}
+![1526189945180](http://image.augustrush8.com/images/1526189945180.png){:.center}
 
 1. 浏览器准备发起请求，访问http://mamage.leyou.com，但需要进行域名解析
 

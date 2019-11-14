@@ -8,7 +8,7 @@ tags: [read]
 
 本篇文章分析MyBatis 的解析器模块，对应`org.apache.ibatis.parsing`包当中的一些东西
 
-![](../images/mybatis/parsing.jpg)
+![](http://image.augustrush8.com/images/mybatis/parsing.JPG)
 
 前一篇文章当中已经说明了它的作用，这里再来回看一下
 
@@ -343,7 +343,7 @@ public interface TokenHandler {
 
 这个接口的继承类
 
-![](../images/mybatis/tokenhandler.jpg)
+![](http://image.augustrush8.com/images/mybatis/tokenhandler.JPG)
 
 再`parsing`这个包当中我们已经在`PropertyParser`这个类中用到了`VariableTokenHandler`,`VariableTokenHandler`是`PropertyParser`的静态内部类。
 

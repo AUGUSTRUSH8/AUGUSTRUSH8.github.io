@@ -12,7 +12,7 @@ tags: [read]
 - 具有简单易用特点的 **TCP/IP 四层体系结构**则是事实上的标准。
 - 需要指出的是，**五层体系结构**虽然综合了 OSI 和 TCP/IP 的优点，但其只是为了学术学习研究而提出的，没有具体的实际意义。
 
-![](../images/net1.png){:.center}
+![](http://image.augustrush8.com/images/net1.png){:.center}
 
 ### OSI七层体系结构简述
 
@@ -103,7 +103,7 @@ IP 地址编址方案将IP地址空间划分为 A、B、C、D、E 五类，其�
 
 每个 IP 地址包括两个标识码（ID），即网络 ID 和主机 ID 。同一个物理网络上的所有主机都使用同一个网络 ID ，网络上的一个主机（包括网络上工作站，服务器和路由器等）有一个主机 ID 与其对应。A~E 类地址的特点如下：
 
-![](../images/net2.png){:.center}
+![](http://image.augustrush8.com/images/net2.png){:.center}
 
 - A 类地址：以 0 开头，第一个字节范围：0~127 。
 - B 类地址：以 10 开头，第一个字节范围：128~191 。
@@ -162,7 +162,7 @@ IP 地址编址方案将IP地址空间划分为 A、B、C、D、E 五类，其�
 - 我们大多数人使用的是第二代互联网 IPv4 技术，它的最大问题是网络地址资源有限，从理论上讲能编址 1600 万个网络、链接 40 亿台主机。而根据相关数据，全球 IPv4 的 IP 地址已经即将用完。
 - 而 IPv6 是作为 IETF 设计的用于替代现行版本 IP 协议(IPv4)的下一代 IP 协议，其 IPV6 地址长度为 12 8位，地址空间增大了 2^98 次方倍，几乎可以说是用之不竭的。所以随着 IPv4 不足，支持 IPv6 的网络势必会增长。
 
-![](../images/net3.png){:.center}
+![](http://image.augustrush8.com/images/net3.png){:.center}
 
 ### ping 的原理
 
@@ -172,7 +172,7 @@ ping 是基于 ICMP 协议工作的。ICMP 全称 Internet Control Message Proto
 
 ICMP 报文是封装在 IP 包里面的。因为传输指令的时候，肯定需要源地址和目标地址。如下图：
 
-![](../images/net4.png){:.center}
+![](http://image.augustrush8.com/images/net4.png){:.center}
 
 ### 什么是 Traceroute
 
@@ -232,7 +232,7 @@ TCP(Transmission Control Protocol)，传输控制协议，是一种面向连接�
 - 接收方：你真的要和我建立链接么？
 - 发送方：我真的要和你建立链接，成功。
 
-![](../images/net5.png){:.center}
+![](http://image.augustrush8.com/images/net5.png){:.center}
 
 - 第一次握手：Client 将标志位 `SYN=1` ，随机产生一个值 `seq=J` ，并将该数据包发送给 Server 。此时，Client 进入SYN_SENT 状态，等待 Server 确认。
 - 第二次握手：Server 收到数据包后由标志位 `SYN=1` 知道Client请求建立连接，Server 将标志位 `SYN` 和 `ACK` 都置为 1 ，`ack=J+1`，随机产生一个值 `seq=K` ，并将该数据包发送给 Client 以确认连接请求，Server 进入 `SYN_RCVD` 状态。此时，Server 进入 SYC_RCVD 状态。
@@ -293,7 +293,7 @@ TCP(Transmission Control Protocol)，传输控制协议，是一种面向连接�
 - 接收方：我也要和你断开连接！
 - 发送方：好的，断吧。
 
-![](../images/net6.png){:.center}
+![](http://image.augustrush8.com/images/net6.png){:.center}
 
 > 如下使用 Client 和 Server 的方式，仅仅是为了方便，也是可以从 Server 向 Client 发起。
 
@@ -338,7 +338,7 @@ TCP 协议是一种面向连接的、可靠的、基于字节流的运输层通�
 
 建立连接后，两台主机就可以相互传输数据了。如下图所示：
 
-![](../images/net7.png){:.center}
+![](http://image.augustrush8.com/images/net7.png){:.center}
 
 - 上图给出了主机 A 分 2 次（分 2 个数据包）向主机 B 传递 200 字节的过程。
 - 首先，主机 A 通过 1 个数据包发送 100 个字节的数据，数据包的 `Seq` 号设置为 1200 。主机 B 为了确认这一点，向主机 A 发送 `ACK` 包，并将 `Ack` 号设置为 1301 。
@@ -352,7 +352,7 @@ TCP 协议是一种面向连接的、可靠的、基于字节流的运输层通�
 
 因为各种原因，TCP 数据包可能存在丢失的情况，TCP 会进行数据重传。如下图所示：
 
-![](../images/net8.png){:.center}
+![](http://image.augustrush8.com/images/net8.png){:.center}
 
 - 上图表示通过 `Seq` 1301 数据包向主机 B 传递 100 字节的数据，但中间发生了错误，主机 B 未收到。经过一段时间后，主机 A 仍未收到对于 `Seq` 1301 的 `ACK` 确认，因此尝试重传数据。为了完成数据包的重传，TCP 套接字每次发送数据包时都会**启动定时器**，如果在一定时间内没有收到目标机器传回的 `ACK` 包，那么定时器超时，数据包会重传。上图演示的是数据包丢失的情况，也会有 `ACK` 包丢失的情况，一样会重传。
 - 重传超时时间(RTO，Retransmission Time Out)
@@ -425,7 +425,7 @@ TCP 提供一种面向连接的、可靠的字节流服务。其中，面向连�
 
 拥塞避免算法，让拥塞窗口缓慢增长，即每经过一个往返时间 RTT 就把发送方的拥塞窗口 cwnd 加 1 ，而不是加倍，这样拥塞窗口按线性规律缓慢增长。
 
-![](../images/net9.png){:.center}
+![](http://image.augustrush8.com/images/net9.png){:.center}
 
 **3）快重传**
 
@@ -433,7 +433,7 @@ TCP 提供一种面向连接的、可靠的字节流服务。其中，面向连�
 
 快重传算法规定，发送方只要一连收到三个重复确认，就应当立即重传对方尚未收到的报文段，而不必继续等待设置的重传计时器时间到期。
 
-![](../images/net10.png){:.center}
+![](http://image.augustrush8.com/images/net10.png){:.center}
 
 **4）快恢复**
 
@@ -442,7 +442,7 @@ TCP 提供一种面向连接的、可靠的字节流服务。其中，面向连�
 - 但是接下去并不执行慢开始算法：因为如果网络出现拥塞的话就不会收到好几个重复的确认，所以发送方现在认为网络可能没有出现拥塞。
 - 所以此时不执行慢开始算法，而是将 cwnd 设置为 ssthresh 的大小，然后执行拥塞避免算法。
 
-![](../images/net11.png){:.center}
+![](http://image.augustrush8.com/images/net11.png){:.center}
 
 ### UDP 是什么
 
@@ -474,7 +474,7 @@ UDP（User Data Protocol，用户数据报协议），是与 TCP 相对应的协
 
 TCP(Transmission Control Protocol)和 UDP(User Datagram Protocol) 协议属于传输层协议，它们之间的区别包括：
 
-![](../images/net12.png){:.center}
+![](http://image.augustrush8.com/images/net12.png){:.center}
 
 - TCP 是面向连接的；UDP 是无连接的。
 - TCP 是可靠的；UDP 是不可靠的。
@@ -497,7 +497,7 @@ TCP(Transmission Control Protocol)和 UDP(User Datagram Protocol) 协议属于�
 
 ### UDP 报文的格式
 
-![](../images/net13.png){:.center}
+![](http://image.augustrush8.com/images/net13.png){:.center}
 
 - 16 位 * 4 = 64 位 = 8 字节。
 

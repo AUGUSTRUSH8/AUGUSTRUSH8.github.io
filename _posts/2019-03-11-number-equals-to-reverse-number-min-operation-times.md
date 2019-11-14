@@ -43,7 +43,7 @@ tags: [code]
 
 本题其实是对双指针用法的考察，画一张图就很明白了
 
-![](../images/doubleptr.png){:.center}
+![](http://image.augustrush8.com/images/doubleptr.png){:.center}
 
 ### 代码
 

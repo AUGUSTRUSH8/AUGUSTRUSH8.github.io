@@ -43,29 +43,29 @@ HTTP 是一个无状态的协议。无状态是指客户机（Web 浏览器）�
 
 服务器关闭 TCP 连接： 一般情况下，一旦 Web 服务器向浏览器发送了请求数据，它就要关闭 TCP 连接，然后如果浏览器或者服务器在其头信息加入了这行代码 Connection:keep-alive， TCP 连接在发送后将仍然保持打开状态，于是，浏览器可以继续通过相同的连接发送请求。保持连接节省了为每个请求建立新连接所需的时间，还节约了网络带宽。 
 
-![](../images/http1.png){:.center}
+![](http://image.augustrush8.com/images/http1.png){:.center}
 
 #### HTTP响应状态
 
 - 1XX
 
-![](../images/http2.png){:.center}
+![](http://image.augustrush8.com/images/http2.png){:.center}
 
 - 2XX
 
-![](../images/http3.png){:.center}
+![](http://image.augustrush8.com/images/http3.png){:.center}
 
 - 3XX
 
-![](../images/http4.png){:.center}
+![](http://image.augustrush8.com/images/http4.png){:.center}
 
 - 4XX
 
-![](../images/http5.png){:.center}
+![](http://image.augustrush8.com/images/http5.png){:.center}
 
 - 5XX
 
-![](../images/http6.png){:.center}
+![](http://image.augustrush8.com/images/http6.png){:.center}
 
 ### 小插曲：301和302有啥区别
 
@@ -112,5 +112,5 @@ Client 在收到服务器返回的证书后，判断签发这个证书的公共�
 
 如果确认证书有效，那么生成对称秘钥并使用服务器的公共秘钥进行加密。然后发送给服务器，服务器使用它的私钥对它进行解密，这样两台计算机可以开始进行对称加密进行通信。 
 
-![](../images/http7.png){:.center}
+![](http://image.augustrush8.com/images/http7.png){:.center}
 

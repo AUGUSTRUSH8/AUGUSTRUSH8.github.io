@@ -26,7 +26,7 @@ tags: [code]
 
 SpringBoot是Spring项目中的一个子工程，与我们所熟知的Spring-framework 同属于spring的产品:
 
-![1525484756737](../images/springboot/1525484756737.png){:.center}
+![1525484756737](http://image.augustrush8.com/images/springboot/1525484756737.png){:.center}
 
 我们可以看到下面的一段介绍：
 
@@ -83,33 +83,33 @@ Spring Boot 主要目标是：
 
 我们先新建一个空的工程：
 
-![1525485888078](../images/springboot/1525485888078.png){:.center}
+![1525485888078](http://image.augustrush8.com/images/springboot/1525485888078.png){:.center}
 
 
 
 工程名为demo：
 
- ![1525485977528](../images/springboot/1525485977528.png){:.center}
+ ![1525485977528](http://image.augustrush8.com/images/springboot/1525485977528.png){:.center}
 
 新建一个model：
 
- ![1525486079389](../images/springboot/1525486079389.png){:.center}
+ ![1525486079389](http://image.augustrush8.com/images/springboot/1525486079389.png){:.center}
 
 使用maven来构建：
 
-![1525486188374](../images/springboot/1525486188374.png){:.center}
+![1525486188374](http://image.augustrush8.com/images/springboot/1525486188374.png){:.center}
 
 然后填写项目坐标：
 
- ![1525486236967](../images/springboot/1525486236967.png){:.center}
+ ![1525486236967](http://image.augustrush8.com/images/springboot/1525486236967.png){:.center}
 
 目录结构：
 
- ![1525486282929](../images/springboot/1525486282929.png){:.center}
+ ![1525486282929](http://image.augustrush8.com/images/springboot/1525486282929.png){:.center}
 
 项目结构：
 
- ![1525486435199](../images/springboot/1525486435199.png){:.center}
+ ![1525486435199](http://image.augustrush8.com/images/springboot/1525486435199.png){:.center}
 
 ## 2.2.添加依赖
 
@@ -144,7 +144,7 @@ Spring Boot 主要目标是：
 
 这个时候，我们会发现项目中多出了大量的依赖：
 
- ![1525486980765](../images/springboot/1525486980765.png){:.center}
+ ![1525486980765](http://image.augustrush8.com/images/springboot/1525486980765.png){:.center}
 
 这些都是SpringBoot根据spring-boot-starter-web这个依赖自动引入的，而且所有的版本都已经管理好，不会出现冲突。
 
@@ -196,7 +196,7 @@ Spring Boot 主要目标是：
 
 Spring Boot项目通过main函数即可启动，我们需要创建一个启动类：
 
- ![1525487293907](../images/springboot/1525487293907.png){:.center}
+ ![1525487293907](http://image.augustrush8.com/images/springboot/1525487293907.png){:.center}
 
 然后编写main函数：
 
@@ -215,7 +215,7 @@ public class Application {
 
 我们编写一个controller：
 
- ![1525487465325](../images/springboot/1525487465325.png){:.center}
+ ![1525487465325](http://image.augustrush8.com/images/springboot/1525487465325.png){:.center}
 
 代码：
 
@@ -235,11 +235,11 @@ public class HelloController {
 
 接下来，我们运行main函数，查看控制台：
 
- ![1525487613365](../images/springboot/1525487613365.png){:.center}
+ ![1525487613365](http://image.augustrush8.com/images/springboot/1525487613365.png){:.center}
 
 并且可以看到监听的端口信息：
 
- ![1525487705460](../images/springboot/1525487705460.png){:.center}
+ ![1525487705460](http://image.augustrush8.com/images/springboot/1525487705460.png){:.center}
 
 - 1）监听的端口是8080
 - 2）SpringMVC的映射路径是：/
@@ -247,7 +247,7 @@ public class HelloController {
 
 打开页面访问：http://localhost:8080/hello
 
- ![1525487820824](../images/springboot/1525487820824.png){:.center}
+ ![1525487820824](http://image.augustrush8.com/images/springboot/1525487820824.png){:.center}
 
 
 
@@ -378,7 +378,7 @@ public class HelloController {
 
 然后Debug运行并查看：
 
-![1525492528558](../images/springboot/1525492528558.png){:.center}
+![1525492528558](http://image.augustrush8.com/images/springboot/1525492528558.png){:.center}
 
 属性注入成功了！
 
@@ -413,7 +413,7 @@ public class JdbcProperties {
 
 - 需要注意的是，这里我们并没有指定属性文件的地址，所以我们需要把jdbc.properties名称改为application.properties，这是SpringBoot默认读取的属性文件名：
 
-   ![1525496325572](../images/springboot/1525496325572.png){:.center}
+   ![1525496325572](http://image.augustrush8.com/images/springboot/1525496325572.png){:.center}
 
 2）在JdbcConfig中使用这个属性：
 
@@ -467,13 +467,13 @@ public class JdbcConfig {
 
 3）测试结果：
 
-![1525492528558](../images/springboot/1525492528558.png){:.center}
+![1525492528558](http://image.augustrush8.com/images/springboot/1525492528558.png){:.center}
 
 
 
 大家会觉得这种方式似乎更麻烦了，事实上这种方式有更强大的功能，也是SpringBoot推荐的注入方式。两者对比关系：
 
-![1525496543249](../images/springboot/1525496543249.png){:.center}
+![1525496543249](http://image.augustrush8.com/images/springboot/1525496543249.png){:.center}
 
 优势：
 
@@ -483,7 +483,7 @@ public class JdbcConfig {
 
   - meta-data support：元数据支持，帮助IDE生成属性提示（写开源框架会用到）。
 
-    ​
+    
 
 ## 3.4、更优雅的注入
 
@@ -507,7 +507,7 @@ public class JdbcConfig {
 
 我们将jdbc的url改成：/heima，再次测试：
 
-![1525497513206](../images/springboot/1525497513206.png){:.center}
+![1525497513206](http://image.augustrush8.com/images/springboot/1525497513206.png){:.center}
 
 
 
@@ -517,7 +517,7 @@ public class JdbcConfig {
 
 一切魔力的开始，都是从我们的main函数来的，所以我们再次来看下启动类：
 
- ![1525488044650](../images/springboot/1525488044650.png){:.center}
+ ![1525488044650](http://image.augustrush8.com/images/springboot/1525488044650.png){:.center}
 
 我们发现特别的地方有两个：
 
@@ -530,7 +530,7 @@ public class JdbcConfig {
 
 点击进入，查看源码：
 
-![1525488226710](../images/springboot/1525488226710.png){:.center}
+![1525488226710](http://image.augustrush8.com/images/springboot/1525488226710.png){:.center}
 
 这里重点的注解有3个：
 
@@ -542,7 +542,7 @@ public class JdbcConfig {
 
 我们继续点击查看源码：
 
-![1525488518514](../images/springboot/1525488518514.png){:.center}
+![1525488518514](http://image.augustrush8.com/images/springboot/1525488518514.png){:.center}
 
 通过这段我们可以看出，在这个注解上面，又有一个`@Configuration`注解。通过上面的注释阅读我们知道：这个注解的作用就是声明当前类是一个配置类，然后Spring会自动扫描到添加了`@Configuration`的类，并且读取其中的配置信息。而`@SpringBootConfiguration`是来声明当前类是SpringBoot应用的配置类，项目中只能有一个。所以一般我们无需自己添加。
 
@@ -572,11 +572,11 @@ public class JdbcConfig {
 
 我们跟进源码：
 
- ![1525498265579](../images/springboot/1525498265579.png){:.center}
+ ![1525498265579](http://image.augustrush8.com/images/springboot/1525498265579.png){:.center}
 
 并没有看到什么特殊的地方。我们查看注释：
 
- ![1525498351385](../images/springboot/1525498351385.png){:.center}
+ ![1525498351385](http://image.augustrush8.com/images/springboot/1525498351385.png){:.center}
 
 大概的意思：
 
@@ -599,11 +599,11 @@ public class JdbcConfig {
 
 其实在我们的项目中，已经引入了一个依赖：spring-boot-autoconfigure，其中定义了大量自动配置类：
 
- ![1525499397690](../images/springboot/1525499397690.png){:.center}
+ ![1525499397690](http://image.augustrush8.com/images/springboot/1525499397690.png){:.center}
 
 还有：
 
- ![1525499426598](../images/springboot/1525499426598.png){:.center}
+ ![1525499426598](http://image.augustrush8.com/images/springboot/1525499426598.png){:.center}
 
 非常多，几乎涵盖了现在主流的开源框架，例如：
 
@@ -621,11 +621,11 @@ public class JdbcConfig {
 
 我们来看一个我们熟悉的，例如SpringMVC，查看mvc 的自动配置类：
 
- ![1525499859426](../images/springboot/1525499859426.png){:.center}
+ ![1525499859426](http://image.augustrush8.com/images/springboot/1525499859426.png){:.center}
 
 打开WebMvcAutoConfiguration：
 
-![1525500000816](../images/springboot/1525500000816.png){:.center}
+![1525500000816](http://image.augustrush8.com/images/springboot/1525500000816.png){:.center}
 
 我们看到这个类上的4个注解：
 
@@ -648,11 +648,11 @@ public class JdbcConfig {
 
 视图解析器：
 
- ![1525500405278](../images/springboot/1525500405278.png){:.center}
+ ![1525500405278](http://image.augustrush8.com/images/springboot/1525500405278.png){:.center}
 
 处理器适配器（HandlerAdapter）：
 
- ![1525500452517](../images/springboot/1525500452517.png){:.center}
+ ![1525500452517](http://image.augustrush8.com/images/springboot/1525500452517.png){:.center}
 
 还有很多，这里就不一一截图了。
 
@@ -660,19 +660,19 @@ public class JdbcConfig {
 
 另外，这些默认配置的属性来自哪里呢？
 
-![1525500697391](../images/springboot/1525500697391.png){:.center}
+![1525500697391](http://image.augustrush8.com/images/springboot/1525500697391.png){:.center}
 
 我们看到，这里通过@EnableAutoConfiguration注解引入了两个属性：WebMvcProperties和ResourceProperties。这不正是SpringBoot的属性注入玩法嘛。
 
 我们查看这两个属性类：
 
- ![1525500810914](../images/springboot/1525500810914.png){:.center}
+ ![1525500810914](http://image.augustrush8.com/images/springboot/1525500810914.png){:.center}
 
 找到了内部资源视图解析器的prefix和suffix属性。
 
 ResourceProperties中主要定义了静态资源（.js,.html,.css等)的路径：
 
- ![1525500921773](../images/springboot/1525500921773.png){:.center}
+ ![1525500921773](http://image.augustrush8.com/images/springboot/1525500921773.png){:.center}
 
 如果我们要覆盖这些默认属性，只需要在application.properties中定义与其前缀prefix和字段名一致的属性即可。
 
@@ -716,7 +716,7 @@ server.port=80
 
 重启服务后测试：
 
- ![1525511878440](../images/springboot/1525511878440.png){:.center}
+ ![1525511878440](http://image.augustrush8.com/images/springboot/1525511878440.png){:.center}
 
 ### 5.1.2.访问静态资源
 
@@ -724,7 +724,7 @@ server.port=80
 
 回顾我们上面看的源码，有一个叫做ResourceProperties的类，里面就定义了静态资源的默认查找路径：
 
- ![1525500921773](../images/springboot/1525500921773.png){:.center}
+ ![1525500921773](http://image.augustrush8.com/images/springboot/1525500921773.png){:.center}
 
 默认的静态资源路径为：
 
@@ -737,11 +737,11 @@ server.port=80
 
 我们习惯会把静态资源放在`classpath:/static/`目录下。我们创建目录，并且添加一些静态资源：
 
- ![1525512196866](../images/springboot/1525512196866.png){:.center}
+ ![1525512196866](http://image.augustrush8.com/images/springboot/1525512196866.png){:.center}
 
 重启项目后测试：
 
- ![1525512253682](../images/springboot/1525512253682.png){:.center}
+ ![1525512253682](http://image.augustrush8.com/images/springboot/1525512253682.png){:.center}
 
 
 
@@ -819,7 +819,7 @@ public class MvcConfig implements WebMvcConfigurer{
 
 结构如下：
 
- ![1525513555179](../images/springboot/1525513555179.png){:.center}
+ ![1525513555179](http://image.augustrush8.com/images/springboot/1525513555179.png){:.center}
 
 接下来运行并查看日志：
 
@@ -892,11 +892,11 @@ public class UserService {
 
 其实，在刚才引入jdbc启动器的时候，SpringBoot已经自动帮我们引入了一个连接池：
 
- ![1525514424562](../images/springboot/1525514424562.png){:.center}
+ ![1525514424562](http://image.augustrush8.com/images/springboot/1525514424562.png){:.center}
 
 HikariCP应该是目前速度最快的连接池了，我们看看它与c3p0的对比：
 
- ![1525516441005](../images/springboot/1525516441005.png){:.center}
+ ![1525516441005](http://image.augustrush8.com/images/springboot/1525516441005.png){:.center}
 
 因此，我们只需要指定连接池参数即可：
 
@@ -1022,7 +1022,7 @@ public class HelloController {
 
 我们启动项目，查看：
 
- ![1525516714124](../images/springboot/1525516714124.png){:.center}
+ ![1525516714124](http://image.augustrush8.com/images/springboot/1525516714124.png){:.center}
 
 
 
@@ -1030,7 +1030,7 @@ public class HelloController {
 
 SpringBoot并不推荐使用jsp，但是支持一些模板引擎技术：
 
-![1525517263421](../images/springboot/1525517263421.png){:.center}
+![1525517263421](http://image.augustrush8.com/images/springboot/1525517263421.png){:.center}
 
 以前大家用的比较多的是Freemarker，但是我们今天的主角是Thymeleaf！
 
@@ -1082,11 +1082,11 @@ public String all(ModelMap model) {
 
 SpringBoot会自动为Thymeleaf注册一个视图解析器：
 
- ![1525522481007](../images/springboot/1525522481007.png){:.center}
+ ![1525522481007](http://image.augustrush8.com/images/springboot/1525522481007.png){:.center}
 
 与解析JSP的InternalViewResolver类似，Thymeleaf也会根据前缀和后缀来确定模板文件的位置：
 
- ![1525522811359](../images/springboot/1525522811359.png){:.center}
+ ![1525522811359](http://image.augustrush8.com/images/springboot/1525522811359.png){:.center}
 
 - 默认前缀：`classpath:/templates/`
 - 默认后缀：`.html`
@@ -1099,7 +1099,7 @@ SpringBoot会自动为Thymeleaf注册一个视图解析器：
 
 根据上面的文档介绍，模板默认放在classpath下的templates文件夹，我们新建一个html文件放入其中：
 
- ![1525521721279](../images/springboot/1525521721279.png){:.center}
+ ![1525521721279](http://image.augustrush8.com/images/springboot/1525521721279.png){:.center}
 
 编写html模板，渲染模型中的数据：
 
@@ -1158,7 +1158,7 @@ SpringBoot会自动为Thymeleaf注册一个视图解析器：
 
 接下来，我们打开页面测试一下：
 
-![1525523911854](../images/springboot/1525523911854.png){:.center}
+![1525523911854](http://image.augustrush8.com/images/springboot/1525523911854.png){:.center}
 
 
 

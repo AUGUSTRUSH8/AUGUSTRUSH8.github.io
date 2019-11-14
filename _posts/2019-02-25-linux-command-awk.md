@@ -14,7 +14,7 @@ tags: [read]
 
 它依次处理文件的每一行，并读取里面的每一个字段。**对于日志、CSV 那样的每行格式相同的文本文件，`awk`可能是最方便的工具。**
 
-![](../images/awk1.png){:.center}
+![](http://image.augustrush8.com/images/awk1.png){:.center}
 
 `awk`其实不仅仅是工具软件，还是一种编程语言。不过，对于大多数场合它的命令行用法应该足够用了。
 

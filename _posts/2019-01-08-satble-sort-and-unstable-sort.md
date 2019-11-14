@@ -6,7 +6,7 @@ tags: [code]
 
 ### 稳定非稳定如何界定
 
-![](../images/stable1.png){:.center}
+![](http://image.augustrush8.com/images/stable1.png){:.center}
 
 原始数据，a2和a4的位置都是3。对于稳定排序来说，排序后的序列，a2一定还是在a4前面。但是对于非稳定排序来说，就不一定了，可能排完序之后，a4反而在a2的前面了。
 

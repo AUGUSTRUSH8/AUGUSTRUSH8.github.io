@@ -8,7 +8,7 @@ tags: [read]
 
 TCP是个流协议，它存在粘包问题，TCP是一个基于字节流的传输服务，"流"意味着TCP所传输的数据是没有边界的。这不同于UDP提供基于消息的传输服务，其传输的数据是有边界的。TCP的发送方无法保证对等方每次接收到的是一个完整的数据包。主机A向主机B发送两个数据包，主机B的接收情况可能是：
 
-![](../images/zhanbao1.png){:.center}
+![](http://image.augustrush8.com/images/zhanbao1.png){:.center}
 
 产生粘包问题的原因有以下几个：
 

@@ -94,7 +94,7 @@ public class FileWriterDemo {
 
 以上代码中，我们使用FileWriter向demo.txt中写入了“demo”这四个字符，我们用十六进制编辑器WinHex查看下demo.txt的内容：
 
-![](../images/bytestreamandcharstream.png)
+![](http://image.augustrush8.com/images/bytestreamandcharstream.png)
 
 从上图可以看出，我们写入的“demo”被编码为了“64 65 6D 6F”，但是我们并没有在上面的代码中显式指定编码方式，实际上，在我们没有指定时使用的是操作系统的默认字符编码方式来对我们要写入的字符进行编码。
 

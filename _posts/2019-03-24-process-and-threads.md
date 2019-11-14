@@ -16,7 +16,7 @@ tags: [read]
 
 下图显示了 4 个程序创建了 4 个进程，这 4 个进程可以并发地执行。
 
-![](../images/pt1.png){:.center}
+![](http://image.augustrush8.com/images/pt1.png){:.center}
 
 ## 2. 线程
 
@@ -26,7 +26,7 @@ tags: [read]
 
 QQ 和浏览器是两个进程，浏览器进程里面有很多线程，例如 HTTP 请求线程、事件响应线程、渲染线程等等，线程的并发执行使得在浏览器中点击一个新链接从而发起 HTTP 请求时，浏览器还可以响应用户的其它事件。
 
-![](../images/pt2.png){:.center}
+![](http://image.augustrush8.com/images/pt2.png){:.center}
 
 ## 3. 区别
 
@@ -48,7 +48,7 @@ QQ 和浏览器是两个进程，浏览器进程里面有很多线程，例如 H
 
 # 进程状态的切换
 
-![](../images/pt3.png){:.center}
+![](http://image.augustrush8.com/images/pt3.png){:.center}
 
 - 就绪状态（ready）：等待被调度
 - 运行状态（running）
@@ -96,7 +96,7 @@ QQ 和浏览器是两个进程，浏览器进程里面有很多线程，例如 H
 - 因为进程切换都要保存进程的信息并且载入新进程的信息，如果时间片太小，会导致进程切换得太频繁，在进程切换上就会花过多时间。
 - 而如果时间片过长，那么实时性就不能得到保证。
 
-![](../images/pt4.png){:.center}
+![](http://image.augustrush8.com/images/pt4.png){:.center}
 
 **2.2 优先级调度**
 
@@ -114,7 +114,7 @@ QQ 和浏览器是两个进程，浏览器进程里面有很多线程，例如 H
 
 可以将这种调度算法看成是时间片轮转调度算法和优先级调度算法的结合。
 
-![](../images/pt5.png){:.center}
+![](http://image.augustrush8.com/images/pt5.png){:.center}
 
 ## 3. 实时系统
 
@@ -431,7 +431,7 @@ void reader()
 
 ## 2. 哲学家进餐问题
 
-![](../images/pt6.png){:.center}
+![](http://image.augustrush8.com/images/pt6.png){:.center}
 
 五个哲学家围着一张圆桌，每个哲学家面前放着食物。哲学家的生活有两种交替活动：吃饭以及思考。当一个哲学家吃饭时，需要先拿起自己左右两边的两根筷子，并且一次只能拿起一根筷子。
 
@@ -525,7 +525,7 @@ int pipe(int fd[2]);
 - 只支持半双工通信（单向交替传输）；
 - 只能在父子进程中使用。
 
-![](../images/pt7.png){:.center}
+![](http://image.augustrush8.com/images/pt7.png){:.center}
 
 ## 2. FIFO
 
@@ -539,7 +539,7 @@ int mkfifoat(int fd, const char *path, mode_t mode);
 
 FIFO 常用于客户-服务器应用程序中，FIFO 用作汇聚点，在客户进程和服务器进程之间传递数据。
 
-![](../images/pt8.png){:.center}
+![](http://image.augustrush8.com/images/pt8.png){:.center}
 
 ## 3. 消息队列
 

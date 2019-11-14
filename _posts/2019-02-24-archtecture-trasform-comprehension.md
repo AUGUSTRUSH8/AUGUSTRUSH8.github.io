@@ -10,7 +10,7 @@ tags: [read]
 
 先来看一张简单的图示
 
-![](../images/ArchSimple.png)
+![](http://image.augustrush8.com/images/ArchSimple.png)
 
 从底向上大体可分为
 
@@ -22,7 +22,7 @@ tags: [read]
 
 ### 前后端分离
 
-![](../images/ArchSimple1.png)
+![](http://image.augustrush8.com/images/ArchSimple1.png)
 
 那么很简单，我们进一步分离以后，把控制器层（或者说专门提供Api接口的层）和视图分离，这样也就进一步解除了视图绑定的耦合。
 
@@ -41,13 +41,13 @@ tags: [read]
 
 ### 集群环境部署
 
-![](../images/Archcluster.png)
+![](http://image.augustrush8.com/images/Archcluster.png)
 
 既然这一个机器的处理能力不够，那我们多部署几个（集群的方式，上面忘画了一个请求分发的示意图，不要介意），解决这种大家办事都去找一个人的问题。可是请求虽然都分开了，我们每台机器部署的服务其实都是一样的，而且都仍旧去访问请求一个数据库，数据库存储的问题依旧没有解决。那么很自然的，我们会根据业务的区分度进行垂直拆分了。
 
 ### 微服务架构
 
-![](../images/archdistributer.png)
+![](http://image.augustrush8.com/images/archdistributer.png)
 
 图画的有点丑，哈哈！但意思很明白，就是按照不同的业务粒度进行拆分。那么现在又出现了一个问题，按照什么进行拆分呢？
 

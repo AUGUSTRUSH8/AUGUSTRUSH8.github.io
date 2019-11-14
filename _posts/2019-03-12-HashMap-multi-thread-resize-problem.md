@@ -54,11 +54,11 @@ public class TestHashMapResize extends Thread{
 
 看看控制台：
 
-![](../images/hashmapresize/resize1.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize1.png){:.center}
 
 红色方框一直亮着，说明代码死循环了。死循环问题的定位一般都是通过**jps+jstack**查看堆栈信息来定位的：
 
-![](../images/hashmapresize/resize2.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize2.png){:.center}
 
 看到Thread-0处于RUNNABLE，而从堆栈信息上应该可以看出，这次的死循环是由于Thread-0对HashMap进行扩容而引起的。
 
@@ -68,7 +68,7 @@ HashMap的扩容为什么会引起死循环？
 
 先来看一下HashMap一次正常的扩容过程。简单一点看吧，假设我有三个经过了最终rehash得到的数字，分别是5 7 3，HashMap的table也只有2，那么HashMap把这三个数字put进数据结构了之后应该是这么一个样子的：
 
-![](../images/hashmapresize/resize3.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize3.png){:.center}
 
 看一下resize的代码：
 
@@ -131,7 +131,7 @@ void transfer(Entry[] newTable) {
 
 这样就完成了一次扩容，用图表示是这样的：
 
-![](../images/hashmapresize/resize4.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize4.png){:.center}
 
 HashMap的一次正常扩容就是这样的
 
@@ -161,15 +161,15 @@ void transfer(Entry[] newTable) {
 
 两个线程，线程A和线程B。假设`Entry<K,V> next = e.next;`执行完毕，线程A切换，那么对于线程A而言，是这样的：
 
-![](../images/hashmapresize/resize5.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize5.png){:.center}
 
 CPU切换到线程B运行，线程B将整个扩容过程全部执行完毕，于是就形成了：
 
-![](../images/hashmapresize/resize6.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize6.png){:.center}
 
 此时CPU切换到线程A上，执行do...while...循环，首先放置3这个Entry：
 
-![](../images/hashmapresize/resize7.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize7.png){:.center}
 
 **由于线程B已经执行完毕，因此根据Java内存模型（JMM），现在table里面所有的Entry都是最新的，也就是7的next是3，3的next是null**。3放置到table[3]的位置上了，下面的步骤是：
 
@@ -183,7 +183,7 @@ CPU切换到线程B运行，线程B将整个扩容过程全部执行完毕，于
 
 所以，用图表示就是：
 
-![](../images/hashmapresize/resize8.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize8.png){:.center}
 
 放置完7之后，继续运行代码：
 
@@ -197,7 +197,7 @@ CPU切换到线程B运行，线程B将整个扩容过程全部执行完毕，于
 
 把3移到table[3]上去，死循环就出来了：
 
-![](../images/hashmapresize/resize9.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize9.png){:.center}
 
 3移到table[3]上去了，3的next指向7，由于原先7的next指向3，这样就成了一个死循环。
 
@@ -211,19 +211,19 @@ CPU切换到线程B运行，线程B将整个扩容过程全部执行完毕，于
 
 5 7 3这个数字可不巧，扩容前相邻两个Entry被分配到扩容后同样的table位置是很正常的。关键的是，即使这种异常场景发生的可能性再低，只要发生一次，那么你的系统就部分甚至全部不可用了----除了重启系统没有任何办法。所以，这种可能会发生的异常场景必须提前扼杀。
 
-![](../images/hashmapresize/resize10.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize10.png){:.center}
 
 这是扩容前数据结构中的内容，扩容之后正常的应该是：
 
-![](../images/hashmapresize/resize11.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize11.png){:.center}
 
 现在在多线程下遇到问题了，某个线程先放7：
 
-![](../images/hashmapresize/resize12.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize12.png){:.center}
 
 再接着放5：
 
-![](../images/hashmapresize/resize13.png){:.center}
+![](http://image.augustrush8.com/images/hashmapresize/resize13.png){:.center}
 
 由于5的next此时为null，因此扩容操作结束，3 5 7造成的结果就是元素丢失。
 

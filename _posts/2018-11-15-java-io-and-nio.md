@@ -49,13 +49,13 @@ socket 真正有读写事件发生才会占用资源来进行实际的读写操�
 
 ### Java IO包
 
-![](../images/javaio.png){:.center}
+![](http://image.augustrush8.com/images/javaio.png){:.center}
 
 ### JAVA NIO 
 
 NIO 主要有三大核心部分： **Channel(通道)， Buffer(缓冲区), Selector**。传统 IO 基于字节流和字符流进行操作， **而 NIO 基于 Channel 和 Buffer(缓冲区)进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中**。 Selector(选择区)用于监听多个通道的事件（比如：连接打开，数据到达）。因此，单个线程可以监听多个数据通道。  
 
-![](../images/javaio1.png){:.center}
+![](http://image.augustrush8.com/images/javaio1.png){:.center}
 
 **NIO 和传统 IO 之间第一个最大的区别是， IO 是面向流的， NIO 是面向缓冲区的**。 
 
@@ -84,7 +84,7 @@ NIO 中的 Channel 的主要实现有：
 
 Buffer，故名思意， **缓冲区，实际上是一个容器，是一个连续数组**。 Channel 提供从文件、网络读取数据的渠道，但是读取或写入的数据都必须经由 Buffer。 
 
-![](../images/javaio2.png){:.center}
+![](http://image.augustrush8.com/images/javaio2.png){:.center}
 
 上面的图描述了从一个客户端向服务端发送数据，然后服务端接收数据的过程。客户端发送数据时，必须先将数据存入 Buffer 中，然后将 Buffer 中的内容写入通道。服务端这边接收数据必须通过 Channel 将数据读入到 Buffer 中，然后再从 Buffer 中取出数据来处理。
 

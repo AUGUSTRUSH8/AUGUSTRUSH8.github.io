@@ -16,15 +16,15 @@ tags: [code]
 
 可以用一个变量来保存最小值，在push的时候更新这个最小值。
 
-![](../images/stack1.png){:.center}
+![](http://image.augustrush8.com/images/stack1.png){:.center}
 
 问题：最小值被pop出去了怎么办？
 
-![](../images/stack2.png){:.center}
+![](http://image.augustrush8.com/images/stack2.png){:.center}
 
 那就只能再遍历一遍整个栈，再更新最小值了。
 
-![](../images/stack3.png){:.center}
+![](http://image.augustrush8.com/images/stack3.png){:.center}
 
 时间复杂度、空间复杂度：pop操作时间O(n)，其他操作时间都是O(1)，空间O(1)。
 
@@ -34,7 +34,7 @@ tags: [code]
 
 那就空间换时间了，创建一个辅助栈，辅助栈中保存最小值。
 
-![](../images/stack4.png){:.center}
+![](http://image.augustrush8.com/images/stack4.png){:.center}
 
 辅助栈每次push当前的最小值，pop时，两栈同时pop。
 
@@ -113,19 +113,19 @@ public class MinStack {
 
 想象一下，如果依次入栈2 1 2 3 4 5 6，辅助栈当中会存什么？
 
-![](../images/stack5.png){:.center}
+![](http://image.augustrush8.com/images/stack5.png){:.center}
 
 可以看到，辅助栈后面全是1，这一块可以再优化一下
 
 我们可以在push的时候判断一下，如果比最小值还大，就不加入辅助栈。pop的时候，如果不是最小值，辅助栈就不出栈。这样一来，辅助栈就不会有大量重复元素了。
 
-![](../images/stack6.png){:.center}
+![](http://image.augustrush8.com/images/stack6.png){:.center}
 
 push的时候进行判断，如果数值比当前最小值大，就不动mins栈了，这样mins栈中不会保存大量冗余的最小值。pop的时候同样进行判断，只有pop出的数就是当前最小值的时候，才让mins出栈。
 
 **思考**：如果再来一个和最小值相等的数要入栈，要不要添加到辅助栈。
 
-![](../images/stack7.png){:.center}
+![](http://image.augustrush8.com/images/stack7.png){:.center}
 
 如果push一个和最小值相等的元素，还是要入mins栈。不然当这个最小值pop出去的时候。data中还会有一个最小值元素，而mins中却已经没有最小值元素了。
 
@@ -133,7 +133,7 @@ push的时候进行判断，如果数值比当前最小值大，就不动mins栈
 
 怎么解决？如果辅助栈中存的不是最小值，而是最小值的索引就好了。
 
-![](../images/stack8.png){:.center}
+![](http://image.augustrush8.com/images/stack8.png){:.center}
 
 mins栈中改存最小值在data数组中的索引。这样一来，当push了与最小值相同元素的时候，就不需要动mins栈了。而pop的时候，pop出的元素的索引如果不是mins栈顶元素，mins也不出栈。同时，获取最小值的时候，需要拿到mins栈顶元素作为索引，再去data数组中找到相应的数作为最小值。
 

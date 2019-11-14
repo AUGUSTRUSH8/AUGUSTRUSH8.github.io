@@ -134,7 +134,7 @@ tags: [read]
 
 ### 字符串优化
 
-![](../images/字符串进化.JPG)
+![](http://image.augustrush8.com/images/字符串进化.JPG)
 
 char数组的方式存在什么问题？可能会出现内存泄漏
 

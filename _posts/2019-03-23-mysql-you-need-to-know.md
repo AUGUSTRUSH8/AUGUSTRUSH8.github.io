@@ -186,7 +186,7 @@ B-Tree 结构的数据可以让系统高效的找到数据所在的磁盘块。�
 
 B-Tree 中的每个节点根据实际情况可以包含大量的关键字信息和分支，如下图所示为一个 3 阶的 B-Tree：
 
-![](../images/mysql1.png){:.center}
+![](http://image.augustrush8.com/images/mysql1.png){:.center}
 
 - 每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的 key 和三个指向子树根节点的 point ，point 存储的是子节点所在磁盘块的地址。两个 key 划分成的三个范围域，对应三个 point 指向的子树的数据的范围域。
 - 以根节点为例，key 为 17 和 35 ，P1 指针指向的子树的数据范围为小于 17 ，P2 指针指向的子树的数据范围为 [17~35] ，P3 指针指向的子树的数据范围为大于 35 。
@@ -218,7 +218,7 @@ B+Tree 相对于 B-Tree 有几点不同：
 
 将上一节中的 B-Tree 优化，由于 B+Tree 的非叶子节点只存储键值信息，假设每个磁盘块能存储 4 个键值及指针信息，则变成 B+Tree 后其结构如下图所示：
 
-![](../images/mysql2.png){:.center}
+![](http://image.augustrush8.com/images/mysql2.png){:.center}
 
 - 通常在 B+Tree 上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对 B+Tree 进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。
 
@@ -282,7 +282,7 @@ MyISAM 索引的实现，和 InnoDB 索引的实现是一样使用 B+Tree ，**�
 
 MyISAM引 擎使用B+Tree作为索引结构，**叶节点的data域存放的是数据记录的地址**。下图是MyISAM主键索引的原理图：
 
-![](../images/mysql3.png){:.center}
+![](http://image.augustrush8.com/images/mysql3.png){:.center}
 
 - 这里设表一共有三列，假设我们以 Col1 为主键，上图是一个 MyISAM 表的主索引（Primary key）示意。可以看出 MyISAM 的索引文件仅仅保存数据记录的地址。
 
@@ -290,7 +290,7 @@ MyISAM引 擎使用B+Tree作为索引结构，**叶节点的data域存放的是�
 
 **在 MyISAM 中，主索引和辅助索引在结构上没有任何区别，只是主索引要求 key 是唯一的，而辅助索引的 key 可以重复。**如果我们在 Col2 上建立一个辅助索引，则此索引的结构如下图所示：
 
-![](../images/mysql4.png){:.center}
+![](http://image.augustrush8.com/images/mysql4.png){:.center}
 
 - 同样也是一颗 B+Tree ，data 域保存数据记录的地址。因此，**MyISAM 中索引检索的算法为首先按照 B+Tree 搜索算法搜索索引，如果指定的 Key 存在，则取出其 data 域的值，然后以 data 域的值为地址，读取相应数据记录。**
 
@@ -316,7 +316,7 @@ MyISAM 的索引方式也叫做“**非聚集**”的，之所以这么称呼是
 
 **事务的特性指的是？**
 
-![](../images/mysql5.png){:.center}
+![](http://image.augustrush8.com/images/mysql5.png){:.center}
 
 1. **原子性** Atomicity ：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被恢复（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。
 2. **一致性** Consistency ：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设[约束](https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7)、[触发器](https://zh.wikipedia.org/wiki/%E8%A7%A6%E5%8F%91%E5%99%A8_(%E6%95%B0%E6%8D%AE%E5%BA%93))、[级联回滚](https://zh.wikipedia.org/w/index.php?title=%E7%BA%A7%E8%81%94%E5%9B%9E%E6%BB%9A&action=edit&redlink=1)等。

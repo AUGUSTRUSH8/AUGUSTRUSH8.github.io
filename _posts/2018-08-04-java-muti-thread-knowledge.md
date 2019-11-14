@@ -162,7 +162,7 @@ Executors.newSingleThreadExecutor()返回一个线程池（这个线程池只有
 
 ​	3.**调用 stop** ：直接调用该线程的 stop()方法来结束该线程—该方法通常容易导致死锁，不推荐使用。 
 
-![](../images/multiThreadState.png)
+![](http://image.augustrush8.com/images/multiThreadState.png)
 
 ### 终止线程的4种方式
 

@@ -8,11 +8,11 @@ tags: [code]
 
 有1到8八个数字，放在一个3x3的九宫格里面，那么会留下一个空格。
 
-![](../images/hua1.png){:.center}
+![](http://image.augustrush8.com/images/hua1.png){:.center}
 
 空格可以和上下左右的数字进行交换，你可以认为空格在移动。如果移动成
 
-![](../images/hua2.png){:.center}
+![](http://image.augustrush8.com/images/hua2.png){:.center}
 
 则游戏胜利。
 
@@ -113,17 +113,17 @@ public class HuaRongDao {
 
 对于以下迷宫，应该怎么走？
 
-![](../images/hua3.png){:.center}
+![](http://image.augustrush8.com/images/hua3.png){:.center}
 
 很显然，人眼一看就大概知道怎么走。
 
-![](../images/hua4.png){:.center}
+![](http://image.augustrush8.com/images/hua4.png){:.center}
 
 计算机应该怎么走呢？
 
 每个点都可以按照右下左上的方向来进行尝试，如果是墙壁，就换一个方向，如果可以走，就往前走到下一点，然后再接着尝试。直到到达终点为止。
 
-![](../images/hua5.png){:.center}
+![](http://image.augustrush8.com/images/hua5.png){:.center}
 
 四个方向顺序尝试，如果能够走通，就继续往下走，接着尝试下一点。
 
@@ -131,47 +131,47 @@ public class HuaRongDao {
 
 前面已经走过两步了，下面看看第三步怎么走：
 
-![](../images/hua6.png){:.center}
+![](http://image.augustrush8.com/images/hua6.png){:.center}
 
 搜索的时候，不再搜索一些明显不对的方向，这在搜索算法当中叫做剪枝。剪掉没用的分支，提高效率
 
 再看一个迷宫：
 
-![](../images/hua7.png){:.center}
+![](http://image.augustrush8.com/images/hua7.png){:.center}
 
 一眼就能看出的走法：
 
-![](../images/hua8.png){:.center}
+![](http://image.augustrush8.com/images/hua8.png){:.center}
 
 算法来进行搜索呢？
 
-![](../images/hua9.png){:.center}
+![](http://image.augustrush8.com/images/hua9.png){:.center}
 
 此时第三步会发现右边能走，就往右边走，但会发现右边是一个死胡同。那么这是就应该“回溯”。
 
 注意，这块并不是往左走，而是回退，退回到上一步。如果我们正在往前搜索，当然不能走回头路。但是当前面没有路的时候，我们就需要返回来，找到之前有可能出现岔路口的地方，再去下一个方向进行搜索。
 
-![](../images/hua10.png){:.center}
+![](http://image.augustrush8.com/images/hua10.png){:.center}
 
 那么，对应于原来的问题我们应该怎么解呢？
 
 加入以下面这个状态开始：
 
-![](../images/hua11.png){:.center}
+![](http://image.augustrush8.com/images/hua11.png){:.center}
 
 接着：
 
-![](../images/hua12.png){:.center}
+![](http://image.augustrush8.com/images/hua12.png){:.center}
 
 再接着：
 
-![](../images/hua13.png){:.center}
+![](http://image.augustrush8.com/images/hua13.png){:.center}
 
 那么，什么时候应该回溯呢？那就是发现碰到“**死胡同**”的时候，也就是所有的路都走不通的时候
 
 这个回溯的过程就跟栈非常类似，往前走一步就像是入栈，到了死胡同，要往回退，就像是出栈。但用递归来编码，相对来说难度要小一点。
 
-![](../images/hua14.png){:.center}
+![](http://image.augustrush8.com/images/hua14.png){:.center}
 
 当然，递归在计算机里面也是用栈实现的，用递归的话，会清晰不少。
 
@@ -185,7 +185,7 @@ public class HuaRongDao {
 
 记录移动路径，其实就是在真正搜索之前，把方向记录下来，而搜索如果要返回了，则说明该次搜索已经结束，没有结果，应该把该记录去除。
 
-![](../images/hua15.png){:.center}
+![](http://image.augustrush8.com/images/hua15.png){:.center}
 
 看看具体的代码实现：
 
@@ -440,11 +440,11 @@ public static void main(String[] args) {
 
 but! 不幸的事情发生了：
 
-![](../images/hua16.png){:.center}
+![](http://image.augustrush8.com/images/hua16.png){:.center}
 
 栈溢出了，为什么呢？
 
-![](../images/hua17.png){:.center}
+![](http://image.augustrush8.com/images/hua17.png){:.center}
 
 那么我们改一改代码，把search函数入口里面的判断条件改一改：
 
@@ -469,7 +469,7 @@ if(canMove(direction)&& moveArr.size()<100)
 
 简单理解就是，每到一个岔路口，就会分成多波人在每一个方向上去进行搜索。
 
-![](../images/hua18.png){:.center}
+![](http://image.augustrush8.com/images/hua18.png){:.center}
 
 广度优先搜索就没有回溯的必要了。不再使用递归了
 
