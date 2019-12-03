@@ -1,6 +1,6 @@
 {
-  "short_name": "饮冰先生",
-  "name": "饮冰先生的博客",
+  "short_name": "AugustRush",
+  "name": "AugustRush的博客",
   "icons": [
     {
       "src": "/public/images/icons/launcher-icon-128x128.png",
@@ -19,5 +19,6 @@
     }
   ],
   "start_url": "/?utm_source=homescreen",
-  "display": "standalone"
+  "display": "standalone",
+  "img_name": ["317Family","中北坦克","中北升旗"]
 }

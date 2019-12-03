@@ -75,9 +75,9 @@ sequence: 5
 <div class="page">
   <h1 class="page-title">影集</h1>
   <div class="grid">
-    <div class="grid-size"></div>
+    <!-- <div class="grid-size"></div> -->
     <!-- Add new photo from here -->
-    <div class="grid-item">
+    <!-- <div class="grid-item">
       <a class="view" href="http://image.augustrush8.com/images/album/317Family.jpg" title="317Family" rel="vsco">
         <img src="http://image.augustrush8.com/images/album/317Family.jpg">
       </a>
@@ -171,7 +171,7 @@ sequence: 5
       <a class="view" href="http://image.augustrush8.com/images/album/%E8%A1%8C%E7%9F%A5%E5%B9%BF%E5%9C%BA.jpg" title="行知广场" rel="vsco">
         <img src="http://image.augustrush8.com/images/album/%E8%A1%8C%E7%9F%A5%E5%B9%BF%E5%9C%BA.jpg">
       </a>
-    </div>
+    </div> -->
   </div>
 </div>
 
@@ -180,6 +180,15 @@ sequence: 5
 <script src="{{site.baseurl}}/public/js/view.min.js?auto"></script>
 <script>
   var grid = document.querySelector('.grid');
+  var html = '';
+  html += '<div class="grid-size"></div>';
+  var arr = ['317Family','中北坦克','中北升旗'];
+  var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
+  for(let i = 0; i < arr.length; i++){
+    var temp = template.replace(/{template}/g, arr[i]);
+    html += temp;
+  }
+  grid.innerHTML = html;
 
   var msnry = new Masonry(grid, {
     itemSelector: '.grid-item',
