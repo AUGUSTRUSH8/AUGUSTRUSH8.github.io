@@ -178,7 +178,6 @@ sequence: 5
 <script src="{{site.baseurl}}/public/js/masonry.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/imagesloaded.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/view.min.js?auto"></script>
-<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
 </script>
 <script>
   var grid = document.querySelector('.grid');
@@ -186,7 +185,7 @@ sequence: 5
   html += '<div class="grid-size"></div>';
   // var arr = ['317Family','中北坦克','中北升旗'];
   $.getJSON(
-    "https://augustrush8.com/manifest.json",
+    "./manifest.json",
     function(data){
       console.log(data);
     }
