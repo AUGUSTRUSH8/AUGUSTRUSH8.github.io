@@ -184,6 +184,20 @@ sequence: 5
   var html = '';
   html += '<div class="grid-size"></div>';
   // var arr = ['317Family','中北坦克','中北升旗'];
+  $.ajax({
+        url:"https://augustrush8.com/manifest.json",
+        type:"get",
+        dataType:"json",
+        success: function(data) {
+	        console.log(data);    
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        },
+    })
+
   var json_response = $.get('https://augustrush8.com/manifest.json');
   console.log(json_response);
   var img_name = json_response.responseJSON.img_name;
