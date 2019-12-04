@@ -178,26 +178,17 @@ sequence: 5
 <script src="{{site.baseurl}}/public/js/masonry.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/imagesloaded.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/view.min.js?auto"></script>
-<script src="{{site.baseurl}}/public/js/jquery.min.js"></script>
 <script>
   var grid = document.querySelector('.grid');
   var html = '';
   html += '<div class="grid-size"></div>';
   // var arr = ['317Family','中北坦克','中北升旗'];
-  $.ajax({
-        url:"/manifest.json",
-        type:"get",
-        dataType:"json",
-        success: function(data) {
-	        console.log(data);    
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        },
-    })
-
+  $.getJSON(
+    "/manifest.json",
+    function(data){
+      console.log(data);
+    }
+  );
   var json_response = $.get('https://augustrush8.com/manifest.json');
   console.log(json_response);
   var img_name = json_response.responseJSON.img_name;
