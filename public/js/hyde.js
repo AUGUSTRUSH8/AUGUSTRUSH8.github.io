@@ -14,7 +14,7 @@ if (navigator.platform.match(/win32/i)) {
         head.appendChild(style);
     }
 }
-console.log('Powered by Ma Yanbin <myanbin@gmail.com>')
+// console.log('Powered by Ma Yanbin <myanbin@gmail.com>')
 /* Dark mode */
 document.getElementById("_dark-mode").addEventListener("click", function(e) {
     e.preventDefault();
