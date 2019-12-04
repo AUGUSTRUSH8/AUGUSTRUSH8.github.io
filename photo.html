@@ -178,44 +178,37 @@ sequence: 5
 <script src="{{site.baseurl}}/public/js/masonry.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/imagesloaded.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/view.min.js?auto"></script>
-<script src="{{site.baseurl}}/public/js/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+</script>
 <script>
-  $(function(){
-    var grid = document.querySelector('.grid');
-    var html = '';
-    html += '<div class="grid-size"></div>';
-    // var arr = ['317Family','中北坦克','中北升旗'];
-    $.ajax({
-      //请求方式
-      type:"GET",
-      //文件位置
-      url:"json_data.json",
-      //返回数据格式为json,也可以是其他格式如
-      dataType: "json",
-      //请求成功后要执行的函数，拼接html
-      success: function(data){
-        console.log(data);
-      }
-    });
-    var json_response = $.get('https://augustrush8.com/manifest.json');
-    console.log(json_response);
-    var img_name = json_response.responseJSON.img_name;
-    console.log(img_name);
-    var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
-    for(let i = 0; i < img_name.length; i++){
-      var temp = template.replace(/{template}/g, img_name[i]);
-      html += temp;
+  var grid = document.querySelector('.grid');
+  var html = '';
+  html += '<div class="grid-size"></div>';
+  // var arr = ['317Family','中北坦克','中北升旗'];
+  $.getJSON(
+    "https://augustrush8.com/manifest.json",
+    function(data){
+      console.log(data);
     }
-    grid.innerHTML = html;
+  );
+  // var json_response = $.get('https://augustrush8.com/manifest.json');
+  // console.log(json_response);
+  // var img_name = json_response.responseJSON.img_name;
+  // console.log(img_name);
+  // var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
+  // for(let i = 0; i < img_name.length; i++){
+  //   var temp = template.replace(/{template}/g, img_name[i]);
+  //   html += temp;
+  // }
+  grid.innerHTML = html;
 
-    var msnry = new Masonry(grid, {
-      itemSelector: '.grid-item',
-      columnWidth: '.grid-size',
-      gutter: 10
-    });
+  var msnry = new Masonry(grid, {
+    itemSelector: '.grid-item',
+    columnWidth: '.grid-size',
+    gutter: 10
+  });
 
-    imagesLoaded(grid).on('progress', function() {
-      msnry.layout();
-    });
+  imagesLoaded(grid).on('progress', function() {
+    msnry.layout();
   });
 </script>
