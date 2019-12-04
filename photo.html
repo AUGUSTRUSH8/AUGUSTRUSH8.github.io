@@ -178,18 +178,28 @@ sequence: 5
 <script src="{{site.baseurl}}/public/js/masonry.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/imagesloaded.pkgd.min.js"></script>
 <script src="{{site.baseurl}}/public/js/view.min.js?auto"></script>
+</script>
 <script>
   var grid = document.querySelector('.grid');
   var html = '';
   html += '<div class="grid-size"></div>';
-  var arr = ['317Family','中北坦克','中北升旗'];
-  var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
-  for(let i = 0; i < arr.length; i++){
-    var temp = template.replace(/{template}/g, arr[i]);
-    html += temp;
-  }
-  grid.innerHTML = html;
-
+  $(document).ready(function(){
+    $.getJSON(
+      "https://augustrush8.com/manifest.json",
+      function(data){
+        console.log(data);
+        var img_name = data.img_name;
+        var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
+        for(let i = 0; i < img_name.length; i++){
+          var temp = template.replace(/{template}/g, img_name[i]);
+          html += temp;
+        }
+        grid.innerHTML = html;
+      }
+    );
+  });
+  
+  // var arr = ['317Family','中北坦克','中北升旗'];
   var msnry = new Masonry(grid, {
     itemSelector: '.grid-item',
     columnWidth: '.grid-size',
