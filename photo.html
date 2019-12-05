@@ -187,7 +187,7 @@ sequence: 5
     $.getJSON(
       "https://augustrush8.com/manifest.json",
       function(data){
-        console.log(data);
+        // console.log(data);
         var img_name = data.img_name;
         var template = '<div class="grid-item"><a class="view" href="http://image.augustrush8.com/images/album/{template}.jpg" title="{template}" rel="vsco"><img src="http://image.augustrush8.com/images/album/{template}.jpg"></a></div>';
         for(let i = 0; i < img_name.length; i++){

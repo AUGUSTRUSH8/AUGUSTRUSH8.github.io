@@ -6,6 +6,8 @@ tags: [read]
 
 > 在调试代码的过程中，为了更好的定位及解决问题，有时候需要我们使用远程调试的方法。在本文中，就让我们一起来看看，如何利用 IntelliJ IDEA 进行远程 Tomcat 的调试。
 
+### 操作篇
+
 首先，配置remote：
 
 ![1](http://image.augustrush8.com/images/idea/1.png){:.center}
@@ -57,12 +59,22 @@ tags: [read]
 
 ![5](http://image.augustrush8.com/images/idea/5.png){:.center}
 
+### 原理阐述
+
+我们在启动远程JVM的时候，通常会附上以下启动参数：
+
+```shell
+-Xdebug -Xrunjdwp:transport=dt_socket,suspend=n,server=y,address=${debug_port}
+```
+
+**JDWP协议**：JDWP 是 Java Debug Wire Protocol 的缩写，它定义了调试器（debugger）和目标虚拟机（target vm）之间的通信协议。Target vm 中运行着我们要调试的 Java 程序，它与一般运行的 JVM 没有什么区别，只是在启动时加载了 JDWP Agent 从而具备了调试功能。而 debugger 就是我们本地的调试器，它向运行中的 target vm 发送指令来获取 target vm 运行时的状态和控制远程 Java 程序的执行。Debugger 和 target vm 分别在各自的进程中运行，他们之间通过 JDWP 通信协议进行通信。
+
+### 注意事项
+
+**请务必保证本地 debug 的代码与远程部署的代码完全一致，不能发生任何的修改！否则断点将无法命中！**
+
 此外，如果我们是跨多个系统进行调试，则只需要在想要调试的系统中配置Remote，打上断点，启动Debug模式，然后在服务开始的地方执行程序即可进入到我们设置的断点。而且，如果我们在本地配置Remote并关联到某个 Tomcat，在Debug模式下，所有涉及到断点所在代码的功能，都会进入我们设置的断点。
 
 例如，对于服务器上的 Tomcat A，多个系统都用到了这个 Tomcat，如订单子系统、账户子系统、路由子系统等，并且多个系统间互相调用，如订单子系统调了账户子系统，账户子系统又调了路由子系统，则当我们在这三个子系统中配置Remote并在对应的代码（如在订单子系统中查询商户的账户信息，则调到账户子系统；在账户子系统中又通过路由子系统调到其他底层服务查询商户的账户余额等）上打上断点，启动Debug模式之后，通过单元测试或者页面操作触发订单子系统中的查询商户的账户信息功能，则会依次进入到在上述三个子系统中设置的断点。
 
 此外，在我们配置完远程调试之后，就算别人启动相关服务，也会进入到我们的断点，而且会受到我们设置的断点的影响，只有在我们执行完测试之后，服务才会继续执行下去。最后，远程调试的功能真的很强大，善用远程调试，远离 Bug！
-
-其他参考文章：
-
-<https://blog.csdn.net/mingjie1212/article/details/52281847>
