@@ -204,6 +204,20 @@
   text-decoration: none;
 }
 
+/*beian number style*/
+.beian {
+  margin-bottom: 1.25rem;
+}
+.beian > a {
+  font-size: 1.4rem;
+  line-height: 1rem;
+  margin-right: 30rem;
+  cursor: pointer;
+}
+.beian > a:hover {
+  text-decoration: none;
+}
+
 /* Enable z-index (derived from DOM structure) for the sidbar content. */
 .container {
   position: relative;
