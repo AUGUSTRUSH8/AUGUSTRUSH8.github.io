@@ -1,0 +1,168 @@
+I"W<blockquote>
+  <p>题目描述是这样的，在王大锤的眼里，给字符串纠错是个大事情，一般碰到三个连续的字母在一块儿的这种直接去掉一个就行，有AABB这种的，去掉一个B就好了，碰到AABBCCDD这样的依照最左匹配的原则进行修改。王大锤梦想着靠着这走上巅峰之路，但很快，，，就被炒了。</p>
+</blockquote>
+
+<p>我的写法，递归，其中有很多时间花销是重复的，因此并不是最优写法，但还算直观</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">leyou</span><span class="o">.</span><span class="na">test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">res</span><span class="o">=</span><span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Scanner</span> <span class="n">scanner</span><span class="o">=</span><span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="c1">//接收字符串数目</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">strings</span><span class="o">=</span><span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">strings</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">());</span>
+        <span class="o">}</span>
+        <span class="n">scanner</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="n">solve</span><span class="o">(</span><span class="n">strings</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">res</span><span class="o">.</span><span class="na">size</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">res</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solve</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">strings</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">strings</span><span class="o">.</span><span class="na">size</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="nc">String</span> <span class="n">string</span><span class="o">=</span><span class="n">removeThree</span><span class="o">(</span><span class="n">strings</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="nc">String</span> <span class="n">string1</span><span class="o">=</span><span class="n">removeAABB</span><span class="o">(</span><span class="n">string</span><span class="o">);</span>
+            <span class="n">res</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">string1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">removeThree</span><span class="o">(</span><span class="nc">String</span> <span class="n">string</span><span class="o">){</span>
+        <span class="nc">String</span> <span class="n">newString</span><span class="o">=</span><span class="s">""</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">()&lt;</span><span class="mi">3</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">string</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">)&lt;=</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="kt">char</span> <span class="n">pre</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="kt">char</span> <span class="n">cur</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="kt">char</span> <span class="n">next</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">==</span><span class="n">pre</span><span class="o">&amp;&amp;</span><span class="n">cur</span><span class="o">==</span><span class="n">next</span><span class="o">){</span>
+                    <span class="n">newString</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">i</span><span class="o">)+</span><span class="n">string</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="k">return</span> <span class="n">string</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">newString</span><span class="o">=</span><span class="n">removeThree</span><span class="o">(</span><span class="n">newString</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">newString</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">removeAABB</span><span class="o">(</span><span class="nc">String</span> <span class="n">string</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">()&lt;</span><span class="mi">4</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">string</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">char</span> <span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span><span class="n">next1</span><span class="o">,</span><span class="n">next2</span><span class="o">,</span><span class="n">next3</span><span class="o">;</span>
+        <span class="nc">String</span> <span class="n">newString</span><span class="o">=</span><span class="s">""</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">string</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="n">i</span><span class="o">)&gt;=</span><span class="mi">4</span><span class="o">){</span>
+                <span class="n">cur</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="n">next1</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">next2</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">);</span>
+                <span class="n">next3</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">==</span><span class="n">next1</span><span class="o">&amp;&amp;</span><span class="n">cur</span><span class="o">!=</span><span class="n">next2</span><span class="o">&amp;&amp;</span><span class="n">next2</span><span class="o">==</span><span class="n">next3</span><span class="o">){</span>
+                    <span class="n">newString</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">)+</span><span class="n">string</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">);</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span><span class="k">return</span> <span class="n">string</span><span class="o">;}</span>
+
+        <span class="o">}</span>
+        <span class="n">newString</span><span class="o">=</span><span class="n">removeAABB</span><span class="o">(</span><span class="n">newString</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">newString</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>测试用例</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4
+helloo
+helllo
+helllllllooooo
+helllaabbccddnnn
+hello
+hello
+hello
+hellabbcddn
+</code></pre></div></div>
+
+<p>大佬的写法，注重逻辑推演，很简洁，运行时间也很短</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">leyou</span><span class="o">.</span><span class="na">test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dachui</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Scanner</span> <span class="n">sc</span><span class="o">=</span><span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">words</span><span class="o">=</span><span class="k">new</span> <span class="nc">String</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">sc</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">words</span><span class="o">[</span><span class="n">i</span><span class="o">++]=</span><span class="n">sc</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">==(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">sc</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">words</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">checkedWord</span><span class="o">(</span><span class="n">words</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">checkedWord</span><span class="o">(</span><span class="nc">String</span> <span class="n">word</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">word</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">""</span><span class="o">);</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">wc</span><span class="o">=</span><span class="n">word</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">cur_count</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">pre_count</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">wc</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">cur_count</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">wc</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="n">wc</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="o">{</span>
+                <span class="n">cur_count</span><span class="o">++;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">cur_count</span><span class="o">==</span><span class="mi">3</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">wc</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="o">]=</span><span class="sc">','</span><span class="o">;</span>
+                    <span class="n">cur_count</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">cur_count</span><span class="o">==</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">pre_count</span><span class="o">==</span><span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">wc</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]=</span><span class="sc">','</span><span class="o">;</span>
+                    <span class="n">cur_count</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">pre_count</span><span class="o">=</span><span class="n">cur_count</span><span class="o">;</span>
+                <span class="n">cur_count</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="nc">String</span> <span class="n">result</span><span class="o">=</span><span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">wc</span><span class="o">);</span>
+
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">","</span><span class="o">,</span> <span class="s">""</span><span class="o">));</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>测试用例</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4
+helloo
+helllo
+helllllllooooo
+helllaabbccddnnn
+hello
+hello
+hello
+hellabbcddn
+</code></pre></div></div>
+
+:ET

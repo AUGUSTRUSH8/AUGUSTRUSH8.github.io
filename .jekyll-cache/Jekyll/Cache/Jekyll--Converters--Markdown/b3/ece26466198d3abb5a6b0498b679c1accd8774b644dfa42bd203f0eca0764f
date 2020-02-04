@@ -1,0 +1,561 @@
+I"+�<p><img src="http://image.augustrush8.com/images/mybatis/introduction.jpg" alt="" class="center" /></p>
+
+<blockquote>
+  <p>MyBatis SQL映射器框架使关系数据库与面向对象的应用程序的使用变得更加容易。MyBatis使用XML描述符或注释将对象与存储过程或SQL语句结合在一起。简单性是MyBatis数据映射器相对于对象关系映射工具的最大优势。</p>
+</blockquote>
+
+<h4 id="第一步">第一步</h4>
+
+<p>从https://github.com/mybatis/mybatis-3 fork源码到自己的仓库当中，方便自己注释提交</p>
+
+<h4 id="第二步">第二步</h4>
+
+<p>把项目导入到<code class="highlighter-rouge">idea</code>当中</p>
+
+<h4 id="第三步">第三步</h4>
+
+<blockquote>
+  <p>MyBatis 想要调试，非常方便，只需要打开 <code class="highlighter-rouge">org.apache.ibatis.autoconstructor.AutoConstructorTest</code> 单元测试类，任意一个单元测试方法，右键，开始调试即可。</p>
+</blockquote>
+
+<p>为更好的理解<code class="highlighter-rouge">AutoConstructorTest</code>这个类，我们先来看看<code class="highlighter-rouge">autoconstructor</code>这个包</p>
+
+<p><img src="http://image.augustrush8.com/images/mybatis/package.JPG" alt="" class="center" /></p>
+
+<h5 id="mybatis-configxml">mybatis-config.xml</h5>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</span>
+
+<span class="nt">&lt;configuration&gt;</span>
+
+    <span class="c">&lt;!-- autoMappingBehavior should be set in each test case --&gt;</span>
+
+    <span class="nt">&lt;environments</span> <span class="na">default=</span><span class="s">"development"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;environment</span> <span class="na">id=</span><span class="s">"development"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;transactionManager</span> <span class="na">type=</span><span class="s">"JDBC"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">""</span> <span class="na">value=</span><span class="s">""</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/transactionManager&gt;</span>
+            <span class="nt">&lt;dataSource</span> <span class="na">type=</span><span class="s">"UNPOOLED"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driver"</span> <span class="na">value=</span><span class="s">"org.hsqldb.jdbcDriver"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:hsqldb:mem:automapping"</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"sa"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/dataSource&gt;</span>
+        <span class="nt">&lt;/environment&gt;</span>
+    <span class="nt">&lt;/environments&gt;</span>
+
+    <span class="nt">&lt;mappers&gt;</span>
+        <span class="nt">&lt;mapper</span> <span class="na">resource=</span><span class="s">"org/apache/ibatis/autoconstructor/AutoConstructorMapper.xml"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/mappers&gt;</span>
+
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre></div></div>
+
+<p><strong>解释</strong>：</p>
+
+<ul>
+  <li>在 <code class="highlighter-rouge">&lt;environments /&gt;</code> 标签中，配置了事务管理和数据源。考虑到减少外部依赖，所以使用了 <a href="https://zh.wikipedia.org/wiki/HSQLDB">HSQLDB</a> 。</li>
+  <li>在 <code class="highlighter-rouge">&lt;mappers /&gt;</code> 标签中，配置了需要扫描的 Mapper 文件。目前，仅仅扫描 <code class="highlighter-rouge">AutoConstructorMapper.xml</code> 文件。</li>
+</ul>
+
+<h5 id="autoconstructormapperxml">AutoConstructorMapper.xml</h5>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"org.apache.ibatis.autoconstructor.AutoConstructorMapper"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/mapper&gt;</span>
+</code></pre></div></div>
+
+<p><strong>解释</strong>：</p>
+
+<ul>
+  <li>对应的接口为 <code class="highlighter-rouge">org.apache.ibatis.autoconstructor.AutoConstructorMapper</code> 。</li>
+</ul>
+
+<h5 id="autoconstructormapper">AutoConstructorMapper</h5>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AutoConstructorMapper</span> <span class="o">{</span>
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM subject WHERE id = #{id}"</span><span class="o">)</span>
+  <span class="nc">PrimitiveSubject</span> <span class="nf">getSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">);</span>
+
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM subject"</span><span class="o">)</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">PrimitiveSubject</span><span class="o">&gt;</span> <span class="nf">getSubjects</span><span class="o">();</span>
+
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM subject"</span><span class="o">)</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">AnnotatedSubject</span><span class="o">&gt;</span> <span class="nf">getAnnotatedSubjects</span><span class="o">();</span>
+
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM subject"</span><span class="o">)</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">BadSubject</span><span class="o">&gt;</span> <span class="nf">getBadSubjects</span><span class="o">();</span>
+
+  <span class="nd">@Select</span><span class="o">(</span><span class="s">"SELECT * FROM extensive_subject"</span><span class="o">)</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">ExtensiveSubject</span><span class="o">&gt;</span> <span class="nf">getExtensiveSubject</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<ul>
+  <li>使用注解的方法，编写 SQL 。</li>
+</ul>
+
+<h5 id="createdbsql">CreateDB.sql</h5>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">subject</span>
+<span class="n">IF</span> <span class="k">EXISTS</span><span class="p">;</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">extensive_subject</span>
+<span class="n">IF</span> <span class="k">EXISTS</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">subject</span> <span class="p">(</span>
+  <span class="n">id</span>     <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">name</span>   <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+  <span class="n">age</span>    <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">height</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">weight</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">active</span> <span class="nb">BIT</span><span class="p">,</span>
+  <span class="n">dt</span>     <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">extensive_subject</span> <span class="p">(</span>
+  <span class="n">aByte</span>      <span class="nb">TINYINT</span><span class="p">,</span>
+  <span class="n">aShort</span>     <span class="nb">SMALLINT</span><span class="p">,</span>
+  <span class="n">aChar</span>      <span class="nb">CHAR</span><span class="p">,</span>
+  <span class="n">anInt</span>      <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">aLong</span>      <span class="nb">BIGINT</span><span class="p">,</span>
+  <span class="n">aFloat</span>     <span class="nb">FLOAT</span><span class="p">,</span>
+  <span class="n">aDouble</span>    <span class="nb">DOUBLE</span><span class="p">,</span>
+  <span class="n">aBoolean</span>   <span class="nb">BIT</span><span class="p">,</span>
+  <span class="n">aString</span>    <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">anEnum</span>     <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">aClob</span>      <span class="n">LONGVARCHAR</span><span class="p">,</span>
+  <span class="n">aBlob</span>      <span class="n">LONGVARBINARY</span><span class="p">,</span>
+  <span class="n">aTimestamp</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">subject</span> <span class="k">VALUES</span>
+  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">),</span>
+  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">),</span>
+  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">extensive_subject</span>
+<span class="k">VALUES</span>
+  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'AVALUE'</span><span class="p">,</span> <span class="s1">'ACLOB'</span><span class="p">,</span> <span class="s1">'aaaaaabbbbbb'</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">),</span>
+  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'BVALUE'</span><span class="p">,</span> <span class="s1">'BCLOB'</span><span class="p">,</span> <span class="s1">'010101010101'</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">),</span>
+  <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'CVALUE'</span><span class="p">,</span> <span class="s1">'CCLOB'</span><span class="p">,</span> <span class="s1">'777d010078da'</span><span class="p">,</span> <span class="k">CURRENT_TIMESTAMP</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<p><code class="highlighter-rouge">CreateDB.sql</code> 文件，用于单元测试里，初始化数据库的数据</p>
+
+<ul>
+  <li>创建了 <code class="highlighter-rouge">subject</code> 表，并初始化三条数据。</li>
+  <li>创建了 <code class="highlighter-rouge">extensive_subject</code> 表，并初始化三条数据。</li>
+</ul>
+
+<h5 id="四个pojo">四个POJO</h5>
+
+<p><strong>思考：</strong>在 AutoConstructorMapper 中，我们可以看到有四个 POJO 类。但是，从 <code class="highlighter-rouge">CreateDB.sql</code> 中，实际只有两个表。这个是为什么呢？</p>
+
+<p>1.AnnotatedSubject</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AnnotatedSubject</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">height</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">weight</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">AnnotatedSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">height</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">weight</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@AutomapConstructor</span>
+  <span class="kd">public</span> <span class="nf">AnnotatedSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Integer</span> <span class="n">height</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Integer</span> <span class="n">weight</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">height</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">weight</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<ul>
+  <li>对应 <code class="highlighter-rouge">subject</code> 表。</li>
+  <li><code class="highlighter-rouge">@AutomapConstructor</code> 注解，表示 MyBatis 查询后，在创建 AnnotatedSubject 对象，使用该构造方法。（实际场景下，不常使用这个注解）</li>
+</ul>
+
+<p>2.PrimitiveSubject</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PrimitiveSubject</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">height</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">weight</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">active</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Date</span> <span class="n">dt</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">PrimitiveSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">height</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">weight</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">active</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Date</span> <span class="n">dt</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">active</span> <span class="o">=</span> <span class="n">active</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<ul>
+  <li>对应的也是 <code class="highlighter-rouge">subject</code> 表。</li>
+  <li>和 AnnotatedSubject 不同，<strong>在其构造方法上，<code class="highlighter-rouge">weight</code> 和 <code class="highlighter-rouge">height</code> 方法参数的类型是 <code class="highlighter-rouge">int</code> ，而不是 Integer 。那么，如果 <code class="highlighter-rouge">subject</code> 表中的记录，这两个字段为 <code class="highlighter-rouge">NULL</code> 时，会创建 PrimitiveSubject 对象报错。</strong></li>
+</ul>
+
+<p>3.BadSubject</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BadSubject</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Height</span> <span class="n">height</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Double</span> <span class="n">weight</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">BadSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">id</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">age</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Height</span> <span class="n">height</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Double</span> <span class="n">weight</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">weight</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">weight</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kd">class</span> <span class="nc">Height</span> <span class="o">{</span>
+
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<ul>
+  <li>对应的也是 <code class="highlighter-rouge">subject</code> 表。</li>
+  <li>和 AnnotatedSubject 不同，在其构造方法上，<code class="highlighter-rouge">height</code> 方法参数的类型是 Height ，而不是 Integer 。因为 MyBatis 无法识别 Height 类，所以会创建 BadSubject 对象报错。（这也就解释了它叫BadSubject的原因）</li>
+</ul>
+
+<blockquote>
+  <p>补充：一般情况下，POJO 对象里，不使用基本类型。</p>
+</blockquote>
+
+<p>4.ExtensiveSubject</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExtensiveSubject</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">byte</span> <span class="n">aByte</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">short</span> <span class="n">aShort</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">char</span> <span class="n">aChar</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">anInt</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">aLong</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">aFloat</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">aDouble</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">aBoolean</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">aString</span><span class="o">;</span>
+
+    <span class="c1">// enum types</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">TestEnum</span> <span class="n">anEnum</span><span class="o">;</span>
+
+    <span class="c1">// array types</span>
+
+    <span class="c1">// string to lob types:</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">aClob</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">aBlob</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">ExtensiveSubject</span><span class="o">(</span><span class="kd">final</span> <span class="kt">byte</span> <span class="n">aByte</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">short</span> <span class="n">aShort</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">char</span> <span class="n">aChar</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">int</span> <span class="n">anInt</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">long</span> <span class="n">aLong</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">float</span> <span class="n">aFloat</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">double</span> <span class="n">aDouble</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">aBoolean</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="nc">String</span> <span class="n">aString</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="nc">TestEnum</span> <span class="n">anEnum</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="nc">String</span> <span class="n">aClob</span><span class="o">,</span>
+                            <span class="kd">final</span> <span class="nc">String</span> <span class="n">aBlob</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aByte</span> <span class="o">=</span> <span class="n">aByte</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aShort</span> <span class="o">=</span> <span class="n">aShort</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aChar</span> <span class="o">=</span> <span class="n">aChar</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">anInt</span> <span class="o">=</span> <span class="n">anInt</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aLong</span> <span class="o">=</span> <span class="n">aLong</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aFloat</span> <span class="o">=</span> <span class="n">aFloat</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aDouble</span> <span class="o">=</span> <span class="n">aDouble</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aBoolean</span> <span class="o">=</span> <span class="n">aBoolean</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aString</span> <span class="o">=</span> <span class="n">aString</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">anEnum</span> <span class="o">=</span> <span class="n">anEnum</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aClob</span> <span class="o">=</span> <span class="n">aClob</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">aBlob</span> <span class="o">=</span> <span class="n">aBlob</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="nc">TestEnum</span> <span class="o">{</span>
+        <span class="no">AVALUE</span><span class="o">,</span> <span class="no">BVALUE</span><span class="o">,</span> <span class="no">CVALUE</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>说明</strong>：</p>
+
+<ul>
+  <li>对应的也是 <code class="highlighter-rouge">extensive_subject</code> 表。</li>
+  <li>这是个复杂对象，基本涵盖了各种类型的数据。</li>
+</ul>
+
+<h5 id="autoconstructortest">AutoConstructorTest</h5>
+
+<p>现在我们来查看<code class="highlighter-rouge">org.apache.ibatis.autoconstructor.AutoConstructorTest</code>这个测试类，一步一步的调试</p>
+
+<p>准备工作：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@BeforeAll</span>
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="c1">// create a SqlSessionFactory</span>
+    <span class="k">try</span> <span class="o">(</span><span class="nc">Reader</span> <span class="n">reader</span> <span class="o">=</span> <span class="nc">Resources</span><span class="o">.</span><span class="na">getResourceAsReader</span><span class="o">(</span><span class="s">"org/apache/ibatis/autoconstructor/mybatis-config.xml"</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">sqlSessionFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SqlSessionFactoryBuilder</span><span class="o">().</span><span class="na">build</span><span class="o">(</span><span class="n">reader</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// populate in-memory database</span>
+    <span class="nc">BaseDataTest</span><span class="o">.</span><span class="na">runScript</span><span class="o">(</span><span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">().</span><span class="na">getEnvironment</span><span class="o">().</span><span class="na">getDataSource</span><span class="o">(),</span>
+        <span class="s">"org/apache/ibatis/autoconstructor/CreateDB.sql"</span><span class="o">);</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>创建 SqlSessionFactory 对象，基于 <code class="highlighter-rouge">mybatis-config.xml</code> 配置文件。</li>
+  <li>初始化数据到内存数据库，基于 <code class="highlighter-rouge">CreateDB.sql</code> SQL 文件。</li>
+</ul>
+
+<h4 id="mybatis-整体架构">Mybatis 整体架构</h4>
+
+<p>在调试之前，我们有必要对Mybatis的总体结构有一个大致的认知。</p>
+
+<p>MyBatis 的整体架构分为三层：</p>
+
+<ul>
+  <li>基础支持层</li>
+  <li>核心处理层</li>
+  <li>接口层</li>
+</ul>
+
+<p>图示：</p>
+
+<p><img src="http://image.augustrush8.com/images/mybatis/mybatis整体结构.png" alt="" class="center" /></p>
+
+<h5 id="基础支持层">基础支持层</h5>
+
+<p>基础支持层，包含整个 MyBatis 的基础模块，这些模块为核心处理层的功能提供了良好的支撑。</p>
+
+<ul>
+  <li><strong>反射模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.reflection</code>包</p>
+
+<p>Java 中的反射虽然功能强大，但对大多数开发人员来说，写出高质量的反射代码还是 有一定难度的。MyBatis 中专门提供了反射模块，该模块对 Java 原生的反射进行了良好的封装，提了更加<strong>简洁易用的 API</strong>，方便上层使调用，并且对<strong>反射操作进行了一系列优化</strong>，例如缓存了类的元数据，提高了反射操作的性能。</p>
+
+<ul>
+  <li><strong>类型模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.type</code>包</p>
+
+<p>1.MyBatis 为简化配置文件提供了<strong>别名机制</strong>，该机制是类型转换模块的主要功能之一。</p>
+
+<p>2.类型转换模块的另一个功能是<strong>实现 JDBC 类型与 Java 类型之间</strong>的转换，该功能在为 SQL 语句绑定实参以及映射查询结果集时都会涉及：</p>
+
+<ul>
+  <li>在为 SQL 语句绑定实参时，会将数据由 Java 类型转换成 JDBC 类型。</li>
+  <li>
+    <p>而在映射结果集时，会将数据由 JDBC 类型转换成 Java 类型。</p>
+  </li>
+  <li><strong>日志模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.logging</code>包</p>
+
+<p>无论在开发测试环境中，还是在线上生产环境中，日志在整个系统中的地位都是非常重要的。良好的日志功能可以帮助开发人员和测试人员快速定位 Bug 代码，也可以帮助运维人员快速定位性能瓶颈等问题。目前的 Java 世界中存在很多优秀的日志框架，例如 Log4j、 Log4j2、Slf4j 等。</p>
+
+<p>MyBatis 作为一个设计优良的框架，除了提供详细的日志输出信息，还要能够集成多种日志框架，其日志模块的一个主要功能就是<strong>集成第三方日志框架</strong>。</p>
+
+<ul>
+  <li><strong>IO模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.io</code>包</p>
+
+<p>资源加载模块，主要是对类加载器进行封装，确定类加载器的使用顺序，并提供了加载类文件以及其他资源文件的功能 。</p>
+
+<ul>
+  <li><strong>解析器模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.parsing</code>包</p>
+
+<p>解析器模块，主要提供了两个功能:</p>
+
+<blockquote>
+  <p>一个功能，是对 <a href="http://www.w3school.com.cn/xpath/index.asp">XPath</a> 进行封装，为 MyBatis 初始化时解析 <code class="highlighter-rouge">mybatis-config.xml</code> 配置文件以及映射配置文件提供支持。</p>
+</blockquote>
+
+<blockquote>
+  <p>另一个功能，是为处理动态 SQL 语句中的占位符提供支持。</p>
+</blockquote>
+
+<ul>
+  <li><strong>数据源模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.datasource</code>包</p>
+
+<p>数据源是实际开发中常用的组件之一。现在开源的数据源都提供了比较丰富的功能，例如，连接池功能、检测连接状态等，选择性能优秀的数据源组件对于提升 ORM 框架乃至整个应用的性能都是非常重要的。</p>
+
+<p>MyBatis <strong>自身提供了相应的数据源实现，当然 MyBatis 也提供了与第三方数据源集成的接口，这些功能都位于数据源模块之中</strong>。</p>
+
+<ul>
+  <li><strong>事务模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.transaction</code>包</p>
+
+<p>MyBatis 对数据库中的事务进行了抽象，其自身提供了<strong>相应的事务接口和简单实现</strong>。</p>
+
+<p>在很多场景中，MyBatis 会与 Spring 框架集成，并由 <strong>Spring 框架管理事务</strong>。</p>
+
+<ul>
+  <li><strong>缓存模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.cache</code>包</p>
+
+<p>在优化系统性能时，优化数据库性能是非常重要的一个环节，而添加缓存则是优化数据库时最有效的手段之一。正确、合理地使用缓存可以将一部分数据库请求拦截在缓存这一层。</p>
+
+<p>MyBatis 中提供了<strong>一级缓存和二级缓存</strong>，而这两级缓存都是依赖于基础支持层中的缓 存模块实现的。这里需要读者注意的是，MyBatis 中自带的这两级缓存与 MyBatis 以及整个应用是运行在同一个 JVM 中的，共享同一块堆内存。如果这两级缓存中的数据量较大， 则可能影响系统中其他功能的运行，所以当需要缓存大量数据时，优先考虑使用 Redis、Memcache 等缓存产品。</p>
+
+<ul>
+  <li><strong>binding模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.binding</code>包</p>
+
+<p>在调用 SqlSession 相应方法执行数据库操作时，需要指定映射文件中定义的 SQL 节点，如果出现拼写错误，我们只能在运行时才能发现相应的异常。为了尽早发现这种错误，MyBatis 通过 Binding 模块，将用户自定义的 Mapper 接口与映射配置文件关联起来，系统可以通过调用自定义 Mapper 接口中的方法执行相应的 SQL 语句完成数据库操作，从而避免上述问题。</p>
+
+<p>值得读者注意的是，开发人员无须编写自定义 Mapper 接口的实现，MyBatis 会自动为其创建动态代理对象。在有些场景中，自定义 Mapper 接口可以完全代替映射配置文件，但有的映射规则和 SQL 语句的定义还是写在映射配置文件中比较方便，例如动态 SQL 语句的定义。</p>
+
+<ul>
+  <li><strong>注解模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.annotations</code>包</p>
+
+<p>随着 Java 注解的慢慢流行，MyBatis 提供了<strong>注解</strong>的方式，使得我们方便的在 Mapper 接口上编写简单的数据库 SQL 操作代码，而无需像之前一样，必须编写 SQL 在 XML 格式的 Mapper 文件中。虽然说，实际场景下，大家还是喜欢在 XML 格式的 Mapper 文件中编写相应的 SQL 操作。</p>
+
+<ul>
+  <li><strong>异常模块</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.exceptions</code>包</p>
+
+<p>定义了 MyBatis 专有的 PersistenceException 和 TooManyResultsException 异常。</p>
+
+<h5 id="核心处理层">核心处理层</h5>
+
+<p>在核心处理层中，实现了 MyBatis 的核心处理流程，其中包括 MyBatis 的<strong>初始化</strong>以及完成一次<strong>数据库操作</strong>的涉及的全部流程 。</p>
+
+<ul>
+  <li><strong>配置解析</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.builder</code>和<code class="highlighter-rouge">org.apache.ibatis.mapping</code>模块，前者为配置<strong>解析过程</strong>，后者主要为 SQL 操作解析后的<strong>映射</strong>。</p>
+
+<p>在 MyBatis 初始化过程中，会加载 <code class="highlighter-rouge">mybatis-config.xml</code> 配置文件、映射配置文件以及 Mapper 接口中的注解信息，解析后的配置信息会形成相应的对象并保存到 Configuration 对象中。例如：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;resultMap&gt;</code>节点(即 ResultSet 的映射规则) 会被解析成 ResultMap 对象。</li>
+  <li><code class="highlighter-rouge">&lt;result&gt;</code> 节点(即属性映射)会被解析成 ResultMapping 对象。</li>
+</ul>
+
+<p>之后，利用该 Configuration 对象创建 SqlSessionFactory对象。待 MyBatis 初始化之后，开发人员可以通过初始化得到 SqlSessionFactory 创建 SqlSession 对象并完成数据库操作。</p>
+
+<ul>
+  <li><strong>SQL解析</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.scripting</code>包</p>
+
+<p>拼凑 SQL 语句是一件烦琐且易出错的过程，为了将开发人员从这项枯燥无趣的工作中 解脱出来，MyBatis 实现<strong>动态 SQL 语句</strong>的功能，提供了多种动态 SQL语句对应的节点。例如<code class="highlighter-rouge">&lt;where&gt;</code> 节点、<code class="highlighter-rouge">&lt;if&gt;</code> 节点、<code class="highlighter-rouge">&lt;foreach&gt;</code>节点等 。通过这些节点的组合使用， 开发人 员可以写出几乎满足所有需求的动态 SQL 语句。</p>
+
+<p>MyBatis 中的 <code class="highlighter-rouge">scripting</code> 模块，会根据用户传入的实参，解析映射文件中定义的动态 SQL 节点，并形成数据库可执行的 SQL 语句。之后会处理 SQL 语句中的占位符，绑定用户传入的实参。</p>
+
+<ul>
+  <li><strong>SQL执行</strong></li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.executor</code>包和<code class="highlighter-rouge">org.apache.ibatis.cursor</code>包，前者对应<strong>执行器</strong>，后者对应执行<strong>结果的游标</strong>。</p>
+
+<p>SQL 语句的执行涉及多个组件 ，其中比较重要的是 Executor、StatementHandler、ParameterHandler 和 ResultSetHandler 。</p>
+
+<ul>
+  <li><strong>Executor</strong> 主要负责维护一级缓存和二级缓存，并提供事务管理的相关操作，它会将数据库相关操作委托给 StatementHandler完成。</li>
+  <li><strong>StatementHandler</strong> 首先通过 <strong>ParameterHandler</strong> 完成 SQL 语句的实参绑定，然后通过 <code class="highlighter-rouge">java.sql.Statement</code> 对象执行 SQL 语句并得到结果集，最后通过 <strong>ResultSetHandler</strong> 完成结果集的映射，得到结果对象并返回。</li>
+</ul>
+
+<p>示意图：</p>
+
+<p><img src="http://image.augustrush8.com/images/mybatis/sql执行.png" alt="" class="center" /></p>
+
+<ul>
+  <li>插件层</li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.plugin</code>模块</p>
+
+<p>Mybatis 自身的功能虽然强大，但是并不能完美切合所有的应用场景，因此 MyBatis 提供了插件接口，我们可以通过添加用户自定义插件的方式对 MyBatis 进行扩展。用户自定义插件也可以改变 Mybatis 的默认行为，例如，我们可以拦截 SQL 语句并对其进行重写。</p>
+
+<p>由于用户自定义插件会影响 MyBatis 的核心行为，在使用自定义插件之前，开发人员需要了解 MyBatis 内部的原理，这样才能编写出安全、高效的插件。</p>
+
+<h4 id="接口层">接口层</h4>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.session</code>模块</p>
+
+<p>接口层相对简单，其核心是 SqlSession 接口，该接口中定义了 MyBatis 暴露给应用程序调用的 API，也就是上层应用与 MyBatis 交互的桥梁。接口层在接收到调用请求时，会调用核心处理层的相应模块来完成具体的数据库操作。</p>
+
+<h4 id="其他模块">其他模块</h4>
+
+<p>除了上面提到的那些层，还有一些别的模块</p>
+
+<ul>
+  <li>JDBC模块</li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.jdbc</code>包</p>
+
+<p>JDBC <strong>单元测试</strong>工具类。</p>
+
+<ul>
+  <li>Lang模块</li>
+</ul>
+
+<p>对应<code class="highlighter-rouge">org.apache.ibatis.lang</code>包</p>
+
+<p>可暂时不管它</p>
+
+:ET

@@ -2,13 +2,13 @@
 permalink:        /post/:title.html
 
 # Setup
-url:              https://augustrush8.github.io
+url:              https://blog.augustrush8.com
 img_url:          http://pkngrra8q.bkt.clouddn.com
 
 # Set to '' in case of hosting on `https://<your-github-name>.github.io`
 baseurl:          ''
 
-title:            'AugustRush'
+title:            'August Rush'
 
 # Markdown enabled, however don't use more than one paragraph (enforced by `>`)
 description:      >
@@ -18,6 +18,7 @@ description:      >
 # Fallback image and color if not overwritten for tag or post
 image:            http://image.augustrush8.com/images/avatar/sunset.jpg
 color:            '#dc322f'
+
 
 author:
   name:           'AugustRush'
@@ -31,7 +32,7 @@ author:
 
   # Markdown enabled, can use multiple paragraphs (enabled by `|`)
   about:          |
-    我是AugustRush，热爱编程，喜欢与人交流分享思想和 IT 技术。我的GitHub地址是 [AugustRush](https://github.com/AUGUSTRUSH8)
+    我是August Rush，热爱编程，喜欢与人交流分享思想和 IT 技术。我的GitHub地址是 [AugustRush](https://github.com/AUGUSTRUSH8)
 
 
 compress_html:

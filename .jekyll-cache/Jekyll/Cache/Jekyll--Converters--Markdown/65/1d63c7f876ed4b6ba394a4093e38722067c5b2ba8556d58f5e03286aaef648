@@ -1,0 +1,121 @@
+I"�:<p>先引用一段描述性的文字：</p>
+
+<blockquote>
+  <p>SeetaFace开源库由FaceDetection、FaceAlignment、FaceIdentification三部分组成。FaceDetection是在一副图片中检测出人脸区域，以一个方形区域表示。FaceAlignment利用FaceDetection中检测出的方框，进一步检测出人脸的5个关键点（两眼中心，鼻尖和两个嘴角）。最后，FaceIdentification利用FaceAlignment中检测出的关键点，提取出单个人脸的特征。</p>
+</blockquote>
+
+<p>从中可以看出这个开源库的模块功能和特性，下面就简单说一下这个开源模型实践当中的一些坑。</p>
+
+<p><strong>一点拓展</strong></p>
+
+<p>最近接触到各种face detection的模型，也对各种方法和模型的优劣有了自己的认识，其中<strong>这个模型</strong>实现简单(但Windows上却又不少麻烦的地方，主要体现在dlib库的安装上面，有兴趣的同学可以参考我之前<a href="https://www.jianshu.com/p/772ccb948f1a">安装dlib的文章</a>)，效果也非常不错，其模型介绍有这样几句话：</p>
+
+<blockquote>
+  <ul>
+    <li>The world’s simplest facial recognition api for Python and the command line</li>
+    <li>The model has an accuracy of 99.38% on the<a href="https://link.jianshu.com/?t=http%3A%2F%2Fvis-www.cs.umass.edu%2Flfw%2F">Labeled Faces in the Wild</a>benchmark.</li>
+  </ul>
+</blockquote>
+
+<p>这个模型使用起来是简单，但我还没解剖它的实现方法和原理，抽时间去看看。</p>
+
+<p>好了，下面进入正题，seetaface是由中科院山世光团队研究开源的一个模型，据介绍其准确率也能达到97.1%，但很多其他实践的同学总结了这样几条结论：</p>
+
+<blockquote>
+  <p>检测部分，速度有点慢，误检率小，漏检率稍微大
+对齐部分，还是可以的，但是效果肯定不会有SDM好
+识别部分，按我自己的测试结果，对于变化比较大的2个同样的人，0.7的徘徊分数，不是一个可以实际产品话的算法，个人认为不如DeepID好。
+<strong>其实，这些都不重要，开源精神最值得钦佩。</strong></p>
+</blockquote>
+
+<p>个人觉着最后一句话说的很对。
+那么，下面我们就自己来实践一下这个开源项目。
+网上有很多指导教程或者博客，但大都说的不完全，让很多人有些疑惑，最终跑代码的时候会抛出bug。
+其实该开源项目给了非常详尽的指导文档，地址如下: <a href="https://link.jianshu.com/?t=https%3A%2F%2Fgithub.com%2Fseetaface%2FSeetaFaceEngine%2Fblob%2Fmaster%2FSeetaFace_config.docx">传送门</a></p>
+
+<p>只要跟着这个指导文档一步一步做就好了，非常详尽。
+主要说说注意的地方。我的运行环境是VS2015+opencv3.0+windows，之前的配置基本都没有什么问题，只是到了最后测试的时候由于最新的测试代码有点改动，可能有部分同学不知道最后怎么贴路径，其实稍稍看看测试代码就知道怎么改了，下面贴一个我的测试代码吧，有需要的同学改动一下就好：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdint&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+</span>
+<span class="cp">#include "highgui.hpp"
+#include "imgproc.hpp"
+</span>
+<span class="cp">#include "face_detection.h"
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">img_path</span> <span class="o">=</span> <span class="s">"D:/my_project/hub_project/FaceRecognition_5/MyBuild/Detection/x64/Release/people.jpg"</span><span class="p">;</span>
+    <span class="n">seeta</span><span class="o">::</span><span class="n">FaceDetection</span> <span class="n">detector</span><span class="p">(</span><span class="s">"D:/my_project/hub_project/FaceRecognition_5/MyBuild/Detection/x64/Release/seeta_fd_frontal_v1.0.bin"</span><span class="p">);</span><span class="c1">//seeta_fd_frontal_v1.0.bin 文件是作者已经训练好并提供的  </span>
+                                                               <span class="c1">//设置人脸检测的参数  </span>
+    <span class="n">detector</span><span class="p">.</span><span class="n">SetMinFaceSize</span><span class="p">(</span><span class="mi">40</span><span class="p">);</span>
+    <span class="n">detector</span><span class="p">.</span><span class="n">SetScoreThresh</span><span class="p">(</span><span class="mf">2.</span><span class="n">f</span><span class="p">);</span>
+    <span class="n">detector</span><span class="p">.</span><span class="n">SetImagePyramidScaleFactor</span><span class="p">(</span><span class="mf">0.8</span><span class="n">f</span><span class="p">);</span>
+    <span class="n">detector</span><span class="p">.</span><span class="n">SetWindowStep</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+
+    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">img</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">IMREAD_UNCHANGED</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">img_gray</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">img</span><span class="p">.</span><span class="n">channels</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cv</span><span class="o">::</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img_gray</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">COLOR_BGR2GRAY</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">img_gray</span> <span class="o">=</span> <span class="n">img</span><span class="p">;</span>
+
+    <span class="n">seeta</span><span class="o">::</span><span class="n">ImageData</span> <span class="n">img_data</span><span class="p">;</span>
+    <span class="n">img_data</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">img_gray</span><span class="p">.</span><span class="n">data</span><span class="p">;</span><span class="c1">//注意这里必须是单通道的图像  </span>
+    <span class="n">img_data</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">img_gray</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span>
+    <span class="n">img_data</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">img_gray</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span>
+    <span class="n">img_data</span><span class="p">.</span><span class="n">num_channels</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="kt">long</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">getTickCount</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">seeta</span><span class="o">::</span><span class="n">FaceInfo</span><span class="o">&gt;</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">detector</span><span class="p">.</span><span class="n">Detect</span><span class="p">(</span><span class="n">img_data</span><span class="p">);</span><span class="c1">//人脸检测的主要函数  </span>
+    <span class="kt">long</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">getTickCount</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">secs</span> <span class="o">=</span> <span class="p">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">cv</span><span class="o">::</span><span class="n">getTickFrequency</span><span class="p">();</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Detections takes "</span> <span class="o">&lt;&lt;</span> <span class="n">secs</span> <span class="o">&lt;&lt;</span> <span class="s">" seconds "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="cp">#ifdef USE_OPENMP  
+</span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"OpenMP is used."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="cp">#else  
+</span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"OpenMP is not used. "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="cp">#endif  
+</span>
+<span class="cp">#ifdef USE_SSE  
+</span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SSE is used."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="cp">#else  
+</span>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SSE is not used."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="cp">#endif  
+</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Image size (wxh): "</span> <span class="o">&lt;&lt;</span> <span class="n">img_data</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;&lt;</span> <span class="s">"x"</span>
+        <span class="o">&lt;&lt;</span> <span class="n">img_data</span><span class="p">.</span><span class="n">height</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">cv</span><span class="o">::</span><span class="n">Rect</span> <span class="n">face_rect</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">num_face</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">faces</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_face</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="c1">//提取找到的人脸区域  </span>
+    <span class="p">{</span>
+        <span class="n">face_rect</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">bbox</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">face_rect</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">bbox</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+        <span class="n">face_rect</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">bbox</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+        <span class="n">face_rect</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">bbox</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+
+        <span class="n">cv</span><span class="o">::</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">face_rect</span><span class="p">,</span> <span class="n">CV_RGB</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">cv</span><span class="o">::</span><span class="n">namedWindow</span><span class="p">(</span><span class="s">"Test"</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">WINDOW_AUTOSIZE</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">"Test"</span><span class="p">,</span> <span class="n">img</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">destroyAllWindows</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>其中要特别注意的一点就是图片和模型的绝对路径要用 <strong>“/”</strong>，Windows里面默认的是“\”,博主在最开始跑代码的时候总是抛出异常，仔细定位分析以后稍改动了以上的内容就成功运行了代码。
+我是以简单的face recognition为例跑的代码，随便贴一下我的运行结果吧</p>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/10780978-e65193f81473a483.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/801/format/webp" alt="img" /></p>
+
+<p><strong>后续将会进一步测试face alignment和face identification</strong></p>
+:ET

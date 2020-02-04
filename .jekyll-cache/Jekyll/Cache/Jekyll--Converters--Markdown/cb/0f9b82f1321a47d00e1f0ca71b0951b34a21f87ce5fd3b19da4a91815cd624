@@ -1,0 +1,751 @@
+I"�G<h3 id="需求描述">需求描述</h3>
+
+<p>有1到8八个数字，放在一个3x3的九宫格里面，那么会留下一个空格。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua1.png" alt="" class="center" /></p>
+
+<p>空格可以和上下左右的数字进行交换，你可以认为空格在移动。如果移动成</p>
+
+<p><img src="http://image.augustrush8.com/images/hua2.png" alt="" class="center" /></p>
+
+<p>则游戏胜利。</p>
+
+<p>你需要完成以下2件事情：</p>
+
+<p>1、给出数据结构来描述这个过程。</p>
+
+<p>2、给你一个初始状态，告诉我能不能胜利，并给出如何移动才能胜利。</p>
+
+<p>第一个问题比较好做，就是定义几个状态量和行为方法即可：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HuaRongDao</span> <span class="o">{</span>
+    <span class="c1">//定义一个二维数组来表示这个棋盘</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="c1">//方向移动标识</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">right</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">up</span><span class="o">=</span><span class="mi">3</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">down</span><span class="o">=</span><span class="mi">4</span><span class="o">;</span>
+
+    <span class="c1">//x，y记录当前走到哪一步,即空格在什么位置</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+    <span class="c1">//定义移动的轨迹数组</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">=</span><span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="c1">//初始化这个二维数组并找到空格的位置</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">findBlank</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">array</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">arr</span><span class="o">=</span><span class="n">array</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">array</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">array</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]==</span><span class="mi">0</span><span class="o">){</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">x</span><span class="o">=</span><span class="n">i</span><span class="o">;</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">y</span><span class="o">=</span><span class="n">j</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">canMove</span><span class="o">(</span><span class="kt">int</span> <span class="n">dir</span><span class="o">){</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">dir</span><span class="o">){</span>
+            <span class="k">case</span> <span class="nl">left:</span><span class="k">return</span> <span class="n">y</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">right:</span><span class="k">return</span> <span class="n">y</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">up:</span><span class="k">return</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">down:</span><span class="k">return</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">move</span><span class="o">(</span><span class="kt">int</span> <span class="n">dir</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">dir</span><span class="o">){</span>
+            <span class="k">case</span> <span class="nl">left:</span><span class="o">{</span>
+                <span class="n">temp</span><span class="o">=</span><span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="o">]=</span><span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">case</span> <span class="nl">right:</span><span class="o">{</span>
+                <span class="n">temp</span><span class="o">=</span><span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="o">]=</span><span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">case</span> <span class="nl">up:</span><span class="o">{</span>
+                <span class="n">temp</span><span class="o">=</span><span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">case</span> <span class="nl">down:</span><span class="o">{</span>
+                <span class="n">temp</span><span class="o">=</span><span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]=</span><span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]+</span><span class="s">" "</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>至于第二问，我们先来看一个问题</p>
+
+<p>对于以下迷宫，应该怎么走？</p>
+
+<p><img src="http://image.augustrush8.com/images/hua3.png" alt="" class="center" /></p>
+
+<p>很显然，人眼一看就大概知道怎么走。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua4.png" alt="" class="center" /></p>
+
+<p>计算机应该怎么走呢？</p>
+
+<p>每个点都可以按照右下左上的方向来进行尝试，如果是墙壁，就换一个方向，如果可以走，就往前走到下一点，然后再接着尝试。直到到达终点为止。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua5.png" alt="" class="center" /></p>
+
+<p>四个方向顺序尝试，如果能够走通，就继续往下走，接着尝试下一点。</p>
+
+<p>这里所说的尝试，即是搜索。</p>
+
+<p>前面已经走过两步了，下面看看第三步怎么走：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua6.png" alt="" class="center" /></p>
+
+<p>搜索的时候，不再搜索一些明显不对的方向，这在搜索算法当中叫做剪枝。剪掉没用的分支，提高效率</p>
+
+<p>再看一个迷宫：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua7.png" alt="" class="center" /></p>
+
+<p>一眼就能看出的走法：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua8.png" alt="" class="center" /></p>
+
+<p>算法来进行搜索呢？</p>
+
+<p><img src="http://image.augustrush8.com/images/hua9.png" alt="" class="center" /></p>
+
+<p>此时第三步会发现右边能走，就往右边走，但会发现右边是一个死胡同。那么这是就应该“回溯”。</p>
+
+<p>注意，这块并不是往左走，而是回退，退回到上一步。如果我们正在往前搜索，当然不能走回头路。但是当前面没有路的时候，我们就需要返回来，找到之前有可能出现岔路口的地方，再去下一个方向进行搜索。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua10.png" alt="" class="center" /></p>
+
+<p>那么，对应于原来的问题我们应该怎么解呢？</p>
+
+<p>加入以下面这个状态开始：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua11.png" alt="" class="center" /></p>
+
+<p>接着：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua12.png" alt="" class="center" /></p>
+
+<p>再接着：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua13.png" alt="" class="center" /></p>
+
+<p>那么，什么时候应该回溯呢？那就是发现碰到“<strong>死胡同</strong>”的时候，也就是所有的路都走不通的时候</p>
+
+<p>这个回溯的过程就跟栈非常类似，往前走一步就像是入栈，到了死胡同，要往回退，就像是出栈。但用递归来编码，相对来说难度要小一点。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua14.png" alt="" class="center" /></p>
+
+<p>当然，递归在计算机里面也是用栈实现的，用递归的话，会清晰不少。</p>
+
+<p>接下来的问题是，我如何判断到达了胜利的状态呢？</p>
+
+<p>想一想，如果每一条路都被堵住的话，回溯就会回到起点了吧，如果回到起点状态还没有胜利的话，就是不能到达胜利状态了。</p>
+
+<p>最后一个问题，正确的移动步骤应该如何记录呢？</p>
+
+<p>思考：走迷宫的时候，每走一步，就把这一步是往哪走的记录下来，但是碰到了死胡同，往回退的时候，又把之前记录的步骤最后一步去掉。这样一来，达到终点的时候，记下来的步骤就是一条从起点到终点的路径了。</p>
+
+<p>记录移动路径，其实就是在真正搜索之前，把方向记录下来，而搜索如果要返回了，则说明该次搜索已经结束，没有结果，应该把该记录去除。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua15.png" alt="" class="center" /></p>
+
+<p>看看具体的代码实现：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">leyou</span><span class="o">.</span><span class="na">test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HuaRongDao</span> <span class="o">{</span>
+
+    <span class="c1">// 定义方向</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">LEFT</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">RIGHT</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">UP</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">DOWN</span> <span class="o">=</span> <span class="mi">4</span><span class="o">;</span>
+
+    <span class="c1">// 3x3的九宫格</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">;</span>
+
+    <span class="c1">// 记录空格的位置</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+
+    <span class="c1">// 定义移动的数组</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">moveArr</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;();</span>
+
+    <span class="c1">// 定义终点状态</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Integer</span> <span class="no">WIN_STATE</span> <span class="o">=</span> <span class="mi">123456780</span><span class="o">;</span>
+
+    <span class="c1">// 保存已经搜索过的状态</span>
+    <span class="kd">private</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">statusSet</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;();</span>
+
+    <span class="c1">// 初始化，数字0代表空格，先遍历，找出空格的位置</span>
+    <span class="kd">public</span> <span class="nf">HuaRongDao</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 判断是否可以朝某个方向进行移动</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">canMove</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// y &gt; 0才能左移</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="k">return</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="c1">// y &lt; 2才能右移</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="k">return</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="c1">// x &gt; 0才能上移</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="c1">// x &lt; 2才能下移</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 朝某个方向进行移动，该函数不作判断，直接移动</span>
+    <span class="c1">// 调用前请自行用canMove先行判断</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">move</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 空格和左侧数字交换</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和右侧数字交换</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和上方数字交换</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和下方数字交换</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 该方向记录</span>
+        <span class="n">moveArr</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 某个方向的回退，该函数不作判断，直接移动</span>
+    <span class="c1">// 其操作和move方法正好相反</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">moveBack</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 空格和左侧数字交换</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和右侧数字交换</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和上方数字交换</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">// 空格和下方数字交换</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">];</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 记录的移动步骤出栈</span>
+        <span class="n">moveArr</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">moveArr</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 获取状态，这里把9个数字按顺序组成一个整数来代表状态</span>
+    <span class="c1">// 方法不唯一，只要能区分九宫格状态就行</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="nf">getStatus</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">status</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 搜索方法</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 如果能够朝该方向行走</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">canMove</span><span class="o">(</span><span class="n">direction</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 往该方向移动</span>
+            <span class="n">move</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+            <span class="c1">// 移动后的状态</span>
+            <span class="nc">Integer</span> <span class="n">status</span> <span class="o">=</span> <span class="n">getStatus</span><span class="o">();</span>
+            <span class="c1">// 如果已经是胜利状态，返回true</span>
+            <span class="k">if</span><span class="o">(</span><span class="no">WIN_STATE</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 如果是之前走过的状态了，返回false</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">statusSet</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+                <span class="c1">// 这一步走错了，回退</span>
+                <span class="n">moveBack</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 将当前状态存入set</span>
+            <span class="n">statusSet</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">status</span><span class="o">);</span>
+            <span class="c1">// 继续朝四个方向进行搜索</span>
+            <span class="kt">boolean</span> <span class="n">searchFourOk</span> <span class="o">=</span> <span class="n">search</span><span class="o">(</span><span class="no">RIGHT</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">DOWN</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">LEFT</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">UP</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">searchFourOk</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// 这一步走错了，把它的记录去除</span>
+                <span class="n">moveBack</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 解题入口方法</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">solve</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Integer</span> <span class="n">status</span> <span class="o">=</span> <span class="n">getStatus</span><span class="o">();</span>
+        <span class="c1">// 如果已经是胜利状态，返回true</span>
+        <span class="k">if</span><span class="o">(</span><span class="no">WIN_STATE</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 初始状态先记录</span>
+        <span class="n">statusSet</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">status</span><span class="o">);</span>
+        <span class="c1">// 朝4个方向进行搜索</span>
+        <span class="k">return</span> <span class="nf">search</span><span class="o">(</span><span class="no">RIGHT</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">DOWN</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">LEFT</span><span class="o">)</span> <span class="o">||</span> <span class="n">search</span><span class="o">(</span><span class="no">UP</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 打印路径</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printRoute</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">moveArr</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">getDirString</span><span class="o">(</span><span class="n">moveArr</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)));</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 方向与其对应的字符串</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="nf">getDirString</span><span class="o">(</span><span class="kt">int</span> <span class="n">dir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">dir</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="k">return</span> <span class="s">"左"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="k">return</span> <span class="s">"右"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="k">return</span> <span class="s">"上"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="k">return</span> <span class="s">"下"</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 打印当前华容道的状态</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>这里代码编写注意几点，第一，我们是以当前空格所在位置作为状态的，当回溯的时候，注意x，y状态的回复；第二，我们对于“当前局面”的设定，当前局面也可以理解为当前状态，一定需要保证它的唯一性；第三，写递归代码的时候有套路，我们一般都是先判定状态是否满足，如果满足就直接返回真，不满足的话再判断状态集里面是否已经有了此状态，有的话直接回溯并返回假，紧接着就是搜索，搜索完判断是否满足，不满足就回溯。</p>
+
+<p>好了，让我们写一个测试用例来测试一下代码：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">=(</span><span class="err">此处有</span><span class="n">jekyll</span><span class="err">渲染问题，请读者自行在这里构造一个二维数组</span><span class="o">);</span>
+        <span class="nc">HuaRongDao</span> <span class="n">huaRongDao</span><span class="o">=</span><span class="k">new</span> <span class="nc">HuaRongDao</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+        <span class="n">huaRongDao</span><span class="o">.</span><span class="na">solve</span><span class="o">();</span>
+        <span class="n">huaRongDao</span><span class="o">.</span><span class="na">printRoute</span><span class="o">();</span>
+        <span class="n">huaRongDao</span><span class="o">.</span><span class="na">print</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>but! 不幸的事情发生了：</p>
+
+<p><img src="http://image.augustrush8.com/images/hua16.png" alt="" class="center" /></p>
+
+<p>栈溢出了，为什么呢？</p>
+
+<p><img src="http://image.augustrush8.com/images/hua17.png" alt="" class="center" /></p>
+
+<p>那么我们改一改代码，把search函数入口里面的判断条件改一改：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="o">(</span><span class="n">canMove</span><span class="o">(</span><span class="n">direction</span><span class="o">)&amp;&amp;</span> <span class="n">moveArr</span><span class="o">.</span><span class="na">size</span><span class="o">()&lt;</span><span class="mi">100</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>再来测试同样的测试用例</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>下 右 
+1 2 3 
+4 5 6 
+7 8 0 
+</code></pre></div></div>
+
+<p>这就得到了正确的结果。</p>
+
+<p>以上，就是深度搜索了，深度搜索就像一个死钻牛角尖的人一样，不撞南墙不回头。</p>
+
+<p>但上面这道题，其实更适合使用广度优先搜索。广度优先搜索，是先搜索每一个可行方向的第一步，然后再接着搜索每一个可行方向的第二步。以此类推。</p>
+
+<p>简单理解就是，每到一个岔路口，就会分成多波人在每一个方向上去进行搜索。</p>
+
+<p><img src="http://image.augustrush8.com/images/hua18.png" alt="" class="center" /></p>
+
+<p>广度优先搜索就没有回溯的必要了。不再使用递归了</p>
+
+<p>广度搜索可以将要搜索的初始状态加到一个<strong>队列</strong>里，然后每次从队列中取出一个状态，往可以前进的方向前进一步，然后再将该状态放到队列。利用队列先进先出的特点，就可以实现广搜的效果。这和之前深搜的对比一下就能看出来了，<strong>深搜是栈的最佳体现，而广搜则更多的体现一种队列的思想</strong>。</p>
+
+<p>那么，对于这个问题，使用广度搜索，如何判断胜利状态呢？如果队列空了还没有找到出口，说明所有的方向都找不到，那么自然就无法胜利了。</p>
+
+<p>然后，怎么记录这条胜利的路径呢？其实只要每一步都记录上一步的状态和这次的方向即可。这样在达到最终胜利状态的时候，可以找到这个状态的上一步。而上一步又可以找到上上步，这就是链表的特征了。</p>
+
+<p>有了上面的基础，继续来解决这个问题</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HuaRongDao</span> <span class="o">{</span>
+
+    <span class="c1">// 定义方向</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">LEFT</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">RIGHT</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">UP</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">DOWN</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+
+    <span class="c1">// 定义辅助数组（此处有Jekyll渲染问题，运行时添加方向二维数组{0, -1}, {0, 1}, {-1, 0}, {1, 0}）</span>
+    <span class="c1">//private static final int[][] dxdy = .....</span>
+
+    <span class="c1">// 3x3的九宫格</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">;</span>
+
+    <span class="c1">// 记录空格的位置</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+
+    <span class="c1">// 定义移动的数组</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">moveArr</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;();</span>
+
+    <span class="c1">// 定义终点状态</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Integer</span> <span class="no">WIN_STATE</span> <span class="o">=</span> <span class="mi">123456780</span><span class="o">;</span>
+
+    <span class="c1">// 保存已经搜索过的状态</span>
+    <span class="kd">private</span> <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">statusSet</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;();</span>
+
+    <span class="c1">// 代表广搜的每一步，通过lastItem链起来</span>
+    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">SearchItem</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">status</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">dir</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="nc">SearchItem</span> <span class="n">lastItem</span><span class="o">;</span>
+        <span class="nc">SearchItem</span><span class="o">(</span><span class="nc">Integer</span> <span class="n">status</span><span class="o">,</span> <span class="nc">Integer</span> <span class="n">dir</span><span class="o">,</span> <span class="nc">SearchItem</span> <span class="n">lastItem</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">status</span> <span class="o">=</span> <span class="n">status</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">dir</span> <span class="o">=</span> <span class="n">dir</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">lastItem</span> <span class="o">=</span> <span class="n">lastItem</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="nc">Integer</span> <span class="nf">getStatus</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">status</span><span class="o">;}</span>
+        <span class="kd">public</span> <span class="nc">Integer</span> <span class="nf">getDir</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">dir</span><span class="o">;}</span>
+        <span class="kd">public</span> <span class="nc">SearchItem</span> <span class="nf">getLastItem</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">lastItem</span><span class="o">;}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 广搜的存储队列</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">SearchItem</span><span class="o">&gt;</span> <span class="n">statusToSearch</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">SearchItem</span><span class="o">&gt;();</span>
+
+    <span class="c1">// 初始化，数字0代表空格，先遍历，找出空格的位置</span>
+    <span class="kd">public</span> <span class="nf">HuaRongDao</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="n">getXY</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 获取空格的x和y坐标</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">getXY</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 判断是否可以朝某个方向进行移动</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">canMove</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// y &gt; 0才能左移</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="k">return</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="c1">// y &lt; 2才能右移</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="k">return</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="c1">// x &gt; 0才能上移</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="c1">// x &lt; 2才能下移</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 找出该方向的相反方向</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getBackDir</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// y &gt; 0才能左移</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="k">return</span> <span class="no">RIGHT</span><span class="o">;</span>
+            <span class="c1">// y &lt; 2才能右移</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="k">return</span> <span class="no">LEFT</span><span class="o">;</span>
+            <span class="c1">// x &gt; 0才能上移</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="k">return</span> <span class="no">DOWN</span><span class="o">;</span>
+            <span class="c1">// x &lt; 2才能下移</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="k">return</span> <span class="no">UP</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 朝某个方向进行移动，该函数不作判断，直接移动</span>
+    <span class="c1">// 调用前请自行用canMove先行判断</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">move</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">0</span><span class="o">]][</span><span class="n">y</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">1</span><span class="o">]];</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">0</span><span class="o">]][</span><span class="n">y</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">1</span><span class="o">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dxdy</span><span class="o">[</span><span class="n">direction</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 某个方向的前进，该函数不作判断，直接移动</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">moveForward</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">move</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+        <span class="c1">// 该方向记录</span>
+        <span class="n">moveArr</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">direction</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 某个方向的回退，该函数不作判断，直接移动</span>
+    <span class="c1">// 其操作和moveForward方法正好相反</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">moveBack</span><span class="o">(</span><span class="kt">int</span> <span class="n">direction</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">move</span><span class="o">(</span><span class="n">getBackDir</span><span class="o">(</span><span class="n">direction</span><span class="o">));</span>
+        <span class="c1">// 记录的移动步骤出栈</span>
+        <span class="n">moveArr</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">moveArr</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 获取状态，这里把9个数字按顺序组成一个整数来代表状态</span>
+    <span class="c1">// 方法不唯一，只要能区分九宫格状态就行</span>
+    <span class="kd">public</span> <span class="nc">Integer</span> <span class="nf">getStatus</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">status</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 根据状态还原九宫格数组</span>
+    <span class="c1">// 该方法是getStatus的逆过程</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">recoverStatus</span><span class="o">(</span><span class="nc">Integer</span> <span class="n">status</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">arr</span><span class="o">[</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i</span><span class="o">][</span><span class="mi">2</span> <span class="o">-</span> <span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">status</span> <span class="o">%</span> <span class="mi">10</span><span class="o">;</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status</span> <span class="o">/</span> <span class="mi">10</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">getXY</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 搜索方法</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">search</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 如果还有要搜索的状态</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">statusToSearch</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 队首出列</span>
+            <span class="nc">SearchItem</span> <span class="n">item</span> <span class="o">=</span> <span class="n">statusToSearch</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="nc">Integer</span> <span class="n">status</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getStatus</span><span class="o">();</span>
+            <span class="c1">// 搜到了</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">status</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="no">WIN_STATE</span><span class="o">))</span> <span class="o">{</span>
+                <span class="c1">// 找到路径</span>
+                <span class="n">recordRoute</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 根据status还原arr和x，y</span>
+            <span class="n">recoverStatus</span><span class="o">(</span><span class="n">status</span><span class="o">);</span>
+            <span class="c1">// 4个方向进行遍历</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="c1">// 如果能够朝该方向行走</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">canMove</span><span class="o">(</span><span class="n">i</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="c1">// 向前一步</span>
+                    <span class="n">moveForward</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="n">getStatus</span><span class="o">();</span>
+                    <span class="c1">// 之前搜过的状态</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">statusSet</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="n">moveBack</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                        <span class="c1">// 放弃</span>
+                        <span class="k">continue</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="c1">// 新状态加入待搜索</span>
+                    <span class="n">statusSet</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">status</span><span class="o">);</span>
+                    <span class="n">statusToSearch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">SearchItem</span><span class="o">(</span><span class="n">status</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">item</span><span class="o">));</span>
+                    <span class="n">moveBack</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 解题入口方法</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">solve</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Integer</span> <span class="n">status</span> <span class="o">=</span> <span class="n">getStatus</span><span class="o">();</span>
+        <span class="c1">// 如果已经是胜利状态，返回true</span>
+        <span class="k">if</span><span class="o">(</span><span class="no">WIN_STATE</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 初始状态先记录</span>
+        <span class="n">statusSet</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">status</span><span class="o">);</span>
+        <span class="c1">// 初始状态进入搜索队列</span>
+        <span class="n">statusToSearch</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">SearchItem</span><span class="o">(</span><span class="n">status</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">));</span>
+        <span class="k">return</span> <span class="nf">search</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 根据链表顺藤摸瓜，找到路径</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">recordRoute</span><span class="o">(</span><span class="nc">SearchItem</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">null</span> <span class="o">!=</span> <span class="n">item</span><span class="o">.</span><span class="na">getLastItem</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">moveArr</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">getDir</span><span class="o">());</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="na">getLastItem</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 打印路径</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printRoute</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">moveArr</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">getDirString</span><span class="o">(</span><span class="n">moveArr</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)));</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 方向与其对应的字符串</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="nf">getDirString</span><span class="o">(</span><span class="kt">int</span> <span class="n">dir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">dir</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="nl">LEFT:</span>
+                <span class="k">return</span> <span class="s">"左"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">RIGHT:</span>
+                <span class="k">return</span> <span class="s">"右"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">UP:</span>
+                <span class="k">return</span> <span class="s">"上"</span><span class="o">;</span>
+            <span class="k">case</span> <span class="nl">DOWN:</span>
+                <span class="k">return</span> <span class="s">"下"</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 打印当前华容道的状态</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>看看测试用例：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 2 3 
+4 5 6 
+8 7 0 
+无法胜利
+1 2 3 
+4 0 6 
+7 5 8 
+可以胜利，路径为：下 右 
+3 4 1 
+5 6 0 
+8 2 7 
+可以胜利，路径为：左 左 上 右 下 左 下 右 右 上 左 左 下 右 上 上 右 下 左 左 上 右 下 右 下 
+
+Process finished with exit code 0
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+
+<p>总结一下深搜和广搜的区别和适用场景。</p>
+
+<p>其实广搜比深搜多了一个队列来存储要搜索的状态，但它却能够得到最优解，属于空间换时间。</p>
+
+<p>而深搜的适用场景也就很明显了，如果这道题的要求是求所有解，深搜的空间更少，编码也要简单一些，所以更加适合</p>
+:ET

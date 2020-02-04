@@ -1,0 +1,441 @@
+I"^�<h4 id="简单介绍">简单介绍</h4>
+
+<p>MQ全称为Message Queue，即消息队列， RabbitMQ是由erlang语言开发，基于AMQP（Advanced Message
+Queue 高级消息队列协议）协议实现的消息队列，它是一种应用程序之间的通信方法，消息队列在分布式系统开
+发中应用非常广泛。RabbitMQ官方地址：http://www.rabbitmq.com/</p>
+
+<h4 id="使用场景">使用场景</h4>
+
+<ul>
+  <li>任务异步处理</li>
+</ul>
+
+<p>将不需要同步处理的并且耗时长的操作由消息队列通知消息接收方进行异步处理。提高了应用程序的响应时间。</p>
+
+<ul>
+  <li>应用程序解耦合</li>
+</ul>
+
+<p>MQ相当于一个中介，生产方通过MQ与消费方交互，它将应用程序进行解耦合。</p>
+
+<h4 id="类似产品">类似产品</h4>
+
+<p>ActiveMQ，RabbitMQ，ZeroMQ，Kafka，MetaMQ，RocketMQ、Redis</p>
+
+<h4 id="why-rabbitmq">WHY RabbitMQ？</h4>
+
+<ul>
+  <li>使用简单，功能强大。</li>
+  <li>基于AMQP协议。</li>
+  <li>社区活跃，文档完善。</li>
+  <li>高并发性能好，这主要得益于Erlang语言。</li>
+  <li>Spring Boot默认已集成RabbitMQ</li>
+</ul>
+
+<h4 id="amqp协议">AMQP协议</h4>
+
+<p>AMQP是一套公开的消息队列协议，最早在2003年被提出，它旨在从协议层定义消息通信数据的标准格式，
+为的就是解决MQ市场上协议不统一的问题。RabbitMQ就是遵循AMQP标准协议开发的MQ服务。</p>
+
+<h4 id="与jms辨析">与JMS辨析</h4>
+
+<p>JMS是java提供的一套消息服务API标准，其目的是为所有的java应用程序提供统一的消息通信的标准，类似java的
+jdbc，只要遵循jms标准的应用程序之间都可以进行消息通信。它和AMQP有什么 不同，jms是java语言专属的消
+息服务标准，它是在api层定义标准，并且只能用于java应用；而AMQP是在协议层定义的标准，是跨语言的 。</p>
+
+<h4 id="rabbitmq工作原理图示">RabbitMQ工作原理图示</h4>
+
+<p><img src="http://image.augustrush8.com/images/./rabbitMQ/rabbitmq.png" alt="" /></p>
+
+<p><strong>组件说明</strong></p>
+
+<ul>
+  <li>Broker：消息队列服务进程，此进程包括两个部分：Exchange和Queue。</li>
+  <li>Exchange：消息队列交换机，按一定的规则将消息路由转发到某个队列，对消息进行过滤</li>
+  <li>Queue：消息队列，存储消息的队列，消息到达队列并转发给指定的消费方</li>
+  <li>Producer：消息生产者，即生产方客户端，生产方客户端将消息发送到MQ。</li>
+  <li>Consumer：消息消费者，即消费方客户端，接收MQ转发的消息。</li>
+</ul>
+
+<h4 id="消息收发流程">消息收发流程</h4>
+
+<ul>
+  <li>发送消息
+    <ul>
+      <li>1、生产者和Broker建立TCP连接。</li>
+      <li>2、生产者和Broker建立通道。</li>
+      <li>3、生产者通过通道消息发送给Broker，由Exchange将消息进行转发。</li>
+      <li>4、Exchange将消息转发到指定的Queue（队列）</li>
+    </ul>
+  </li>
+  <li>接收消息
+    <ul>
+      <li>1、消费者和Broker建立TCP连接</li>
+      <li>2、消费者和Broker建立通道</li>
+      <li>3、消费者监听指定的Queue（队列）</li>
+      <li>4、当有消息到达Queue时Broker默认将消息推送给消费者。</li>
+      <li>5、消费者接收到消息。</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="程序编码实现消息的发送和接收">程序编码实现消息的发送和接收</h4>
+
+<ul>
+  <li>发送程序编码流程
+    <ul>
+      <li>创建连接</li>
+      <li>创建通道</li>
+      <li>声明队列</li>
+      <li>发送消息</li>
+    </ul>
+  </li>
+  <li>接收程序编码流程
+    <ul>
+      <li>创建连接</li>
+      <li>创建通道</li>
+      <li>声明队列</li>
+      <li>监听队列</li>
+      <li>接收消息</li>
+      <li>ack回复</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="一段简单的发布订阅模式的原生编码">一段简单的发布订阅模式的原生编码</h4>
+
+<ul>
+  <li>生产者</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Producer02_publish</span> <span class="o">{</span>
+    <span class="c1">//队列名称</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">QUEUE_INFORM_EMAIL</span> <span class="o">=</span> <span class="s">"queue_inform_email"</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">QUEUE_INFORM_SMS</span> <span class="o">=</span> <span class="s">"queue_inform_sms"</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">=</span><span class="s">"exchange_fanout_inform"</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//通过连接工厂创建新的连接和mq建立连接</span>
+        <span class="nc">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConnectionFactory</span><span class="o">();</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">5672</span><span class="o">);</span><span class="c1">//端口</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="c1">//设置虚拟机，一个mq服务可以设置多个虚拟机，每个虚拟机就相当于一个独立的mq</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setVirtualHost</span><span class="o">(</span><span class="s">"/"</span><span class="o">);</span>
+
+        <span class="nc">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="nc">Channel</span> <span class="n">channel</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//建立新连接</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">connectionFactory</span><span class="o">.</span><span class="na">newConnection</span><span class="o">();</span>
+            <span class="c1">//创建会话通道,生产者和mq服务所有通信都在channel通道中完成</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">createChannel</span><span class="o">();</span>
+            <span class="c1">//声明队列，如果队列在mq 中没有则要创建</span>
+            <span class="c1">//参数：String queue, boolean durable, boolean exclusive, boolean autoDelete, Map&lt;String, Object&gt; arguments</span>
+            <span class="cm">/**
+             * 参数明细
+             * 1、queue 队列名称
+             * 2、durable 是否持久化，如果持久化，mq重启后队列还在
+             * 3、exclusive 是否独占连接，队列只允许在该连接中访问，如果connection连接关闭队列则自动删除,如果将此参数设置true可用于临时队列的创建
+             * 4、autoDelete 自动删除，队列不再使用时是否自动删除此队列，如果将此参数和exclusive参数设置为true就可以实现临时队列（队列不用了就自动删除）
+             * 5、arguments 参数，可以设置一个队列的扩展参数，比如：可设置存活时间
+             */</span>
+            <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="no">QUEUE_INFORM_EMAIL</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
+            <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="no">QUEUE_INFORM_SMS</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
+            <span class="c1">//声明一个交换机</span>
+            <span class="c1">//参数：String exchange, String type</span>
+            <span class="cm">/**
+             * 参数明细：
+             * 1、交换机的名称
+             * 2、交换机的类型
+             * fanout：对应的rabbitmq的工作模式是 publish/subscribe
+             * direct：对应的Routing	工作模式
+             * topic：对应的Topics工作模式
+             * headers： 对应的headers工作模式
+             */</span>
+            <span class="n">channel</span><span class="o">.</span><span class="na">exchangeDeclare</span><span class="o">(</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span> <span class="nc">BuiltinExchangeType</span><span class="o">.</span><span class="na">FANOUT</span><span class="o">);</span>
+            <span class="c1">//进行交换机和队列绑定</span>
+            <span class="c1">//参数：String queue, String exchange, String routingKey</span>
+            <span class="cm">/**
+             * 参数明细：
+             * 1、queue 队列名称
+             * 2、exchange 交换机名称
+             * 3、routingKey 路由key，作用是交换机根据路由key的值将消息转发到指定的队列中，在发布订阅模式中调协为空字符串
+             */</span>
+            <span class="n">channel</span><span class="o">.</span><span class="na">queueBind</span><span class="o">(</span><span class="no">QUEUE_INFORM_EMAIL</span><span class="o">,</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span><span class="s">""</span><span class="o">);</span>
+            <span class="n">channel</span><span class="o">.</span><span class="na">queueBind</span><span class="o">(</span><span class="no">QUEUE_INFORM_SMS</span><span class="o">,</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span><span class="s">""</span><span class="o">);</span>
+            <span class="c1">//发送消息</span>
+            <span class="c1">//参数：String exchange, String routingKey, BasicProperties props, byte[] body</span>
+            <span class="cm">/**
+             * 参数明细：
+             * 1、exchange，交换机，如果不指定将使用mq的默认交换机（设置为""）
+             * 2、routingKey，路由key，交换机根据路由key来将消息转发到指定的队列，如果使用默认交换机，routingKey设置为队列的名称
+             * 3、props，消息的属性
+             * 4、body，消息内容
+             */</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="c1">//消息内容</span>
+                <span class="nc">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"send inform message to user"</span><span class="o">;</span>
+                <span class="n">channel</span><span class="o">.</span><span class="na">basicPublish</span><span class="o">(</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span><span class="s">""</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="n">message</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"send to mq "</span><span class="o">+</span><span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="c1">//关闭连接</span>
+            <span class="c1">//先关闭通道</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">channel</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">TimeoutException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>消费者1</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Consumer02_subscribe_email</span> <span class="o">{</span>
+    <span class="c1">//队列名称</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">QUEUE_INFORM_EMAIL</span> <span class="o">=</span> <span class="s">"queue_inform_email"</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">=</span><span class="s">"exchange_fanout_inform"</span><span class="o">;</span>
+
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">TimeoutException</span> <span class="o">{</span>
+        <span class="c1">//通过连接工厂创建新的连接和mq建立连接</span>
+        <span class="nc">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConnectionFactory</span><span class="o">();</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">5672</span><span class="o">);</span><span class="c1">//端口</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="c1">//设置虚拟机，一个mq服务可以设置多个虚拟机，每个虚拟机就相当于一个独立的mq</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setVirtualHost</span><span class="o">(</span><span class="s">"/"</span><span class="o">);</span>
+
+        <span class="c1">//建立新连接</span>
+        <span class="nc">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">connectionFactory</span><span class="o">.</span><span class="na">newConnection</span><span class="o">();</span>
+        <span class="c1">//创建会话通道,生产者和mq服务所有通信都在channel通道中完成</span>
+        <span class="nc">Channel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">createChannel</span><span class="o">();</span>
+
+        <span class="cm">/**
+         * 参数明细
+         * 1、queue 队列名称
+         * 2、durable 是否持久化，如果持久化，mq重启后队列还在
+         * 3、exclusive 是否独占连接，队列只允许在该连接中访问，如果connection连接关闭队列则自动删除,如果将此参数设置true可用于临时队列的创建
+         * 4、autoDelete 自动删除，队列不再使用时是否自动删除此队列，如果将此参数和exclusive参数设置为true就可以实现临时队列（队列不用了就自动删除）
+         * 5、arguments 参数，可以设置一个队列的扩展参数，比如：可设置存活时间
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="no">QUEUE_INFORM_EMAIL</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
+        <span class="c1">//声明一个交换机</span>
+        <span class="c1">//参数：String exchange, String type</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、交换机的名称
+         * 2、交换机的类型
+         * fanout：对应的rabbitmq的工作模式是 publish/subscribe
+         * direct：对应的Routing	工作模式
+         * topic：对应的Topics工作模式
+         * headers： 对应的headers工作模式
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">exchangeDeclare</span><span class="o">(</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span> <span class="nc">BuiltinExchangeType</span><span class="o">.</span><span class="na">FANOUT</span><span class="o">);</span>
+        <span class="c1">//进行交换机和队列绑定</span>
+        <span class="c1">//参数：String queue, String exchange, String routingKey</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、queue 队列名称
+         * 2、exchange 交换机名称
+         * 3、routingKey 路由key，作用是交换机根据路由key的值将消息转发到指定的队列中，在发布订阅模式中调协为空字符串
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">queueBind</span><span class="o">(</span><span class="no">QUEUE_INFORM_EMAIL</span><span class="o">,</span> <span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span> <span class="s">""</span><span class="o">);</span>
+
+        <span class="c1">//实现消费方法</span>
+        <span class="nc">DefaultConsumer</span> <span class="n">defaultConsumer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DefaultConsumer</span><span class="o">(</span><span class="n">channel</span><span class="o">){</span>
+
+            <span class="cm">/**
+             * 当接收到消息后此方法将被调用
+             * @param consumerTag  消费者标签，用来标识消费者的，在监听队列时设置channel.basicConsume
+             * @param envelope 信封，通过envelope
+             * @param properties 消息属性
+             * @param body 消息内容
+             * @throws IOException
+             */</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleDelivery</span><span class="o">(</span><span class="nc">String</span> <span class="n">consumerTag</span><span class="o">,</span> <span class="nc">Envelope</span> <span class="n">envelope</span><span class="o">,</span> <span class="no">AMQP</span><span class="o">.</span><span class="na">BasicProperties</span> <span class="n">properties</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+                <span class="c1">//交换机</span>
+                <span class="nc">String</span> <span class="n">exchange</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="na">getExchange</span><span class="o">();</span>
+                <span class="c1">//消息id，mq在channel中用来标识消息的id，可用于确认消息已接收</span>
+                <span class="kt">long</span> <span class="n">deliveryTag</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="na">getDeliveryTag</span><span class="o">();</span>
+                <span class="c1">//消息内容</span>
+                <span class="nc">String</span> <span class="n">message</span><span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">body</span><span class="o">,</span><span class="s">"utf-8"</span><span class="o">);</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"receive message:"</span><span class="o">+</span><span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+
+        <span class="c1">//监听队列</span>
+        <span class="c1">//参数：String queue, boolean autoAck, Consumer callback</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、queue 队列名称
+         * 2、autoAck 自动回复，当消费者接收到消息后要告诉mq消息已接收，如果将此参数设置为tru表示会自动回复mq，如果设置为false要通过编程实现回复
+         * 3、callback，消费方法，当消费者接收到消息要执行的方法
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">basicConsume</span><span class="o">(</span><span class="no">QUEUE_INFORM_EMAIL</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="n">defaultConsumer</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>消费者2</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Consumer02_subscribe_sms</span> <span class="o">{</span>
+    <span class="c1">//队列名称</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">QUEUE_INFORM_SMS</span> <span class="o">=</span> <span class="s">"queue_inform_sms"</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">=</span><span class="s">"exchange_fanout_inform"</span><span class="o">;</span>
+
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">TimeoutException</span> <span class="o">{</span>
+        <span class="c1">//通过连接工厂创建新的连接和mq建立连接</span>
+        <span class="nc">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConnectionFactory</span><span class="o">();</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"127.0.0.1"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">5672</span><span class="o">);</span><span class="c1">//端口</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="s">"guest"</span><span class="o">);</span>
+        <span class="c1">//设置虚拟机，一个mq服务可以设置多个虚拟机，每个虚拟机就相当于一个独立的mq</span>
+        <span class="n">connectionFactory</span><span class="o">.</span><span class="na">setVirtualHost</span><span class="o">(</span><span class="s">"/"</span><span class="o">);</span>
+
+        <span class="c1">//建立新连接</span>
+        <span class="nc">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">connectionFactory</span><span class="o">.</span><span class="na">newConnection</span><span class="o">();</span>
+        <span class="c1">//创建会话通道,生产者和mq服务所有通信都在channel通道中完成</span>
+        <span class="nc">Channel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">createChannel</span><span class="o">();</span>
+
+        <span class="cm">/**
+         * 参数明细
+         * 1、queue 队列名称
+         * 2、durable 是否持久化，如果持久化，mq重启后队列还在
+         * 3、exclusive 是否独占连接，队列只允许在该连接中访问，如果connection连接关闭队列则自动删除,如果将此参数设置true可用于临时队列的创建
+         * 4、autoDelete 自动删除，队列不再使用时是否自动删除此队列，如果将此参数和exclusive参数设置为true就可以实现临时队列（队列不用了就自动删除）
+         * 5、arguments 参数，可以设置一个队列的扩展参数，比如：可设置存活时间
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="no">QUEUE_INFORM_SMS</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">false</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
+        <span class="c1">//声明一个交换机</span>
+        <span class="c1">//参数：String exchange, String type</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、交换机的名称
+         * 2、交换机的类型
+         * fanout：对应的rabbitmq的工作模式是 publish/subscribe
+         * direct：对应的Routing	工作模式
+         * topic：对应的Topics工作模式
+         * headers： 对应的headers工作模式
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">exchangeDeclare</span><span class="o">(</span><span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span> <span class="nc">BuiltinExchangeType</span><span class="o">.</span><span class="na">FANOUT</span><span class="o">);</span>
+        <span class="c1">//进行交换机和队列绑定</span>
+        <span class="c1">//参数：String queue, String exchange, String routingKey</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、queue 队列名称
+         * 2、exchange 交换机名称
+         * 3、routingKey 路由key，作用是交换机根据路由key的值将消息转发到指定的队列中，在发布订阅模式中调协为空字符串
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">queueBind</span><span class="o">(</span><span class="no">QUEUE_INFORM_SMS</span><span class="o">,</span> <span class="no">EXCHANGE_FANOUT_INFORM</span><span class="o">,</span> <span class="s">""</span><span class="o">);</span>
+
+        <span class="c1">//实现消费方法</span>
+        <span class="nc">DefaultConsumer</span> <span class="n">defaultConsumer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DefaultConsumer</span><span class="o">(</span><span class="n">channel</span><span class="o">){</span>
+
+            <span class="cm">/**
+             * 当接收到消息后此方法将被调用
+             * @param consumerTag  消费者标签，用来标识消费者的，在监听队列时设置channel.basicConsume
+             * @param envelope 信封，通过envelope
+             * @param properties 消息属性
+             * @param body 消息内容
+             * @throws IOException
+             */</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleDelivery</span><span class="o">(</span><span class="nc">String</span> <span class="n">consumerTag</span><span class="o">,</span> <span class="nc">Envelope</span> <span class="n">envelope</span><span class="o">,</span> <span class="no">AMQP</span><span class="o">.</span><span class="na">BasicProperties</span> <span class="n">properties</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+                <span class="c1">//交换机</span>
+                <span class="nc">String</span> <span class="n">exchange</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="na">getExchange</span><span class="o">();</span>
+                <span class="c1">//消息id，mq在channel中用来标识消息的id，可用于确认消息已接收</span>
+                <span class="kt">long</span> <span class="n">deliveryTag</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="na">getDeliveryTag</span><span class="o">();</span>
+                <span class="c1">//消息内容</span>
+                <span class="nc">String</span> <span class="n">message</span><span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">body</span><span class="o">,</span><span class="s">"utf-8"</span><span class="o">);</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"receive message:"</span><span class="o">+</span><span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+
+        <span class="c1">//监听队列</span>
+        <span class="c1">//参数：String queue, boolean autoAck, Consumer callback</span>
+        <span class="cm">/**
+         * 参数明细：
+         * 1、queue 队列名称
+         * 2、autoAck 自动回复，当消费者接收到消息后要告诉mq消息已接收，如果将此参数设置为tru表示会自动回复mq，如果设置为false要通过编程实现回复
+         * 3、callback，消费方法，当消费者接收到消息要执行的方法
+         */</span>
+        <span class="n">channel</span><span class="o">.</span><span class="na">basicConsume</span><span class="o">(</span><span class="no">QUEUE_INFORM_SMS</span><span class="o">,</span><span class="kc">true</span><span class="o">,</span><span class="n">defaultConsumer</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h4 id="其他工作模式">其他工作模式</h4>
+
+<ul>
+  <li>1、Work queues</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/rabbitMQ/workqueue.JPG" alt="" /></p>
+
+<ul>
+  <li>2、Publish/Subscribe</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/rabbitMQ/publishandsubscribe.JPG" alt="" /></p>
+
+<ul>
+  <li>3、Routing</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/rabbitMQ/routing.JPG" alt="" /></p>
+
+<ul>
+  <li>4、Topics</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/rabbitMQ/topics.JPG" alt="" /></p>
+
+<ul>
+  <li>5、Header</li>
+  <li>6、RPC （这个就比较适合后台有个什么耗时任务的编码需求）</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/rabbitMQ/rpc.JPG" alt="" /></p>
+
+<h4 id="springboot-的编码方式">springboot 的编码方式</h4>
+
+<p>具体的就不添加代码了，这里主要描述一下编写流程</p>
+
+<ul>
+  <li>引入maven依赖</li>
+  <li>在application.yml中配置连接RabbitMQ的相关配置信息</li>
+  <li>定义RabbitConfig类，配置Exchange、Queue、及绑定交换机。</li>
+  <li>编写生产者消费者</li>
+</ul>
+
+:ET

@@ -1,0 +1,139 @@
+I";<p>这是一个有趣的算法题，其主要的思想是宽度优先搜索 :wink:</p>
+
+<h3 id="题目描述">题目描述</h3>
+
+<p>在给定的网格中，每个单元格可以有以下三个值之一：</p>
+
+<ul>
+  <li>值 <code class="highlighter-rouge">0</code> 代表空单元格；</li>
+  <li>值 <code class="highlighter-rouge">1</code> 代表新鲜橘子；</li>
+  <li>值 <code class="highlighter-rouge">2</code> 代表腐烂的橘子。</li>
+</ul>
+
+<p>每分钟，任何与腐烂的橘子（在 4 个正方向上）相邻的新鲜橘子都会腐烂。</p>
+
+<p>返回直到单元格中没有新鲜橘子为止所必须经过的最小分钟数。如果不可能，返回 <code class="highlighter-rouge">-1</code>。</p>
+
+<h3 id="输入输出示例">输入输出示例</h3>
+
+<ul>
+  <li>例一</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：[[2,1,1],[1,1,0],[0,1,1]]
+输出：4
+</code></pre></div></div>
+
+<ul>
+  <li>例二</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：[[2,1,1],[0,1,1],[1,0,1]]
+输出：-1
+解释：左下角的橘子（第 2 行， 第 0 列）永远不会腐烂，因为腐烂只会发生在 4 个正向上。
+</code></pre></div></div>
+
+<ul>
+  <li>例三</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入：[[0,2]]
+输出：0
+解释：因为 0 分钟时已经没有新鲜橘子了，所以答案就是 0 。
+</code></pre></div></div>
+
+<h3 id="图形解释说明">图形解释说明</h3>
+
+<p><img src="http://image.augustrush8.com/images/orange.png" alt="img" /></p>
+
+<h3 id="思路">思路</h3>
+
+<p>每一轮，腐烂将会从每一个烂橘子蔓延到与其相邻的新鲜橘子上。一开始，腐烂的橘子拥有深度为 0，每一轮腐烂会从腐烂橘子传染到之相邻新鲜橘子上，并且设置这些新的腐烂橘子的深度为自己深度 +1，我们想知道完成这个过程之后的最大深度值是多少。</p>
+
+<h3 id="算法">算法</h3>
+
+<p>我们可以用一个宽度优先遍历来建模这一过程。因为我们总是选择去使用深度值最小的（且之前未使用过的）腐烂橘子去腐化新鲜橘子，如此保证每一个橘子腐烂时的深度标号也是最小的。</p>
+
+<p>我们还应该检查最终状态下，是否还有新鲜橘子。</p>
+
+<h3 id="java算法实现">Java算法实现</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MinimumDepth</span> <span class="o">{</span>
+    <span class="c1">//方向移动数组</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array1</span><span class="o">={</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">,-</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">};</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">array2</span><span class="o">={</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">,-</span><span class="mi">1</span><span class="o">};</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">orangesRottrng</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">grid</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//定义存储腐烂橘子的数据结构，这里使用ArrayDeque</span>
+        <span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">queue</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayDeque</span><span class="o">();</span>
+        <span class="c1">//定义存储深度用的数据结构，这里使用HashMap</span>
+        <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">=</span><span class="k">new</span> <span class="nc">HashMap</span><span class="o">();</span>
+        <span class="c1">//遍历二维数组，找到其中的烂橘子，并记录到queue当中去</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">r</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">r</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span><span class="n">c</span><span class="o">++){</span>
+                <span class="c1">//找到了腐烂橘子的位置</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">[</span><span class="n">r</span><span class="o">][</span><span class="n">c</span><span class="o">]==</span><span class="mi">2</span><span class="o">){</span>
+                    <span class="c1">//唯一标识该位置</span>
+                    <span class="kt">int</span> <span class="n">position</span><span class="o">=</span><span class="n">r</span><span class="o">*</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">+</span><span class="n">c</span><span class="o">;</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+                    <span class="c1">//同时使得该位置在hashmap中的初始值置为0</span>
+                    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">position</span><span class="o">,</span><span class="mi">0</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//定义存储最短时间（最小深度）橘子腐烂的变量</span>
+        <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="c1">//宽度优先遍历</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="kt">int</span> <span class="n">code</span><span class="o">=</span><span class="n">queue</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+            <span class="c1">//解算出该烂橘子的横纵坐标位置</span>
+            <span class="kt">int</span> <span class="n">r</span><span class="o">=</span><span class="n">code</span><span class="o">/</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">c</span><span class="o">=</span><span class="n">code</span><span class="o">%</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+            <span class="c1">//开始寻找上下左右四个方向位置的橘子情况</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="kt">int</span> <span class="n">newr</span><span class="o">=</span><span class="n">r</span><span class="o">+</span><span class="n">array1</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="kt">int</span> <span class="n">newc</span><span class="o">=</span><span class="n">c</span><span class="o">+</span><span class="n">array2</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="kt">int</span> <span class="n">newCode</span><span class="o">=</span><span class="n">newr</span><span class="o">*</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">+</span><span class="n">newc</span><span class="o">;</span>
+                <span class="c1">//判断该新位置是否符合条件</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">newr</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">&amp;&amp;</span><span class="n">newr</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">&amp;&amp;</span><span class="n">newc</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">&amp;&amp;</span><span class="n">newc</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">&amp;&amp;</span><span class="n">grid</span><span class="o">[</span><span class="n">newr</span><span class="o">][</span><span class="n">newc</span><span class="o">]==</span><span class="mi">1</span><span class="o">){</span>
+                    <span class="c1">//把它变成烂橘子</span>
+                    <span class="n">grid</span><span class="o">[</span><span class="n">newr</span><span class="o">][</span><span class="n">newc</span><span class="o">]=</span><span class="mi">2</span><span class="o">;</span>
+                    <span class="c1">//继续向queue当中添加，好使得继续往下遍历</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">newCode</span><span class="o">);</span>
+                    <span class="c1">//向Map里面记录该节点在初始遍历条件下的深度值,在上一个烂橘子深度值的基础之上加1</span>
+                    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">newCode</span><span class="o">,</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">code</span><span class="o">)+</span><span class="mi">1</span><span class="o">);</span>
+                    <span class="c1">//所有的遍历完以后返回结果</span>
+                    <span class="n">ans</span><span class="o">=</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">newCode</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//最后还要检查所有的方框当中是否还存在好橘子</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]==</span><span class="mi">1</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(){</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">array</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">orangesRottrng</span><span class="o">(</span><span class="n">array</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="测试用例">测试用例</h3>
+
+<p>如以上输入输出示例所示</p>
+
+<h3 id="知识点">知识点</h3>
+
+<p>数据结构：ArrayDeque</p>
+
+<blockquote>
+  <p>解释：<code class="highlighter-rouge">ArrayDeque</code>是<code class="highlighter-rouge">Deque</code>接口的一个实现，使用了可变数组，所以没有容量上的限制。同时，<code class="highlighter-rouge">ArrayDeque</code>是线程不安全的，在没有外部同步的情况下，不能再多线程环境下使用。<code class="highlighter-rouge">ArrayDeque</code>是<code class="highlighter-rouge">Deque</code>的实现类，<strong>可以作为栈来使用</strong>，效率高于<code class="highlighter-rouge">Stack</code>；<strong>也可以作为队列来使用</strong>，效率高于<code class="highlighter-rouge">LinkedList</code>。需要注意的是，<code class="highlighter-rouge">ArrayDeque</code>不支持<code class="highlighter-rouge">null</code>值。</p>
+</blockquote>
+:ET

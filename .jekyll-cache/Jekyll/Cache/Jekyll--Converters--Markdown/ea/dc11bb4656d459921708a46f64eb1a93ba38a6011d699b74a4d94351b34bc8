@@ -1,0 +1,320 @@
+I"�O<p>本书内容对于刚入门的程序员来说可能具有很好的指引作用，对于有些开发经验的程序员来说同样有不错的梳理导引作用，刚开始看到这个书名的时候，给我的直观感觉是–这是不是又是一个人称“大神级”的普通程序员写的一些“人生感悟”什么的，个人对于这种论调的书籍或者材料比较反感，但看了看作者简介和书页以后，觉得这本书写的很不错（真香？），下面就我所阅读感悟的一些点作个简单的总结反思。</p>
+
+<h3 id="导引">导引</h3>
+
+<p>每个行业都有自己的一套运作规则，程序员（狭隘的定义不必深究）这个行业同样有着自己的一套完备的体系和规则，随着这些年的产业快速发展，技术也迭代的非常快速，很多人直呼–“I can not follow any more!”，是的，这是不争的事实。</p>
+
+<p>要进入这个行业，首先需要在这个行业当中找到相应的定位和<strong>成就感</strong>，这个成就感有了，也就顺带激发了兴趣，这是个大前提。如何去获得成就感呢，我们可以先从简单的程序语言（语法糖比较多的）去入手，去慢慢写一些小程序，完成一些“自动化”的工作，然后学会使用很多工具，去构建，去搜索，去实现我们想实现的小功能。</p>
+
+<p>如何成为优秀的程序员？要有程序员的“<strong>自我修养</strong>”，<strong>有修养的程序员才可能成为真正的工程师和架构师，而没有修养的程序员只能沦为码农，这是码农和工程师的关键区分点</strong>。</p>
+
+<p>一个有修养的程序员应该具备哪些关键的能力？</p>
+
+<ul>
+  <li>英文能力</li>
+  <li>问问题的能力</li>
+  <li>写代码的修养</li>
+  <li>安全防范意识</li>
+  <li>软件工程和</li>
+  <li>编程规范</li>
+</ul>
+
+<p>专业基础？</p>
+
+<ul>
+  <li>编程语言：推荐学习C，C++，Java这三个工业级的编程语言</li>
+  <li>理论学科：需要学习算法、数据结构、网络模型、计算机原理等内容</li>
+  <li>系统知识：Unix/Linux，TCP/IP</li>
+</ul>
+
+<p>从业方向？</p>
+
+<ul>
+  <li>如果你对操作系统，文件系统，数据库，网络等比较感兴趣，那么可以考虑从事底层方面的工作</li>
+  <li>如果对分布式架构，微服务，DevOPS，Cloud Native等比较感兴趣，可以从事架构方面的工作</li>
+  <li>如果对大数据、机器学习、人工智能等比较关注，那么数据领域可以成为你一展身手的地方</li>
+  <li>如果对用户体验或者交互比较感兴趣，那么前端工程师是个不错的选择</li>
+  <li>此外，安全开发，运维开发，嵌入式开发等也提供了丰富多彩的发展空间</li>
+</ul>
+
+<p>两个观点：各种技术不是鱼和熊掌，是可以兼得的；很多技术是相通的，关键是你学在表面还是深入本质</p>
+
+<p>软件设计是工程师非常重要的能力，这是从工程师通往架构师的必备技能。</p>
+
+<hr />
+
+<p>给你再一次做选择的机会，平凡还是卓越？自在悠闲，还是猛啃书本，不破楼兰终不还？遵循你内心的选择，偷偷告诉你，我选的是后者。</p>
+
+<p>有了选择，方向就有了，剩下的你需要做的就是朝着这个方向努力就行。</p>
+
+<p>需要解决几个问题：</p>
+
+<ul>
+  <li>理论和现实的差距 –学习学的到底有多少用？</li>
+  <li>技术能力的瓶颈 –老是写业务，好像没看到有多少成长？</li>
+  <li>技术太多学不过来</li>
+</ul>
+
+<p>需要明确几点端正一下态度：</p>
+
+<ul>
+  <li>并不是理论和现实的差距大，而是你还没有找到对应的场景，来感受那些学院派知识的强大。算法与数据结构、操作系统原理、编译原理、数据库原理、……这些原理上的东西，是你想要成为一个专家必须要学的东西，这就是工人和工程师的区别，是建筑工人和建筑架构师的区别。如果你觉得这些理论上的东西无用，那么只能说明，你只不过是在从事工人的工作，而不是工程师的工作。</li>
+  <li>技术能力的瓶颈，以及技术太多学不过来，只不过是你为自己的能力不足和懒惰找的理由罢了。</li>
+  <li>一切成果需要自己持续的努力和付出</li>
+</ul>
+
+<p><strong>学习建议</strong>：</p>
+
+<ul>
+  <li>一定要坚持，要保持长时间学习，甚至终生学习的态度</li>
+  <li>一定要动手，不管例子多么简单，建议至少自己敲一遍看看是否理解了里面的细枝末节</li>
+  <li>一定要学会思考，思考为什么要这样，而不是那样。还要举一反三的思考</li>
+  <li>不要乱买书，不要乱追技术名词，基础的东西经过很长时间的积累，会在未来至少10年时间内通用</li>
+  <li>回顾一下历史，看看历史线上的技术发展，你才会明白明天可能会怎样</li>
+</ul>
+
+<h3 id="进击之路">进击之路</h3>
+
+<p>资料书籍：</p>
+
+<ul>
+  <li>代码大全</li>
+  <li>Java核心技术</li>
+  <li>Head First Java 简单版</li>
+  <li>Spring in action</li>
+  <li>Spring Boot 实战</li>
+  <li>鸟哥的Linux私房菜</li>
+  <li>数据库设计的那些事–慕课网课程</li>
+  <li>JavaScript相关的jQuery，CSS相关的bootstrap</li>
+  <li><a href="http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html">关于字符编码，你所需要知道的（ASCII,Unicode,Utf-8,GB2312…）</a> 字符编码方面</li>
+  <li><a href="https://github.com/Wisdom/Awesome-Unicode">awesome unicode</a>  字符编码方面</li>
+  <li><a href="https://github.com/Codepoints/awesome-codepoints">awesome-codepoints</a>  字符编码方面</li>
+  <li>Pro Git第二版</li>
+  <li><a href="http://www.igeekbar.com/igeekbar/post/156.htm">超完整的Chrome浏览器客户端调试大全</a></li>
+  <li>数据库设计（不是书或资料）</li>
+</ul>
+
+<p>像 Python 和 JavaScript 这样的动态语言用着是很爽，但是，只有像 C、C++ 和 Java 这样的静态语言才可以让你真正地进阶。</p>
+
+<p>到这里，估计你最少也要花 1-2 年左右的时间，已经是一个 “ 全栈工程师 “ 的样子了，相信你可以找到至少年薪</p>
+
+<p>20 万以上的工作了，而且你的知识面算是有不错的广度了，但是深度还不够，这个时候，是一个比较关键点了。</p>
+
+<p><strong>建议：</strong></p>
+
+<p>选择一个方向开始深入。因为你并不知道你未来会有多大的可能性，也不知道你会成为什么样的人，所以为什么不再更努力一把呢？</p>
+
+<p>程序员的自我修养：</p>
+
+<ul>
+  <li>Bad architecture causes more problems than bad code.</li>
+  <li>You will spend more time thinking than coding.</li>
+  <li>The best programmers are always building things.</li>
+  <li>There’s always a better way.</li>
+  <li>Code reviews by your peers will make all of you better.</li>
+  <li>Fewer features for better code is always the right answer in the end.</li>
+  <li>If it’s not tested, it doesn’t work.</li>
+  <li>Don’t reinvent the wheel, library code is there to help.</li>
+  <li>Code that’s hard to understand is hard to maintain.</li>
+  <li>Code that’s hard to maintain is next to useless.</li>
+  <li>Always know how your business makes money, that determines who gets paid what.</li>
+  <li>If you want to feel important as a software developer, work at a tech company.</li>
+</ul>
+
+<p><a href="https://97-things-every-x-should-know.gitbooks.io/97-things-every-programmer-should-know/content/en/thing_01/">《97 Things Every Programmer Should Know》</a></p>
+
+<ul>
+  <li>英文能力</li>
+  <li>
+    <p>问问题的能力—<a href="http://www.catb.org/~esr/faqs/smart-questions.html">提问的智慧</a>，有两个著名的缩写 STFW（Search the fxxking web）以及RTFM（Read the fxxking manual）就是出自本文</p>
+  </li>
+  <li>写代码的修养
+    <ul>
+      <li><a href="https://book.douban.com/subject/4262627/">《重构：改善既有代码的设计》</a></li>
+      <li><a href="https://book.douban.com/subject/2248759/">《修改代码的艺术》</a></li>
+      <li><a href="https://book.douban.com/subject/4199741/">《代码整洁之道》</a></li>
+      <li><a href="https://book.douban.com/subject/11614538/">《程序员的职业素养》</a></li>
+    </ul>
+  </li>
+  <li>安全防范</li>
+  <li>软件工程和上线–需要认真测试，并做上线前检查，以及上线后监控</li>
+</ul>
+
+<p>程序员的自我修养更多的<strong>决定了这条路你到底能走多远</strong></p>
+
+<h3 id="java书籍推荐">Java书籍推荐</h3>
+
+<blockquote>
+  <p>《Java 核心技术：卷 1 基础知识》，这本书本来是 Sun 公司的官方用书，是一本 Java 的入门参考书。对于 Java 初学者来说，是一本非常不错的值得时常翻阅的技术手册。书中有较多地方进行 Java 与 C++ 的比较，因为当时 Java 面世的时候，又被叫作 “C++ Killer”。而我在看这本书的时候，发现书中有很多 C++ 的东西，于是又去学习了 C++。学习 C++ 的时候，发现有很多 C 的东西不懂，又顺着去学习了 C。然后，C -&gt; C++ -&gt; Java 整条线融汇贯通，这对我未来的技术成长有非常大的帮助。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>有了上述的入门后，Java 的 Spring 框架是你玩 Java 所无法回避的东西，所以接下来是两本Spring 相关的书，《Spring 实战》和《Spring Boot 实战》。前者是传统的 Spring，后者是新式的微服务的 Spring。如果你只想看一本的话，那么就看后者吧。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>接下来，你需要了解了一下如何编写高效的代码，于是必需看一下《Effective Java》（注意，这里我给的引用是第三版的，也是 2017 年末出版的书），这本书是模仿 Scott Meyers的经典图书《Effective C++》的。Effective 这种书基本上都是各种经验之谈，所以，这是一本非常不错的书，你一定要读。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>《Java 并发编程实战》，是一本完美的 Java 并发参考手册。书中从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块，用于避免并发危险、构造线程安全的类及验证线程安全的规则，如何将小的线程安全类组合成更大的线程安全类，如何利用线程来提高并发应用程序的吞吐量，如何识别可并行执行的任务，如何提高单线程子系统的响应性，如何确保并发程序执行预期任务，如何提高并发代码的性能和可伸缩性等内容。最后介绍了一些高级主题，如显式锁、原子变量、非阻塞算法以及如何开发自定义的同步工具类。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>了解如何编写出并发的程序，你还需要了解一下如何优化 Java 的性能。我推荐《Java 性能权威指南》。通过学习这本书，你可以比较大程度地提升性能测试的效果。其中包括：使用JDK 中自带的工具收集 Java 应用的性能数据，理解 JIT 编译器的优缺点，调优 JVM 垃圾收集器以减少对程序的影响，学习管理堆内存和 JVM 原生内存的方法，了解如何最大程度地优化 Java 线程及同步的性能，等等。看完这本书后，如果你还有余力，想了解更多的底层细节，那么，你有必要去读一下《深入理解 Java 虚拟机》</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>《Java 编程思想》，真是一本透着编程思想的书。上面的书让你从微观角度了解 Java，而这本书则可以让你从一个宏观角度了解 Java。这本书和 Java 核心技术的厚度差不多，但这本书的信息密度比较大。所以，读起来是非常耗大脑的，因为它会让你不断地思考。对于想学好 Java 的程序员来说，这是一本必读的书。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>《精通 Spring 4.x》，也是一本很不错的书，就是有点厚，一共有 800 多页，都是干货。我认为其中最不错的是在分析原理，尤其是针对前面提到的 Spring 技术，应用与原理都讲得很透彻，IOC 和 AOP 也分析得很棒，娓娓道来。其对任何一个技术都分析得很细致和全面，不足之处就是内容太多了，所以导致很厚，但这并不影响它是一本不错的工具书。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+  <p>当然，学 Java 你一定要学面向对象的设计模式，这里就只有一本经典的书《设计模式》。如果你觉得有点儿难度了，那么可以看一下《Head First 设计模式》。</p>
+</blockquote>
+
+<p>学习设计模式的时候，不要迷失在那23个设计模式当中，明白两个原则：</p>
+
+<ul>
+  <li>Program to an ‘interface’, not an ‘implementation’</li>
+  <li>Favor ‘object composition’ over ‘class inheritance’
+    <ul>
+      <li>继承需要给子类暴露一些父类的设计和实现细节。</li>
+      <li>父类实现的改变会造成子类也需要改变。</li>
+      <li>我们以为继承主要是为了代码重用，但实际上在子类中需要重新实现很多父类的方法。</li>
+      <li>继承更多的应该是为了多态。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>有了以上的铺垫，你已经是一个高级Java程序员了，可以进到一线公司，是高级程序员或者初级架构师的水平。</p>
+
+<p>其他语言及参考书籍资料：</p>
+
+<ul>
+  <li><a href="https://book.douban.com/subject/1139336/">C程序设计语言</a></li>
+  <li><a href="https://book.douban.com/subject/2280547/">《C 语言程序设计现代方法》</a></li>
+  <li><a href="https://book.douban.com/subject/25708312/">《C++ Primer 中文版》</a></li>
+  <li>《Effective C++》</li>
+  <li>《More Effective C++》</li>
+  <li>《深度探索C++对象模型》</li>
+  <li>C++FAQ 中文版</li>
+</ul>
+
+<p>C 语言太原始了，C++ 太复杂了，Go 语言是不二之选</p>
+
+<h3 id="理论学科">理论学科</h3>
+
+<p>算法书籍资料：</p>
+
+<ul>
+  <li>《算法》</li>
+  <li>《算法图解》</li>
+  <li>《算法导论》</li>
+  <li>《编程珠玑》</li>
+  <li>leetcode</li>
+  <li>《数据结构与算法分析》</li>
+  <li>《数据库系统概念》</li>
+  <li>《现代操作系统》</li>
+  <li>《计算机网络》</li>
+  <li>《计算机程序的构造和解释》</li>
+  <li>《编译原理》</li>
+</ul>
+
+<h3 id="系统知识">系统知识</h3>
+
+<ul>
+  <li>《深入理解计算机系统》</li>
+  <li>《Unix高级环境编程》</li>
+  <li>《Unix网络编程》</li>
+  <li>《TCP/IP详解 卷I协议》</li>
+  <li>《Linux C编程一站式学习》</li>
+  <li>《TCP/IP网络编程》</li>
+  <li>《图解TCP/IP》</li>
+  <li>《Wireshark数据包分析实战》</li>
+</ul>
+
+<h3 id="软件设计">软件设计</h3>
+
+<p>学习软件设计的方法、理念、范式和模式，是让你从一个程序员通向工程师的必备技能。</p>
+
+<p>有品位的程序员和没有品位的程序员所写出来的代码，所做出来的软件，差距非常大，而且价值也差别很大。</p>
+
+<p>软件设计这个事，并不是一朝一夕就能学会的，也不是别人能把你教会的，很多东西需要你自己用实践、用时间、用错误、用教训、用痛苦才能真正体会其中的精髓的。所以，除了学习理论知识外，你还需要大量的工程实践。</p>
+
+<p>软件设计的相关原则：</p>
+
+<ul>
+  <li>DRY(don’t repeat yourself)，要做到这点，我们需要做很多的抽象和泛型设计</li>
+  <li>KISS原则</li>
+</ul>
+
+<blockquote>
+  <p>宜家（IKEA）简约、高效的家居设计和生产思路；微软（Microsoft）“所见即所得”的理念；谷歌（Google）简约、直接的商业风格，无一例外地遵循了“KISS”原则。也正是“KISS”原则，成就了这些看似神奇的商业经典。而苹果公司的 iPhone 和 iPad 将这个原则实践到了极至。</p>
+</blockquote>
+
+<ul>
+  <li>
+    <p>Program to an interface, not an implementation，这是设计模式当中最根本的哲学，接口是抽象是稳定的，实现则是多种多样的。还有一条原则叫 Composition over inheritance（喜欢组合而不是继承），这两条是那 23 个经典设计模式中的设计原则。</p>
+  </li>
+  <li>
+    <p>You Ain’t Gonna Need It (YAGNI)，这个原则简而言之为——只考虑和设计必须的功能，避免过度设计。软件开发是一场 trade-off 的博弈。</p>
+  </li>
+  <li>
+    <p>Law of Demeter，迪米特法则 (Law of Demeter)，又称“最少知识原则”（Principle ofLeast Knowledge）</p>
+  </li>
+  <li>
+    <p>面向对象的SOLID原则</p>
+
+    <ul>
+      <li>
+        <p>SRP（Single Responsibility Principle）- 职责单一原则，单一职责，通常意味着单一的功能，因此不要为一个模块实现过多的功能点，以保证实体只有一个引起它变化的原因。</p>
+      </li>
+      <li>
+        <p>OCP（Open/Closed Principle）- 开闭原则，其核心的思想是：模块是可扩展的，而不可修改的。</p>
+      </li>
+      <li>
+        <p>LSP（Liskov substitution principle）- 里氏代换原则，简化为一句话：Subtypes must besubstitutable for their base types，里氏替换原则 LSP是使代码符合开闭原则的一个重要保证。正是由于子类型的可替换性才使得父类型的模块在无需修改的情况下就可以扩展。</p>
+      </li>
+      <li>
+        <p>ISP（Interface Segregation Principle ）- 接口隔离原则。接口隔离原则的意思是把功能实现在接口中，而不是类中，使用多个专门的接口比使用单一的总接口要好。举个例子，我们对电脑有不同的使用方式，比如：写作、通讯、看电影、打游戏、上网、编程、计算和数据存储等。</p>
+
+        <p>如果我们把这些功能都声明在电脑的抽象类里面，那么，我们的上网本、PC 机、服务器和笔记本的实现类都要实现所有的这些接口，这就显得太复杂了。所以，我们可以把这些功能接口隔离开来，如工作学习接口、编程开发接口、上网娱乐接口、计算和数据服务接口，这样，我们的不同功能的电脑就可以有所选择地继承这些接口。</p>
+      </li>
+      <li>
+        <p>DIP（Dependency Inversion Principle）- 依赖倒置原则，高层模块不应该依赖于低层模块的实现，而是依赖于高层抽象</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>CCP——当因为某个原因需要修改时，把需要修改的范围限制在一个最小范围内的包里。</p>
+  </li>
+  <li><strong>好莱坞原则</strong>，好莱坞原则就是一句话——“don’t call us, we’ll call you.”，所有的组件都是被动的，所有的组件初始化和调用都由容器负责，这也就是所谓“控制反转”的概念所在：1) 不创建对象，而是描述创建对象的方式。2）在代码中，对象与服务没有直接联系，而是容器负责将这些联系在一起。控制权由应用代码中转到了外部容器，控制权的转移，是所谓反转。好莱坞原则就是IoC（Inversion of Control） 或DI（Dependency Injection）的基础原则。</li>
+  <li>高内聚、低耦合——<strong>内聚意味着重用和独立，耦合意味着多米诺效应牵一发动全身</strong></li>
+  <li>
+    <p>CoC（Convention over Configuration）- <strong>惯例优于配置原则</strong> ，简单点说，就是将一些公认的配置方式和信息作为内部缺省的规则来使用。当你执行 <code class="highlighter-rouge">mvn -compile</code> 命令的时候，不需要指定源文件放在什么地方，而编译以后的 class 文件放置在什么地方也没有指定，这就是 CoC 原则。</p>
+  </li>
+  <li>
+    <p>SoC (Separation of Concerns) - 关注点分离，实现关注点分离的方法主要有两种，一种是标准化，另一种是抽象与包装</p>
+  </li>
+  <li>ADP——无环依赖原则</li>
+</ul>
+
+:ET

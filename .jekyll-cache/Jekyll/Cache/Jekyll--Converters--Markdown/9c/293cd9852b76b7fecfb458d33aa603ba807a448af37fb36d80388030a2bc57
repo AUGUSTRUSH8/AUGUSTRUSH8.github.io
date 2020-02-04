@@ -1,0 +1,186 @@
+I"-<h4 id="什么是nginx">什么是Nginx</h4>
+
+<p><img src="http://image.augustrush8.com/images/1526187409033.png" alt="" class="center" /></p>
+
+<p>nginx可以作为web服务器，但更多的时候，我们把它作为网关，因为它具备网关必备的功能：</p>
+
+<ul>
+  <li>反向代理</li>
+  <li>负载均衡</li>
+  <li>动态路由</li>
+  <li>请求过滤</li>
+</ul>
+
+<h3 id="nginx作为web服务器">nginx作为web服务器</h3>
+
+<p>Web服务器分2类：</p>
+
+<ul>
+  <li>web应用服务器，如：
+    <ul>
+      <li>tomcat</li>
+      <li>resin</li>
+      <li>jetty</li>
+    </ul>
+  </li>
+  <li>web服务器，如：
+    <ul>
+      <li>Apache 服务器</li>
+      <li>Nginx</li>
+      <li>IIS</li>
+    </ul>
+  </li>
+</ul>
+
+<p>区分：web服务器不能解析jsp等页面，只能处理js、css、html等静态资源。
+并发：web服务器的并发能力远高于web应用服务器。</p>
+
+<h3 id="nginx作为反向代理">nginx作为反向代理</h3>
+
+<p>什么是反向代理？</p>
+
+<ul>
+  <li>代理：通过客户机的配置，实现让一台服务器(代理服务器)代理客户机，客户的所有请求都交给代理服务器处理。</li>
+  <li>反向代理：用一台服务器，代理真实服务器，用户访问时，不再是访问真实服务器，而是代理服务器。</li>
+</ul>
+
+<p>nginx可以当做反向代理服务器来使用：</p>
+
+<ul>
+  <li>我们需要提前在nginx中配置好反向代理的规则，不同的请求，交给不同的真实服务器处理</li>
+  <li>当请求到达nginx，nginx会根据已经定义的规则进行请求的转发，从而实现路由功能</li>
+</ul>
+
+<p>利用反向代理，就可以解决我们前面所说的端口问题，如图</p>
+
+<p><img src="http://image.augustrush8.com/images/1526016663674.png" alt="1526016663674" class="center" /></p>
+
+<h3 id="安装和使用">安装和使用</h3>
+
+<blockquote>
+  <h3 id="安装">安装</h3>
+</blockquote>
+
+<p>安装非常简单，把课前资料提供的nginx直接解压即可，绿色免安装，舒服！</p>
+
+<p><img src="http://image.augustrush8.com/images/0C36B84E.gif" alt="img" class="center" /></p>
+
+<p>解压后，目录结构：</p>
+
+<p><img src="http://image.augustrush8.com/images/nginx.jpg" alt="1530384792790" class="center" /></p>
+
+<ol>
+  <li>conf：配置目录</li>
+  <li>contrib：第三方依赖</li>
+  <li>html：默认的静态资源目录，类似于tomcat的webapps</li>
+  <li>logs：日志目录</li>
+  <li>nginx.exe：启动程序。可双击运行，但不建议这么做。</li>
+</ol>
+
+<blockquote>
+  <h3 id="反向代理配置">反向代理配置</h3>
+</blockquote>
+
+<p>示例：</p>
+
+<p><img src="http://image.augustrush8.com/images/1526188831504.png" alt="1526188831504" class="center" /></p>
+
+<p>nginx中的每个server就是一个反向代理配置，可以有多个server</p>
+
+<p>完整配置：</p>
+
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#user  nobody;</span>
+<span class="k">worker_processes</span>  <span class="mi">1</span><span class="p">;</span>
+
+<span class="k">events</span> <span class="p">{</span>
+    <span class="kn">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">http</span> <span class="p">{</span>
+    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
+    <span class="kn">default_type</span>  <span class="nc">application/octet-stream</span><span class="p">;</span>
+    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+   
+    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+
+    <span class="kn">gzip</span>  <span class="no">on</span><span class="p">;</span>
+	<span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span>       <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">server_name</span>  <span class="s">manage.leyou.com</span><span class="p">;</span>
+
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-Host</span> <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-Server</span> <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+
+        <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+			<span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:9001</span><span class="p">;</span>
+			<span class="kn">proxy_connect_timeout</span> <span class="mi">600</span><span class="p">;</span>
+			<span class="kn">proxy_read_timeout</span> <span class="mi">600</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+	<span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span>       <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">server_name</span>  <span class="s">api.leyou.com</span><span class="p">;</span>
+
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-Host</span> <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-Server</span> <span class="nv">$host</span><span class="p">;</span>
+        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+
+        <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+			<span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:10010</span><span class="p">;</span>
+			<span class="kn">proxy_connect_timeout</span> <span class="mi">600</span><span class="p">;</span>
+			<span class="kn">proxy_read_timeout</span> <span class="mi">600</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <h3 id="使用">使用</h3>
+</blockquote>
+
+<p>nginx可以通过命令行来启动，操作命令：</p>
+
+<ul>
+  <li>启动：<code class="highlighter-rouge">start nginx.exe</code></li>
+  <li>停止：<code class="highlighter-rouge">nginx.exe -s stop</code></li>
+  <li>重新加载：<code class="highlighter-rouge">nginx.exe -s reload</code></li>
+</ul>
+
+<p>启动过程会闪烁一下，启动成功后，任务管理器中会有两个nginx进程：</p>
+
+<p><img src="http://image.augustrush8.com/images/sshot-1.png" alt="1530385404783" class="center" /></p>
+
+<h2 id="测试">测试</h2>
+
+<p>启动nginx，然后用域名访问后台管理系统：</p>
+
+<p><img src="http://image.augustrush8.com/images/screenshot.png" alt="1530385593052" class="center" /></p>
+
+<p>现在实现了域名访问网站了，中间的流程是怎样的呢？</p>
+
+<p><img src="http://image.augustrush8.com/images/1526189945180.png" alt="1526189945180" class="center" /></p>
+
+<ol>
+  <li>
+    <p>浏览器准备发起请求，访问http://mamage.leyou.com，但需要进行域名解析</p>
+  </li>
+  <li>
+    <p>优先进行本地域名解析，因为我们修改了hosts，所以解析成功，得到地址：127.0.0.1</p>
+  </li>
+  <li>
+    <p>请求被发往解析得到的ip，并且默认使用80端口：http://127.0.0.1:80</p>
+
+    <p>本机的nginx一直监听80端口，因此捕获这个请求</p>
+  </li>
+  <li>
+    <p>nginx中配置了反向代理规则，将manage.leyou.com代理到127.0.0.1:9001，因此请求被转发</p>
+  </li>
+  <li>
+    <p>后台系统的webpack server监听的端口是9001，得到请求并处理，完成后将响应返回到nginx</p>
+  </li>
+  <li>
+    <p>nginx将得到的结果返回到浏览器</p>
+  </li>
+</ol>
+:ET

@@ -1,0 +1,107 @@
+I"�.<blockquote>
+  <p>先说答案，Java对象数组的复制是浅复制！</p>
+</blockquote>
+
+<p>下面开始一步一步解开迷惑：</p>
+
+<p>Java编程思想451页说对象数组的复制是浅复制，看个例子</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CopyTest</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">s1</span><span class="o">=</span><span class="k">new</span> <span class="nc">String</span><span class="o">[]{</span><span class="s">"Hi"</span><span class="o">,</span><span class="s">"Hi"</span><span class="o">,</span><span class="s">"Hi"</span><span class="o">};</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">s2</span><span class="o">=</span><span class="k">new</span> <span class="nc">String</span><span class="o">[</span><span class="mi">3</span><span class="o">];</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">s1</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">s2</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">s1</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">s1</span><span class="o">));</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">s2</span><span class="o">));</span>
+        <span class="n">s1</span><span class="o">[</span><span class="mi">2</span><span class="o">]=</span><span class="s">"hier"</span><span class="o">;</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">s1</span><span class="o">));</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">s2</span><span class="o">));</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>看看输出：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Hi, Hi, Hi]
+[Hi, Hi, Hi]
+[Hi, Hi, hier]
+[Hi, Hi, Hi]
+</code></pre></div></div>
+
+<p>奇怪的是，s2字符串数组为何没有改变，难道不是浅复制？</p>
+
+<p>再来看个定义：</p>
+
+<blockquote>
+  <p>浅拷贝只是复制了对象的引用，而不是对象本身的拷贝。</p>
+</blockquote>
+
+<p>正常的理解应该是：</p>
+
+<blockquote>
+  <p>把s1[2]改成”Hier”，希望s2内第3个元素也变成”Hi,Hi,Hier”。因为s2里的元素和s1引用的应该都是同一个对象。如果改变这个对象的值，就等于改变s1和s2中对应对象的值。</p>
+</blockquote>
+
+<p>为什么结果不对呢？</p>
+
+<blockquote>
+  <p>注意做这个测试要避开<strong>String</strong>和<strong>Integer（包括所有自动装箱类）</strong>这两种类型。</p>
+</blockquote>
+
+<p><strong>String的问题是，它是不可变的。</strong>你无法改变任何一个String对象的值。用”=”等号给她赋值，并没有改变这个String对象的值，而是让变量指向了一个全新的对象。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">"Hi"</span><span class="o">;</span> 
+<span class="nc">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="o">;</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="s">"Hier"</span><span class="o">;</span> <span class="c1">// "Hier"是一个全新的对象</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s1</span> <span class="o">==</span> <span class="n">s2</span><span class="o">);</span> <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p><strong>Integer的问题是，它的自动装箱机制。</strong>你用一个int为Integer赋值，编译器会调用 “new Integer()” 创建一个全新的Integer实例，虽然他们的值相等。所以如果你想用等号 “=” 改变一个Integer的值，你又落空了。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Integer</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
+<span class="nc">Integer</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="o">);</span> <span class="c1">// false</span>
+</code></pre></div></div>
+
+<p>所以测试的时候，要避开不可变类和自动装箱类。比如自己创建一个Node类型，持有一个int型的val域。然后用一对get()和set()函数访问域。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Node</span> <span class="o">{</span>
+   <span class="kd">private</span> <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span> <span class="n">val</span> <span class="o">=</span> <span class="n">n</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getVal</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">val</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setVal</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span> <span class="n">val</span> <span class="o">=</span> <span class="n">n</span><span class="o">;</span> <span class="o">}</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">val</span><span class="o">);</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>创建两个Node[]数组，u和v。用同一个Node对象填充数组u。然后把数组u拷贝到数组v。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Node</span><span class="o">[]</span> <span class="n">u</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Node</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
+<span class="nc">Node</span><span class="o">[]</span> <span class="n">v</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Node</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
+<span class="nc">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">u</span><span class="o">,</span><span class="k">new</span> <span class="nc">Node</span><span class="o">(</span><span class="mi">11</span><span class="o">));</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">u</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">v</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="n">u</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"u = "</span> <span class="o">+</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">u</span><span class="o">));</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"v = "</span> <span class="o">+</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">v</span><span class="o">));</span>
+
+<span class="c1">// output</span>
+<span class="c1">// u = [11,11,11,11,11,11,11,11,11,11]</span>
+<span class="c1">// v = [11,11,11,11,11,11,11,11,11,11]</span>
+</code></pre></div></div>
+
+<p>用setVal()函数改变其中任意一个Node对象的值，两个数组所有元素的值全都改变，证明他们指向同一个对象。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">u</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">setVal</span><span class="o">(</span><span class="mi">22</span><span class="o">);</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"u = "</span> <span class="o">+</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">u</span><span class="o">));</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"v = "</span> <span class="o">+</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">v</span><span class="o">));</span>
+
+<span class="c1">// output</span>
+<span class="c1">// u = [22,22,22,22,22,22,22,22,22,22]</span>
+<span class="c1">// v = [22,22,22,22,22,22,22,22,22,22]</span>
+</code></pre></div></div>
+
+:ET

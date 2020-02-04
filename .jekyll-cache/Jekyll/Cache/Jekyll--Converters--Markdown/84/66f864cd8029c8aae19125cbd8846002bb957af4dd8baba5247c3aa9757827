@@ -1,0 +1,135 @@
+I"�-<h2 id="异常处理">异常处理</h2>
+
+<p><strong>异常处理所面临的问题</strong></p>
+
+<ul>
+  <li>
+    <p>1.操作不成功仅向用户返回“错误代码：11111，失败信息：操作失败”，无法区别具体的错误信息。</p>
+  </li>
+  <li>
+    <p>2.service方法在执行过程出现异常在哪捕获？在service中需要都加try/catch，如果在controller也需要添加
+try/catch，代码冗余严重且不易维护。</p>
+  </li>
+</ul>
+
+<p><strong>解决方案</strong></p>
+
+<ul>
+  <li>
+    <p>1.在Service方法中的编码顺序是先校验判断，有问题则抛出具体的异常信息，最后执行具体的业务操作，返回成功信息。</p>
+  </li>
+  <li>
+    <p>2.在统一异常处理类中去捕获异常，无需controller捕获异常，向用户返回统一规范的响应信息</p>
+  </li>
+</ul>
+
+<p><strong>代码模板</strong></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//新增页面</span>
+    <span class="kd">public</span> <span class="nc">CmsPageResult</span> <span class="nf">add</span><span class="o">(</span><span class="nc">CmsPage</span> <span class="n">cmsPage</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cmsPage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="c1">//抛出异常，非法参数异常..指定异常信息的内容</span>
+
+        <span class="o">}</span>
+        <span class="c1">//校验页面名称、站点Id、页面webpath的唯一性</span>
+        <span class="c1">//根据页面名称、站点Id、页面webpath去cms_page集合，如果查到说明此页面已经存在，如果查询不到再继续添加</span>
+        <span class="nc">CmsPage</span> <span class="n">cmsPage1</span> <span class="o">=</span> <span class="n">cmsPageRepository</span><span class="o">.</span><span class="na">findByPageNameAndSiteIdAndPageWebPath</span><span class="o">(</span><span class="n">cmsPage</span><span class="o">.</span><span class="na">getPageName</span><span class="o">(),</span> <span class="n">cmsPage</span><span class="o">.</span><span class="na">getSiteId</span><span class="o">(),</span> <span class="n">cmsPage</span><span class="o">.</span><span class="na">getPageWebPath</span><span class="o">());</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cmsPage1</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="c1">//页面已经存在</span>
+            <span class="c1">//抛出异常，异常内容就是页面已经存在</span>
+            <span class="nc">ExceptionCast</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="nc">CmsCode</span><span class="o">.</span><span class="na">CMS_ADDPAGE_EXISTSNAME</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">//调用dao新增页面</span>
+        <span class="n">cmsPage</span><span class="o">.</span><span class="na">setPageId</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+        <span class="n">cmsPageRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">cmsPage</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">CmsPageResult</span><span class="o">(</span><span class="nc">CommonCode</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">,</span><span class="n">cmsPage</span><span class="o">);</span>
+
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>异常处理流程</strong></p>
+
+<ul>
+  <li>自定义异常类型</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomException</span> <span class="kd">extends</span> <span class="nc">RuntimeException</span> <span class="o">{</span>
+
+    <span class="c1">//错误代码</span>
+    <span class="nc">ResultCode</span> <span class="n">resultCode</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">CustomException</span><span class="o">(</span><span class="nc">ResultCode</span> <span class="n">resultCode</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">resultCode</span> <span class="o">=</span> <span class="n">resultCode</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nc">ResultCode</span> <span class="nf">getResultCode</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">resultCode</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>对于可预知的异常由程序员在代码中主动抛出</li>
+</ul>
+
+<p>如上程序模板</p>
+
+<ul>
+  <li>异常捕获</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@ControllerAdvice</span><span class="c1">//控制器增强</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExceptionCatch</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Logger</span> <span class="no">LOGGER</span> <span class="o">=</span> <span class="nc">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="nc">ExceptionCatch</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="c1">//定义map，配置异常类型所对应的错误代码</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">ImmutableMap</span><span class="o">&lt;</span><span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Throwable</span><span class="o">&gt;,</span><span class="nc">ResultCode</span><span class="o">&gt;</span> <span class="no">EXCEPTIONS</span><span class="o">;</span>
+    <span class="c1">//定义map的builder对象，去构建ImmutableMap</span>
+    <span class="kd">protected</span> <span class="kd">static</span> <span class="nc">ImmutableMap</span><span class="o">.</span><span class="na">Builder</span><span class="o">&lt;</span><span class="nc">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="nc">Throwable</span><span class="o">&gt;,</span><span class="nc">ResultCode</span><span class="o">&gt;</span> <span class="n">builder</span> <span class="o">=</span> <span class="nc">ImmutableMap</span><span class="o">.</span><span class="na">builder</span><span class="o">();</span>
+
+    <span class="c1">//捕获CustomException此类异常</span>
+    <span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="nc">CustomException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="nd">@ResponseBody</span>
+    <span class="kd">public</span> <span class="nc">ResponseResult</span> <span class="nf">customException</span><span class="o">(</span><span class="nc">CustomException</span> <span class="n">customException</span><span class="o">){</span>
+        <span class="c1">//记录日志</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"catch exception:{}"</span><span class="o">,</span><span class="n">customException</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="nc">ResultCode</span> <span class="n">resultCode</span> <span class="o">=</span> <span class="n">customException</span><span class="o">.</span><span class="na">getResultCode</span><span class="o">();</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ResponseResult</span><span class="o">(</span><span class="n">resultCode</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="c1">//捕获Exception此类异常</span>
+    <span class="nd">@ExceptionHandler</span><span class="o">(</span><span class="nc">Exception</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="nd">@ResponseBody</span>
+    <span class="kd">public</span> <span class="nc">ResponseResult</span> <span class="nf">exception</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">exception</span><span class="o">){</span>
+        <span class="c1">//记录日志</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"catch exception:{}"</span><span class="o">,</span><span class="n">exception</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="k">if</span><span class="o">(</span><span class="no">EXCEPTIONS</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="no">EXCEPTIONS</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span><span class="c1">//EXCEPTIONS构建成功</span>
+        <span class="o">}</span>
+        <span class="c1">//从EXCEPTIONS中找异常类型所对应的错误代码，如果找到了将错误代码响应给用户，如果找不到给用户响应99999异常</span>
+        <span class="nc">ResultCode</span> <span class="n">resultCode</span> <span class="o">=</span> <span class="no">EXCEPTIONS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">exception</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">resultCode</span> <span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">ResponseResult</span><span class="o">(</span><span class="n">resultCode</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="c1">//返回99999异常</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">ResponseResult</span><span class="o">(</span><span class="nc">CommonCode</span><span class="o">.</span><span class="na">SERVER_ERROR</span><span class="o">);</span>
+        <span class="o">}</span>
+
+
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="c1">//定义异常类型所对应的错误代码</span>
+        <span class="n">builder</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="nc">HttpMessageNotReadableException</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="nc">CommonCode</span><span class="o">.</span><span class="na">INVALID_PARAM</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>统一异常处理图示</li>
+</ul>
+
+<p><img src="http://image.augustrush8.com/images/统一异常处理.jpg" alt="统一异常处理" class="center" /></p>
+:ET

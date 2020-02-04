@@ -1,0 +1,77 @@
+I"�<h3 id="ubuntu一键脚本安装wireguard">Ubuntu一键脚本安装WireGuard</h3>
+
+<p>Ubuntu的wireguard一键脚本来了，比CentOS版简单，安装快捷，不需要升级内核。</p>
+
+<h4 id="脚本介绍">脚本介绍</h4>
+
+<p>1、适用于ubuntu版本&gt;=14.04。</p>
+
+<p>2、目前在搬瓦工/vultr的14.04/16.04/18.04版本测试通过。</p>
+
+<p>4、VPS建议Vultr</p>
+
+<h4 id="服务端搭建">服务端搭建</h4>
+
+<p>连接VPS，使用下面命令</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://raw.githubusercontent.com/atrandys/wireguard/master/wireguard_install_ubuntu.sh <span class="o">&amp;&amp;</span> <span class="nb">chmod</span> +x wireguard_install_ubuntu.sh <span class="o">&amp;&amp;</span> ./wireguard_install_ubuntu.sh
+</code></pre></div></div>
+
+<p>选择1 安装wireguard</p>
+
+<p><img src="http://image.augustrush8.com/images/wireguard1.png" alt="" class="center" /></p>
+
+<p>等待安装完成，手机可直接扫描，电脑请下载/etc/wireguard/client.conf文件到电脑。</p>
+
+<h3 id="客户端">客户端</h3>
+
+<ul>
+  <li>windows版</li>
+</ul>
+
+<p>下载安装TunSafe，这是一个windows端的第三方客户端，因为官方windows版本的还没开发完成，先用这个软件代替，TunSafe已经开源了，可以放心使用。</p>
+
+<blockquote>
+  <p>官网下载：<a href="https://tunsafe.com/download">TunSafe</a></p>
+</blockquote>
+
+<p>直接选择：</p>
+
+<blockquote>
+  <p><strong>下载稳定版安装包：https://tunsafe.com/downloads/TunSafe-1.4.exe</strong></p>
+</blockquote>
+
+<blockquote>
+  <p><strong>下载测试版安装包：https://tunsafe.com/downloads/TunSafe-1.5-rc1.exe</strong></p>
+</blockquote>
+
+<p>打开TunSafe，点击file，选择import file，选择第5步下载的client.conf文件，导入到软件中。</p>
+
+<p><img src="http://image.augustrush8.com/images/wireguard2.png" alt="" class="center" /></p>
+
+<p>导入后会自动连接，连接成功后，所有流量都会被代理，也就是全局代理。</p>
+
+<ul>
+  <li>安卓版版</li>
+</ul>
+
+<p>1、去Google Play下载wireguard，目前这个软件在Google Play中是未发布版，也可直接下载下面的f-droid的安装包。</p>
+
+<blockquote>
+  <p>安卓版wireguard：<a href="https://f-droid.org/repo/com.wireguard.android_439.apk">点击下载</a></p>
+</blockquote>
+
+<p>2、将软件安装好，并将本教程服务端获取的client.conf文件传输到手机中。打开软件，点击加号，在弹出的页面选择create from file or archive，然后选择保存在手机的conf文件。</p>
+
+<blockquote>
+  <p>注意：这里可能会提示错误，原因是没有文件操作权限，去权限管理里给软件勾上存储权限即可。</p>
+</blockquote>
+
+<p><img src="http://image.augustrush8.com/images/wireguard3.png" alt="" class="center" /></p>
+
+<p>选择文件后如下图所示</p>
+
+<p><img src="http://image.augustrush8.com/images/wireguard4.png" alt="" class="center" /></p>
+
+<p>开启代理即可。</p>
+:ET

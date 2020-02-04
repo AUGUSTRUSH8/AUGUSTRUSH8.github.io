@@ -1,0 +1,230 @@
+I"�U<h3 id="结论">结论</h3>
+
+<p>不正确地使用HashMap会引发死循环及元素丢失</p>
+
+<h3 id="缘起">缘起</h3>
+
+<p>HashMap不是线程安全的。那么HashMap在多线程环境下又会有什么问题呢？</p>
+
+<p>先用一段代码简单模拟出HashMap的死循环：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">leyou</span><span class="o">.</span><span class="na">test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestHashMapResize</span> <span class="kd">extends</span> <span class="nc">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">AtomicInteger</span> <span class="n">ai</span><span class="o">=</span><span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">=</span><span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">ai</span><span class="o">.</span><span class="na">get</span><span class="o">()&lt;</span><span class="mi">100000</span><span class="o">){</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ai</span><span class="o">.</span><span class="na">get</span><span class="o">(),</span><span class="n">ai</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+            <span class="n">ai</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">TestHashMapResize</span> <span class="n">hmt0</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TestHashMapResize</span><span class="o">();</span>
+        <span class="nc">TestHashMapResize</span> <span class="n">hmt1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TestHashMapResize</span><span class="o">();</span>
+        <span class="nc">TestHashMapResize</span> <span class="n">hmt2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TestHashMapResize</span><span class="o">();</span>
+        <span class="nc">TestHashMapResize</span> <span class="n">hmt3</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TestHashMapResize</span><span class="o">();</span>
+        <span class="nc">TestHashMapResize</span> <span class="n">hmt4</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TestHashMapResize</span><span class="o">();</span>
+        <span class="n">hmt0</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">hmt1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">hmt2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">hmt3</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">hmt4</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>以上代码，AtomicInteger和HashMap都是全局共享的，线程的作用很简单，给AtomicInteger不断自增并写入HashMap中。</p>
+
+<p>多运行几次之后死循环就出来了，这里面要提一点，多线程环境下代码会出现问题并不意味着多线程环境下一定会出现问题，但是只要出现了问题，或者是死锁、或者是死循环，那么你的项目除了重启就没有什么别的办法了，所以代码的线程安全性在开发、评审的时候必须要重点考虑到。</p>
+
+<p>看看控制台：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize1.png" alt="" class="center" /></p>
+
+<p>红色方框一直亮着，说明代码死循环了。死循环问题的定位一般都是通过<strong>jps+jstack</strong>查看堆栈信息来定位的：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize2.png" alt="" class="center" /></p>
+
+<p>看到Thread-0处于RUNNABLE，而从堆栈信息上应该可以看出，这次的死循环是由于Thread-0对HashMap进行扩容而引起的。</p>
+
+<p>HashMap的扩容为什么会引起死循环？</p>
+
+<h3 id="正常的扩容过程">正常的扩容过程</h3>
+
+<p>先来看一下HashMap一次正常的扩容过程。简单一点看吧，假设我有三个经过了最终rehash得到的数字，分别是5 7 3，HashMap的table也只有2，那么HashMap把这三个数字put进数据结构了之后应该是这么一个样子的：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize3.png" alt="" class="center" /></p>
+
+<p>看一下resize的代码：</p>
+
+<p>下面代码比较难以理解的话，可以先看看这篇文章：<a href="https://www.cnblogs.com/zhuoqingsen/p/8577646.html">文章</a></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">addEntry</span><span class="o">(</span><span class="kt">int</span> <span class="n">hash</span><span class="o">,</span> <span class="no">K</span> <span class="n">key</span><span class="o">,</span> <span class="no">V</span> <span class="n">value</span><span class="o">,</span> <span class="kt">int</span> <span class="n">bucketIndex</span><span class="o">)</span> <span class="o">{</span>
+<span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">e</span> <span class="o">=</span> <span class="n">table</span><span class="o">[</span><span class="n">bucketIndex</span><span class="o">];</span>
+    <span class="n">table</span><span class="o">[</span><span class="n">bucketIndex</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;(</span><span class="n">hash</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">size</span><span class="o">++</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="o">)</span>
+        <span class="n">resize</span><span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">table</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">resize</span><span class="o">(</span><span class="kt">int</span> <span class="n">newCapacity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Entry</span><span class="o">[]</span> <span class="n">oldTable</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">oldCapacity</span> <span class="o">=</span> <span class="n">oldTable</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">oldCapacity</span> <span class="o">==</span> <span class="no">MAXIMUM_CAPACITY</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nc">Entry</span><span class="o">[]</span> <span class="n">newTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Entry</span><span class="o">[</span><span class="n">newCapacity</span><span class="o">];</span>
+    <span class="n">transfer</span><span class="o">(</span><span class="n">newTable</span><span class="o">);</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">newTable</span><span class="o">;</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="n">newCapacity</span> <span class="o">*</span> <span class="n">loadFactor</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">transfer</span><span class="o">(</span><span class="nc">Entry</span><span class="o">[]</span> <span class="n">newTable</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Entry</span><span class="o">[]</span> <span class="n">src</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">newCapacity</span> <span class="o">=</span> <span class="n">newTable</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">e</span> <span class="o">=</span> <span class="n">src</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">src</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">do</span> <span class="o">{</span>
+                <span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">indexFor</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">hash</span><span class="o">,</span> <span class="n">newCapacity</span><span class="o">);</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newTable</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">newTable</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">while</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>总结一下这三段代码，HashMap一次扩容的过程应该是：</p>
+
+<p>1、取当前table的2倍作为新table的大小</p>
+
+<p>2、根据算出的新table的大小new出一个新的Entry数组来，名为newTable</p>
+
+<p>3、轮询原table的每一个位置，将每个位置上连接的Entry，算出在新table上的位置，并以链表形式连接</p>
+
+<p>4、原table上的所有Entry全部轮询完毕之后，意味着原table上面的所有Entry已经移到了新的table上，HashMap中的table指向newTable</p>
+
+<p>这样就完成了一次扩容，用图表示是这样的：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize4.png" alt="" class="center" /></p>
+
+<p>HashMap的一次正常扩容就是这样的</p>
+
+<h3 id="并发扩容导致的死循环">并发扩容导致的死循环</h3>
+
+<p>依旧注意这段transfer代码：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">transfer</span><span class="o">(</span><span class="nc">Entry</span><span class="o">[]</span> <span class="n">newTable</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Entry</span><span class="o">[]</span> <span class="n">src</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">newCapacity</span> <span class="o">=</span> <span class="n">newTable</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">src</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">e</span> <span class="o">=</span> <span class="n">src</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">src</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">do</span> <span class="o">{</span>
+                <span class="nc">Entry</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">next</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">indexFor</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">hash</span><span class="o">,</span> <span class="n">newCapacity</span><span class="o">);</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newTable</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">newTable</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">while</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>两个线程，线程A和线程B。假设<code class="highlighter-rouge">Entry&lt;K,V&gt; next = e.next;</code>执行完毕，线程A切换，那么对于线程A而言，是这样的：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize5.png" alt="" class="center" /></p>
+
+<p>CPU切换到线程B运行，线程B将整个扩容过程全部执行完毕，于是就形成了：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize6.png" alt="" class="center" /></p>
+
+<p>此时CPU切换到线程A上，执行do…while…循环，首先放置3这个Entry：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize7.png" alt="" class="center" /></p>
+
+<p><strong>由于线程B已经执行完毕，因此根据Java内存模型（JMM），现在table里面所有的Entry都是最新的，也就是7的next是3，3的next是null</strong>。3放置到table[3]的位置上了，下面的步骤是：</p>
+
+<p>1、e=next，即e=7</p>
+
+<p>2、判断e不等于null，循环继续</p>
+
+<p>3、next=e.next，即next=7的next，也就是3</p>
+
+<p>4、放置7这个Entry</p>
+
+<p>所以，用图表示就是：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize8.png" alt="" class="center" /></p>
+
+<p>放置完7之后，继续运行代码：</p>
+
+<p>1、e=next，也就是说e=3</p>
+
+<p>2、判断e不等于null，循环继续</p>
+
+<p>3、next=e.next，即3的next，也就是null</p>
+
+<p>4、放置3这个Entry</p>
+
+<p>把3移到table[3]上去，死循环就出来了：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize9.png" alt="" class="center" /></p>
+
+<p>3移到table[3]上去了，3的next指向7，由于原先7的next指向3，这样就成了一个死循环。</p>
+
+<p>此时执行13行的e=next，那么e=null，循环终止。尽管此次循环确实结束了，但是后面的操作，只要涉及轮询HashMap数据结构的，无论是迭代还是扩容，都将在table[3]这个链表处出现死循环。这也就是前面的死循环堆栈出现的原因，transfer的484行，因为这是一次扩容操作，需要遍历HashMap数据结构，transfer方法是扩容的最后一个方法。</p>
+
+<h3 id="3-5-7又会有怎样的结果">3 5 7又会有怎样的结果</h3>
+
+<p>可能有人觉得上面的数字5 7 3太巧了，像是专门为了产生HashMap的死循环而故意选择的数字。</p>
+
+<p>有一个被反复实践得出的结论是，<strong>任何在多线程下可能发生的错误场景最终一定会发生</strong>。</p>
+
+<p>5 7 3这个数字可不巧，扩容前相邻两个Entry被分配到扩容后同样的table位置是很正常的。关键的是，即使这种异常场景发生的可能性再低，只要发生一次，那么你的系统就部分甚至全部不可用了—-除了重启系统没有任何办法。所以，这种可能会发生的异常场景必须提前扼杀。</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize10.png" alt="" class="center" /></p>
+
+<p>这是扩容前数据结构中的内容，扩容之后正常的应该是：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize11.png" alt="" class="center" /></p>
+
+<p>现在在多线程下遇到问题了，某个线程先放7：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize12.png" alt="" class="center" /></p>
+
+<p>再接着放5：</p>
+
+<p><img src="http://image.augustrush8.com/images/hashmapresize/resize13.png" alt="" class="center" /></p>
+
+<p>由于5的next此时为null，因此扩容操作结束，3 5 7造成的结果就是元素丢失。</p>
+
+<h3 id="如何解决">如何解决</h3>
+
+<p>把一个线程非安全的集合作为全局共享的，本身就是一种错误的做法，并发下一定会产生错误。</p>
+
+<p>所以，解决这个问题的办法很简单，有两种：</p>
+
+<p>1、使用Collections.synchronizedMap(Mao&lt;K,V&gt; m)方法把HashMap变成一个线程安全的Map</p>
+
+<p>2、使用Hashtable、ConcurrentHashMap这两个线程安全的Map</p>
+
+<p>不过，既然选择了线程安全的办法，那么必然要在性能上付出一定的代价—-毕竟这个世界上没有十全十美的事情，既要运行效率高、又要线程安全。</p>
+:ET

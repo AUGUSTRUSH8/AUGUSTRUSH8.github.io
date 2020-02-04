@@ -1,0 +1,161 @@
+I"�G<blockquote>
+  <p>缘起：开发当中有这么一个需求—根据后台提供的财务数据（多半是一些公司的月度或季度年度财务报告、资产负债表等），自动模拟登录当地报税网站，自动完成form表单的填写和提交，然后需要跟踪报税进度。</p>
+</blockquote>
+
+<p><strong>分析</strong>：这其中的工作，大体可拆分为几个阶段</p>
+
+<ul>
+  <li>第一，相关公司报税负责人的登录信息，可解析对应存储文件获取</li>
+  <li>第二，根据报税人的账号密码登录报税网站</li>
+  <li>第三，根据财务报表逐个解析并切分页面进行填写，最终提交</li>
+</ul>
+
+<p><strong>难点</strong>：其中难点也是比较多的</p>
+
+<ul>
+  <li>第一，报税网站采取的是RSA非对称加密方式认证用户登录</li>
+  <li>第二，网站登陆页有图片验证码</li>
+  <li>第三，页面采取的技术比较老，使用的是iframe嵌入的方式</li>
+  <li>第四，页面数据多采用异步加载的方式，并不是一开始就把某些数据渲染到页面的。（这当然咯）</li>
+  <li>第五，页面本身很多表单项并不都是靠填写进去的，当填写完某一项之后，其他的某些项可以自行应用js进行计算</li>
+</ul>
+
+<h4 id="尝试">尝试</h4>
+
+<p>由于以前并没有接触过这类业务，使用的技术只有一个大概的方向，并不明朗。所以经过查资料看相似项目源码大体知道可以使用爬虫的方式解决</p>
+
+<ul>
+  <li>先使用httpclient还有jsoup的原生方式进行请求解析，其中登录进去获取token费了不少功夫，构造加密请求串，获取验证码并智能识别字符。。。最后终于如愿以偿</li>
+  <li>然而最后还是卡在了iframe标签上，总是无法加载iframe当中的内容，StackOverflow等各个地方都有去问询了解，然而还是卡住了，其实是可以解决的。但我转念再去考虑这个业务特点的时候突然发现selenium驱动浏览器不失为一个好办法！</li>
+</ul>
+
+<p>所以诞生了下面的解决方案，Python+Selenium+Webdriver</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">'''
+Created on 2018年10月30日
+
+@author: AUGUSTRUSH
+'''</span>
+<span class="s">'''
+dzswj.cq-l-tax.gov.cn
+12366.cqsw.gov.cn
+以上两个网址都可以登进系统
+
+尝试使用OCR的方式识别验证码，但命中识别率较低，因此放弃使用
+可将验证码发送给点击一键纳税的客户，让用户输入结果
+为避免多个用户同时发起请求，可队列限制请求频率
+'''</span>
+<span class="c1">#前提：需要pip后者conda安装selenium包
+</span><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.chrome.options</span> <span class="kn">import</span> <span class="n">Options</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="c1">#登录函数
+</span><span class="k">def</span> <span class="nf">Login</span><span class="p">(</span><span class="n">driver</span><span class="p">):</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"http://12366.cqsw.gov.cn:7004/ssoserver/login"</span><span class="p">)</span>
+    <span class="c1">#延时一秒
+</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1">#截取当前登录页面图片并保存
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/报税网首页.png"</span><span class="p">)</span>
+    <span class="c1">#获取当前需要登录的用户名密码
+</span>    <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">),</span> <span class="o">=</span> <span class="n">readCSVFile</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="c1">#输入账号
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">"username"</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+    <span class="c1">#输入密码
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">"password"</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+    <span class="c1">#保存验证码的图片
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/验证码.png"</span><span class="p">)</span>
+    <span class="c1">#阻塞输入验证码
+</span>    <span class="n">check_code</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"请输入验证码:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">r"验证码是多少:</span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="n">check_code</span><span class="p">)</span>
+    <span class="c1">#向登录页面输入验证码信息
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">"captcha"</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">check_code</span><span class="p">)</span>
+    <span class="c1">#点击登录按钮
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">"//*[@id=</span><span class="se">\"</span><span class="s">zrrLoginBtn</span><span class="se">\"</span><span class="s">]"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="c1">#休眠一下等待登录成功
+</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="c1">#保存登录成功的快照
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/登录成功.png"</span><span class="p">)</span>
+    <span class="c1">#消除弹窗提示 此处需注意，该网站会不定期的在初次登录时候弹出通知信息框
+</span>    <span class="c1">#因此这里的弹窗信息是不确定的，但每次都是调用相同的弹窗组件提示显示，
+</span>    <span class="c1">#所以以下执行两次关闭弹窗点击
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">"closeWid"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">"closeWid"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="c1">#截取点击完弹窗按钮后的页面
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/消除弹窗主页面.png"</span><span class="p">)</span>
+    <span class="c1">#销毁无头浏览器进程--重要，否则会一直阻塞
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+<span class="c1">#点击"申请纳税"按钮
+</span><span class="k">def</span> <span class="nf">clickPayTaxButton</span><span class="p">(</span><span class="n">driver</span><span class="p">):</span>
+    <span class="c1">#点击申报纳税a标签
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">"//*[@id=</span><span class="se">\"</span><span class="s">left-contain</span><span class="se">\"</span><span class="s">]/ul[1]/li[2]/ul/li[4]/a"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+<span class="c1">#begin----增值税纳税函数模块起始
+#点击"增值税小规模纳税人申报"a标签
+#此处会跨域请求获取资源，并展现在当前页面当中，当前window_handle
+</span><span class="k">def</span> <span class="nf">clickThroughVATaTag</span><span class="p">():</span>
+    <span class="c1">#点击增值税纳税a标签
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">"//*[@id=</span><span class="se">\"</span><span class="s">left-contain</span><span class="se">\"</span><span class="s">]/ul[1]/li[2]/ul/li[4]/ul/li[1]/a"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="c1">#保存截图
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/增值税.png"</span><span class="p">)</span>
+    <span class="c1">#保存当前页面的html到本地
+</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"../saved_htmlFile/cqTax.html"</span><span class="p">,</span><span class="s">"w"</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">page_source</span><span class="p">)</span>
+    <span class="c1">#切换到iframe里面去
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">switch_to</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="s">"mainframe"</span><span class="p">)</span>
+    <span class="c1">#点击填表申报
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">"/html/body/div[2]/div[2]/ul[1]/li[5]/a"</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">();</span>
+    <span class="c1">#点击后等待5秒
+</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="c1"># 拿到所有的窗口
+</span>    <span class="n">allHandles</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">window_handles</span>
+    <span class="n">routeWindowHandle</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">routeTitle</span> <span class="o">=</span> <span class="s">'None'</span>
+    <span class="k">for</span> <span class="n">handle</span> <span class="ow">in</span> <span class="n">allHandles</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">handle</span><span class="o">!=</span><span class="n">driver</span><span class="o">.</span><span class="n">current_window_handle</span><span class="p">:</span>
+            <span class="c1">#切换到新开页面
+</span>            <span class="n">driver</span><span class="o">.</span><span class="n">switch_to_window</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+            <span class="n">routeWindowHandle</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">current_window_handle</span>
+            <span class="n">routeTitle</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">title</span>
+            <span class="k">break</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">"4. switch to routeWindow, routeWindowHandle = {routeWindowHandle},routeTitle = {routeTitle}, currentHandle = {driver.current_window_handle}, currentTitle = {driver.title}"</span><span class="p">)</span>
+    <span class="c1">#截取当前页面
+</span>    <span class="n">driver</span><span class="o">.</span><span class="n">save_screenshot</span><span class="p">(</span><span class="s">"../saved_images/点击填表申报以后.png"</span><span class="p">)</span>
+<span class="c1">#end----增值税纳税函数模块结束
+</span><span class="k">def</span> <span class="nf">readCSVFile</span><span class="p">():</span>
+    <span class="c1"># 读取csv至字典
+</span>    <span class="n">csvFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"../usernameAndPassword/userInfo.csv"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvFile</span><span class="p">)</span>
+    <span class="c1"># 建立空字典
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="c1"># 忽略第一行
+</span>        <span class="k">if</span> <span class="n">reader</span><span class="o">.</span><span class="n">line_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">csvFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1">#初始化浏览器
+</span>    <span class="n">chrome_options</span> <span class="o">=</span> <span class="n">Options</span><span class="p">()</span>
+    <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'window-size=1366x768'</span><span class="p">)</span> <span class="c1">#指定浏览器分辨率
+</span>    <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--disable-gpu'</span><span class="p">)</span> <span class="c1">#谷歌文档提到需要加上这个属性来规避bug
+</span>    <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--hide-scrollbars'</span><span class="p">)</span> <span class="c1">#隐藏滚动条, 应对一些特殊页面
+</span>    <span class="n">chrome_options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--headless'</span><span class="p">)</span> <span class="c1">#浏览器不提供可视化页面. linux下如果系统不支持可视化不加这条会启动失败
+</span>    <span class="c1">#初始化一个局部对象driver
+</span>    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">executable_path</span><span class="o">=</span><span class="s">"../chrome_driverFile/chromedriver_win32/chromedriver.exe"</span><span class="p">,</span><span class="n">chrome_options</span><span class="o">=</span><span class="n">chrome_options</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">driver</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="c1">#获得初始化了参数的driver对象，它一旦初始化就全局使用
+</span>    <span class="n">driver</span><span class="o">=</span><span class="n">main</span><span class="p">()</span>
+    <span class="c1">#执行登录操作
+</span>    <span class="n">Login</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"登录结束"</span><span class="p">)</span>
+    <span class="c1">#首页打开后，默认会展开"办税服务"下拉菜单，然后需要
+</span>    <span class="c1">#点击"申请纳税"子菜单，否则会报invisible异常（所见即所得）
+</span>    <span class="n">clickPayTaxButton</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>这其中涉及到挺多知识点的，需要有个整体的把控。</p>
+:ET
