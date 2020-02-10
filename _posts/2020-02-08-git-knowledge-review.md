@@ -134,13 +134,13 @@ Git版本操作无论是对于开发或者其他一些版本管理操作都有�
 
 ### 忽略特殊文件
 
-- 【约定】忽略某些文件时，需要编写.gitignore；
+- 【约定】忽略某些文件时，需要编写.gitignore。
 - 【约定】.gitignore文件本身要放到版本库里，并且可以对.gitignore做版本管理！
 - 【注意】使用Windows的童鞋注意了，如果你在资源管理器里新建一个.gitignore文件，它会非常弱智地提示你必须输入文件名，但是在文本编辑器里“保存”或者“另存为”就可以把文件保存为.gitignore了。
-- 【操作】可以用git check-ignore命令检查gitignore是否写的有问题
-- 【操作】如果你确实想添加某文件，可以用-f强制添加到Git，如：git add -f App.class
+- 【操作】可以用git check-ignore命令检查gitignore是否写的有问题。
+- 【操作】如果你确实想添加某文件，可以用-f强制添加到Git，如：git add -f App.class。
  
  ### 最后
 
- - 【cheat sheet】https://gitee.com/liaoxuefeng/learn-java/raw/master/teach/git-cheatsheet.pdf
-
+ - 【cheat sheet】[文档链接](https://gitee.com/liaoxuefeng/learn-java/raw/master/teach/git-cheatsheet.pdf
+)
