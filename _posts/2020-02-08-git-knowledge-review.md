@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Git知识拾遗'
-tags: [read]
+tags: [code]
 ---
 
 ### 前言
@@ -140,7 +140,7 @@ Git版本操作无论是对于开发或者其他一些版本管理操作都有�
 - 【操作】可以用git check-ignore命令检查gitignore是否写的有问题。
 - 【操作】如果你确实想添加某文件，可以用-f强制添加到Git，如：git add -f App.class。
  
- ### 最后
+### 最后
 
  - 【cheat sheet】[文档链接](https://gitee.com/liaoxuefeng/learn-java/raw/master/teach/git-cheatsheet.pdf
 )

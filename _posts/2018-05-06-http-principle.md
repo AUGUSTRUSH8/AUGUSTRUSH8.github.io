@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'HTTP与HTTPS原理相关'
-tags: [read]
+tags: [code]
 ---
 
 * TOC

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '快速回顾Spring'
-tags: [read]
+tags: [code]
 ---
 
 > Spring我们经常会用，但其中有些特性需要我们在使用之后来回顾一下是什么以及为什么。

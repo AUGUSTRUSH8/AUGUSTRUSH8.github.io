@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '如何判断一个数是否在40亿个整数中'
-tags: [read]
+tags: [code]
 ---
 
 ### 需求描述

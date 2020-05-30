@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Java实现常用排序算法'
-tags: [read]
+tags: [code]
 ---
 
 ### 冒泡排序

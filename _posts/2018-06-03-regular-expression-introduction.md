@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '正则表达式语法简介'
-tags: [read]
+tags: [code]
 ---
 
 **一、什么是正则表达式？**

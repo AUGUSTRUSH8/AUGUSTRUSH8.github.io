@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '一切缘起于图片上传的功能'
-tags: [read]
+tags: [code]
 ---
 
 > **流程描述**：前台Vue，上传图片至服务端存储，并返回图片地址

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '图像边缘识别的原理'
-tags: [read]
+tags: [code]
 ---
 
 图像识别是一项非常热门而且有趣的技术

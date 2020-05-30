@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '快速了解Java集合框架'
-tags: [read]
+tags: [code]
 ---
 
 ### 简介
@@ -66,3 +66,4 @@ SortedSet 与 SortedMap 默认的排序是自然序，可通过 Comparator 或 C
 - LinkedHashMap：实现 Map 接口，不允许重复的 key，底层数据结构 hash table 与双链表
 - HashTable：实现 Map 接口，不允许重复的 key，底层数据结构 hash table
 - TreeMap：实现 SortedMap 接口，不允许重复的 key，底层数据结构红黑树
+

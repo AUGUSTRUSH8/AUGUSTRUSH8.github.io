@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'SpringBoot笔记'
-tags: [code]
+tags: [read]
 ---
 
 # 0.学习目标

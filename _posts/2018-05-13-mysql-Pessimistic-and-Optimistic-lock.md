@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Mysql乐观锁与悲观锁'
-tags: [read]
+tags: [code]
 ---
 
 ### 悲观锁

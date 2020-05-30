@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '计数排序和桶排序'
-tags: [read]
+tags: [code]
 ---
 
 ### 比较排序和非比较排序的区别

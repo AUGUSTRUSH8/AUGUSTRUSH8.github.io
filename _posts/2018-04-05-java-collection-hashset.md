@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'HashSet类解读'
-tags: [read]
+tags: [code]
 ---
 
 ### 元素不能重复
