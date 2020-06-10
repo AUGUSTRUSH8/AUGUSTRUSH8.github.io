@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '设计模式之代理模式
+title: '设计模式之代理模式'
 tags: [code]
 ---
 

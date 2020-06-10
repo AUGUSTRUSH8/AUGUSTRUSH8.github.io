@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '设计模式之原型模式
+title: '设计模式之原型模式'
 tags: [code]
 ---
 
