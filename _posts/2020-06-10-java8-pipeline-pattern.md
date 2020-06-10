@@ -22,7 +22,7 @@ tags: [code]
 
 首先创建一个 `Car` 类：
 
-```
+```java
 publicclass Car {
     private String producer;
     private String model;
@@ -50,7 +50,7 @@ publicclass Car {
 
 添加一个 Car 实例集合:
 
-```
+```java
 public static List<Car> createCars() {
     return Arrays.asList(new Car("Jeep", "Wrangler", 2011),
             new Car("Jeep", "Comanche", 1990),
@@ -63,7 +63,7 @@ public static List<Car> createCars() {
 
 接着使用`命令式编程`来迭代该列表，并获取 2000 年后制造的汽车的名称。然后按年份对这些型号进行升序排序。
 
-```
+```java
 public static List<String> getNamesAfter2000UsingFor(List<Car> cars) {
     List<Car> carsSortedByYear = new ArrayList<>();
     for (Car car : cars) {
@@ -89,14 +89,16 @@ public static List<String> getNamesAfter2000UsingFor(List<Car> cars) {
 
 以上代码输出结果：
 
-```
+```java
 Avenger
 Wrangler
 Focus
 Cascada
 ```
 
-以上代码中包含了不必要的垃圾变量，其处理示意图如下：![img](https://mmbiz.qpic.cn/mmbiz_png/JyDzyVuiaZHq7B7yGlAhcRBw8ejq3cspbLhgknUnkN0hZGNhzicnBLuAKI7qYypqMepwCFpN96Cfpd78auEdRodA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1){:.center}
+以上代码中包含了不必要的垃圾变量，其处理示意图如下：
+
+![](http://image.augustrush8.com/images/2020-06-10原始for例子.png){:.center}
 
 ## 使用集合管道迭代和排序
 
@@ -104,7 +106,7 @@ Cascada
 
 来看看使用集合管道处理上面例子的处理方式：
 
-```
+```java
 public static List<String> getNamesAfter2000UsingPipeline(List<Car> cars){
     return cars.stream()
             .filter(car -> car.getYear()>2000)
@@ -125,7 +127,9 @@ public static List<String> getNamesAfter2000UsingPipeline(List<Car> cars){
 
 我们将方法引用 `Car::getModel` 传递给 map 方法，而不传递 `lambda` 表达式。类似地，我们将方法引用 `Car::getYear` 传递给 comparing 方法，而不传递拉姆达表达式 `car -> car.getYear()`。方法引用简短、简洁且富于表达力，最好尽可能地使用它们。
 
-集合管道模式的处理示意图如下，随着数据流经各个函数，Java 8 的惰性计算和函数融合功能可帮助避免在某些情况下创建中间对象。数据在管道中传输时，函数不会使中间对象变得可见或可用。![img](https://mmbiz.qpic.cn/mmbiz_png/JyDzyVuiaZHq7B7yGlAhcRBw8ejq3cspb1hkOEjwhEJ5vmRlf5Mjn3VoQvlbbBAopGR7l5EHVFZt0nR2T5Tt8OA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1){:.center}
+集合管道模式的处理示意图如下，随着数据流经各个函数，Java 8 的惰性计算和函数融合功能可帮助避免在某些情况下创建中间对象。数据在管道中传输时，函数不会使中间对象变得可见或可用。
+
+![](http://image.augustrush8.com/images/2020-06-10集合管道例子.png){:.center}
 
 ## 小结
 
